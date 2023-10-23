@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Vendor_Application_Inventory_Platform</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Vendor_Application_Inventory_Platform.styles.css" asp-append-version="true" />
+</head>
+
+<style>
+
+    .component {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #period {
+        color: #4688F1;
+        margin-left: 5px;
+    }
+
+    #date, #month, #hour, #minute {
+        margin: 5px;
+    }
+
+    .full-screen {
+        width: 100vw;
+    }
+
+    .float-right{
+        position: absolute;
+        right: 40px;
+    }
+</style>
+
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+            <div class="container-fluid">
+
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="font-weight: normal; color: #4688F1;" >CitiSoft</a>
+
+                <ul class="navbar-nav flex-grow-1">
+
+                    <li class="nav-item ml-1">
+                        <div class="component">
+                            <div id="day"></div>
+                            <div>, </div>
+                            <div id="month"></div>
+                            <div id="date"></div>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <div class="component float-right">
+                            <div id="hour"></div>
+                            <div>. </div>
+                            <div id="minute"></div>
+                            <div id="period"></div>
+                        </div>
+                    </li>
+                </ul>
+
+
+            </div>
+        </nav>
+    </header>
+    <div class="container p-0 m-0">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Vendor_Application_Inventory_Platform - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+<script>
+    //Get the time on local device
+    const now = new Date();
+
+    function dateAndTime() {
+        //Display day and date
+        document.getElementById("day").innerText = now.toLocaleString("en-US", { weekday: 'long' });
+        document.getElementById("month").innerText = now.toLocaleString("en-US", { month: 'long' });
+        document.getElementById("date").innerText = now.getDate().toString();
+    }
+
+    function updateClock() {
+
+        //A digital clock for the header --> HH:MM AM/PM
+
+        let hour = now.getHours() % 12;
+        let minute = now.getMinutes();
+
+        var period = now.getHours() >= 12 ? "PM" : "AM"
+
+        
+        document.getElementById("hour").innerText = hour.toString().padStart(2, '0');;
+        document.getElementById("minute").innerText = minute.toString().padStart(2, '0');;
+        document.getElementById("period").innerText = period;
+        console.log(hour + " " + minute + " " + period);
+    }
+
+    setInterval(updateClock, 1000); // Update the clock every second
+    updateClock(); // Display the initial time
+
+
+    dateAndTime();
+</script>

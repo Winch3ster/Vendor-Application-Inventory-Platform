@@ -1,0 +1,5 @@
+﻿Things to fix 
+
+
+--> The admin contol panel height
+	-> Maybe make the NON-LAYOUT scrollable
