@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Company\" />
+    <Folder Include="Views\Employee\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Employee\Edit.cshtml" />
+    <None Include="Views\Admin\Edit.cshtml" />
   </ItemGroup>
 
 </Project>

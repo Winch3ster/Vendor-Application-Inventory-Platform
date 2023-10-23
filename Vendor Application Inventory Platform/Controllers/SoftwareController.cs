@@ -2,25 +2,17 @@
 
 namespace Vendor_Application_Inventory_Platform.Controllers
 {
-    public class EmployeeController : Controller
+    public class SoftwareController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
 
-
-        public async Task<IActionResult> Edit()
-        {
-
-            return View();
-        }
-
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
-
 
     }
 }

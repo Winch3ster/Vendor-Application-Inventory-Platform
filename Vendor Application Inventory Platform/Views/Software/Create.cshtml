@@ -1,0 +1,244 @@
+﻿@model Software
+
+@{
+    ViewData["title"] = "Register Software";
+    Layout = "_AdminControlPanel";
+}
+
+<div class="col-9 m-md-5">
+    <p>Register new software</p>
+    <hr />
+    <h3>Software Information</h3>
+
+
+    <form class="mt-2">
+
+        <!-- Software name -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Software Name</label>
+            <input class="form-control-light " />
+        </div>
+
+
+        <!-- Software description -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Software Description</label>
+            <textarea class="form-control-light"></textarea>
+        </div>
+
+
+        <!-- Buiness area -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Business Area</label>
+            
+            <div class="multi-value-container">
+                <div class="multi-value-input-container d-block" id="businessAreaValueContainer">
+                    <div class="d-flex align-items-center justify-content-evenly mb-2">
+                        <input class="form-control-light full-size" />
+                        <span class="btn btn-danger rounded col-2  mx-2 d-flex align-items-center justify-content-center" ><i class="bi bi-trash"></i></span>
+                    </div>
+                   
+                </div>
+                <div class="d-flex justify-content-center" id="test">
+                    <div class="btn btn-primary rounded col-12" onclick="AddField(this)"><i class="bi bi-plus"></i></div>
+                </div>
+            </div>      
+        </div>
+        
+
+        <!-- Modules -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Modules</label>
+
+            <div class="multi-value-container">
+                <div class="multi-value-input-container d-block" id="modulesValueContainer">
+                    <div class="d-flex align-items-center justify-content-evenly mb-2">
+                        <input class="form-control-light full-size" />
+                        <span class="btn btn-danger rounded col-2  mx-2 d-flex align-items-center justify-content-center"><i class="bi bi-trash"></i></span>
+                    </div>
+
+                </div>
+                <div class="d-flex justify-content-center" id="test">
+                    <div class="btn btn-primary rounded col-12" onclick="AddField(this)"><i class="bi bi-plus"></i></div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Cloud -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Cloud</label>
+
+            <div class="col-sm-10">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1">
+                    <label class="form-check-label" for="gridRadios1">
+                        Enabled
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                    <label class="form-check-label" for="gridRadios2">
+                        Native
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3">
+                    <label class="form-check-label" for="gridRadios3">
+                        Based
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <h3>Company Information</h3>
+
+        <!-- Company Name -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Company Name</label>
+            <input class="form-control-light " />
+        </div>
+
+        <!-- Company Website URL -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Company Website URL</label>
+            <input class="form-control-light " />
+        </div>
+
+        <!-- Established Year -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Established Year</label>
+            <input type="number" placeholder="2023" class="form-control-light" />
+        </div>
+
+        <!-- Company employee count -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Number of Employees</label>
+            <input class="form-control-light " />
+        </div>
+
+
+
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Internal Professional Services</label>
+
+            <div class="col-sm-10">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1">
+                    <label class="form-check-label" for="gridRadios1">
+                        Yes
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                    <label class="form-check-label" for="gridRadios2">
+                        No
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!--last demo date -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Last Demo Date</label>
+            <input type="date" class="form-control-light " />
+        </div>
+
+
+
+        <!-- last review date -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Last Review Date</label>
+            <input type="date" class="form-control-light " />
+        </div>
+
+
+
+    </form>
+
+
+</div>
+
+
+
+<script>
+
+   
+    function AddField(button) {
+
+        //elem --> get the element that called this function 
+
+        //get its parent's sibling's id. This will be the container that stores all the input fields
+        var target = ((button.parentNode).previousElementSibling.id);
+        valueContainer = document.getElementById(target);
+
+
+
+        //Create a text field component
+        var container = document.createElement('div');
+        container.classList.add("d-flex", "align-items-center", "justify-content-evenly", "mb-2");
+
+
+        var inputField = document.createElement('input');
+        inputField.classList.add("form-control-light", "full-size");
+
+        var icon = document.createElement('i');
+        icon.classList.add("bi", "bi-trash");
+
+        var removeBtn = document.createElement('span');
+        removeBtn.classList.add("btn", "btn-danger", "rounded", "col-2", "mx-2", "d-flex", "align-items-center", "justify-content-center");
+        
+
+
+        
+
+
+        removeBtn.appendChild(icon)
+
+
+        container.appendChild(inputField);
+        container.appendChild(removeBtn);
+
+        //removeBtn.addEventListener('click', removeThis)
+
+        removeBtn.addEventListener('click', removeThis);
+        //add it to the container 
+        valueContainer.appendChild(container);
+
+        //a();
+
+    }
+
+    function a(){
+
+        
+        let removeBtnList = document.getElementsByClassName('click');
+
+        for (var i = 0; i < removeBtnList.length; i++){
+            removeBtnList[i].addEventListener('click', removeThis)
+        }
+
+
+        //console.log(removeBtnList[1]);
+    }
+
+
+    function removeThis(button) {
+
+        //console.log("The removeThis function is running");
+        //button.parentElement.remove();
+        console.log(button.target.parentNode);
+        button.target.parentNode.closest('div').remove();
+        
+    }
+
+
+
+</script>
+
+

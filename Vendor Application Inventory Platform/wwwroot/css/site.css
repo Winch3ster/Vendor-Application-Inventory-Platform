@@ -22,7 +22,9 @@ body {
 .medium-font-size{
     font-size: 30px;
 }
-
+.citisoft-text-color {
+    color: #4688F1;
+}
 
 
 
@@ -96,3 +98,37 @@ body {
 .employee-block-operation{
     width: 50%;
 }
+
+
+
+
+.form-control-light {
+    background-color: #E7E7E7;
+    border: none;
+    border-radius: 5px;
+    width: 70%;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+.full-size {
+    width: 100%;
+    margin-bottom: 0;
+}
+.multi-value-container {
+    width: 50%;
+    height: auto;
+    padding: 0;
+}
+input:focus {
+    outline: none;
+}
+
+textarea{
+    resize: none;
+    height: 200px;
+}
+
+textarea:focus{
+    outline: none;
+}
+
