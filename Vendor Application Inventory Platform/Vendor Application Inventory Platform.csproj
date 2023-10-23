@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Company\" />
-    <Folder Include="Views\Employee\" />
   </ItemGroup>
 
   <ItemGroup>

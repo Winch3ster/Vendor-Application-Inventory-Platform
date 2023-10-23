@@ -30,12 +30,10 @@ body {
 
 
 .control-panel-style {
-    position: relative;
-    height: 80vh;
+    position:fixed;
+    left:0;
+    height: 100vh;
     background-color: #E6E6E6;
-    > ul{
-            margin-top: 40px;
-        }
 }
 
 .admin-navigation-block {
