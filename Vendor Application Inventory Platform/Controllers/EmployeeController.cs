@@ -9,14 +9,7 @@ namespace Vendor_Application_Inventory_Platform.Controllers
             return View();
         }
 
-
-        public async Task<IActionResult> Edit()
-        {
-
-            return View();
-        }
-
-        public IActionResult Create()
+        public IActionResult Details()
         {
             return View();
         }
