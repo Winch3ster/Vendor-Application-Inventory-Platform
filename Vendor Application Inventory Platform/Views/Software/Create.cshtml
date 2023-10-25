@@ -159,7 +159,47 @@
 
 
 
+
+
+
+
+
+
+
+
+        <!-- Company contacts -->
+        <div>
+            <h3>Register Company Contacts</h3>
+
+            <div id="company-contact-container">
+
+
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Company contacts</label>
+
+                    <div class="d-block">
+                        <input class="form-control-light full-size mb-3" placeholder="Country Name. Eg. Poland" />
+                        <input class="form-control-light full-size mb-3" placeholder="City Name. Eg. Warsaw" />
+                        <input class="form-control-light full-size mb-3" placeholder="Contacts. Eg. +61 2 8317 6698" />
+                    </div>        
+                </div>
+
+
+
+
+            </div>
+
+            <!-- Button to add new field -->
+            <div class="btn btn-primary rounded col-2" onclick="AddContactBlock()"><i class="bi bi-plus"></i></div>
+
+        </div>
     </form>
+
+
+
+
+
+
 
 
 </div>
@@ -168,6 +208,7 @@
 
 <script>
 
+    var companyContactContainer = document.getElementById('company-contact-container');
    
     function AddField(button) {
 
@@ -192,11 +233,7 @@
 
         var removeBtn = document.createElement('span');
         removeBtn.classList.add("btn", "btn-danger", "rounded", "col-2", "mx-2", "d-flex", "align-items-center", "justify-content-center");
-        
-
-
-        
-
+             
 
         removeBtn.appendChild(icon)
 
@@ -238,6 +275,46 @@
     }
 
 
+
+
+
+
+    function AddContactBlock(){
+
+        //Create company contact block
+        var block = document.createElement('div');
+        block.classList.add("mb-3", "d-flex", "align-top");
+
+        //Create input fields' container
+        var inputContainer = document.createElement('div');
+        inputContainer.classList.add('d-block')
+
+        //Create label
+        var label = = document.createElement('label');
+        label.classList.add("form-label", "citisoft-text-color", "col-3");
+
+
+        //Create country field
+        var countryField = = document.createElement('input');
+        countryField.classList.add("form-control-light", "full-size", "mb-3");
+
+
+        //Create city field
+        var cityField = = document.createElement('input');
+        cityField.classList.add("form-control-light", "full-size", "mb-3");
+
+        //Create contact field 
+        var contactField = = document.createElement('input');
+        contactField.classList.add("form-control-light", "full-size", "mb-3");
+
+
+        inputContainer.appendChild(countryField, cityField, contactField);
+
+        block.appendChild(label);
+        block.appendChild(inputContainer);
+
+        companyContactContainer.appendChild(block);
+    }
 
 </script>
 

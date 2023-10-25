@@ -10,6 +10,13 @@ namespace Vendor_Application_Inventory_Platform.Controllers
         }
 
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+
+
 
     }
 }
