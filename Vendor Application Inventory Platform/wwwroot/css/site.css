@@ -26,18 +26,12 @@ body {
     color: #4688F1;
 }
 
-
-
-
 .control-panel-style {
-    position: fixed;
+    position:fixed;
     left:0;
-    top: 8vh;
-    height: 87vh;
+    width:200px;
+    transition: width 0.1s;
     background-color: #E6E6E6;
-    > ul{
-            margin-top: 40px;
-        }
 }
 
 .admin-navigation-block {
