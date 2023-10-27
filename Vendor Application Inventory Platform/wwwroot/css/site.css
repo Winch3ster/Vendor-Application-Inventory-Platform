@@ -29,22 +29,14 @@ body {
 .control-panel-style {
     position:fixed;
     left:0;
+    height:95vh;
     width:200px;
     transition: width 0.1s;
     background-color: #E6E6E6;
 }
 
-.admin-navigation-block {
-    position: relative;
-    width: 100%;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    > a {
-          width:80%;
-          height: fit-content;
-          text-align: center;
-      }
+nav{
+    height:7vh;
 }
 
 .indicator {
@@ -58,15 +50,6 @@ body {
     background-color: transparent;
 }
 
-
-.admin-navigation-actions-block{
-    position:absolute;
-    bottom: 35px;
-    display:flex;
-    justify-content:center;
-    width: 100%;
-
-}
 
 
 

@@ -10,145 +10,135 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 
+    <style>
+        .component {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
+        #period {
+            color: #4688F1;
+            margin-left: 5px;
+        }
+
+        #date, #month, #hour, #minute {
+            margin: 5px;
+        }
+        
+        #control-panel > ul > li{
+            width: 120%;
+            padding: 10px;
+        }
+        
+        #control-panel > ul > li > div{
+            align-items: center;
+            display: flex;
+            height: 40px;
+        }
+
+    </style>
 
 </head>
 
-<style>
 
-    .component {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    #period {
-        color: #4688F1;
-        margin-left: 5px;
-    }
-
-    #date, #month, #hour, #minute {
-        margin: 5px;
-    }
-
-    .full-screen {
-        width: 100vw;
-    }
-
-    .float-right{
-        position: absolute;
-        right: 40px;
-    }
-</style>
 
 
 <body>
-    <div>
+    <header>
+        <nav class="navbar navbar-expand-sm bg-white border-bottom fixed-top">
+            <div class="container-fluid justify-content-between">
+                
+                <div class="d-flex">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="color: #4688F1;">CitiSoft</a>
 
-    </div>
-    <header class="position-sticky d-flex align-items-center" style="top:0; height:8vh;">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow col-12">
-            <div class="container-fluid">
+                    <div class="component">
+                        <div id="day"></div>
+                        <div>, </div>
+                        <div id="month"></div>
+                        <div id="date"></div>
+                    </div>
+                </div>
+                
 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="font-weight: normal; color: #4688F1;" >CitiSoft</a>
 
-                <ul class="navbar-nav flex-grow-1">
-
-                    <li class="nav-item ml-1">
-                        <div class="component">
-                            <div id="day"></div>
-                            <div>, </div>
-                            <div id="month"></div>
-                            <div id="date"></div>
-                        </div>
-                    </li>
-
-                    <li class="nav-item">
-                        <div class="component float-right">
-                            <div id="hour"></div>
-                            <div>. </div>
-                            <div id="minute"></div>
-                            <div id="period"></div>
-                        </div>
-                    </li>
-                </ul>
-
+                <div class="component">
+                    <div id="hour"></div>
+                    <div>. </div>
+                    <div id="minute"></div>
+                    <div id="period"></div>
+                </div>
 
             </div>
         </nav>
     </header>
-    <div class="container p-0 m-0 position-static" style="top:8vh;">
-        <main role="main">
-            
-
-            <div class="d-flex p-0 m-0">
-   
-        <!--Control Panel-->
-        <div class="col-2 control-panel-style">
-            <ul class="text-decoration-none list-unstyled" style="height:100%" >
-
-                <li>
-                    <div class="admin-navigation-block">
-                        <div class="indicator"></div>
-                        <a>View Logs</a>
-                    </div>
-
-                </li>
-
-                <li>
-                    <div class="admin-navigation-block">
-                        <div class="indicator indicator-off"></div>
-                        <a>Edit Entries</a>
-                    </div>
-
-                </li>
-
-                <li>
-                    <div class="admin-navigation-block">
-                        <div class="indicator indicator-off"></div>
-                        <a>Add Entries</a>
-                    </div>
-
-                </li>
-
-                <li>
-                    <div class="admin-navigation-block">
-                        <div class="indicator indicator-off"></div>
-                        <a>Edit Users</a>
-                    </div>
-
-                </li>
-
-                <li>
-                    <div class="admin-navigation-block">
-                        <div id="add-user-indicator" class="indicator indicator-off"></div>
-                        <a>Add Users</a>
-                    </div>
-
-                </li>
-
-
-                <li>
-                    <div class="admin-navigation-actions-block">
-                        <a class="btn btn-primary rounded-pill">Sign Out</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-
-            <!--Employee list View-->
-            <div class="col-10 p-2 ml-2">
-
-                @RenderBody()
-            </div>
-        </div>
-        </main>
+    <div>
+        <main role="main" class="container-fluid">
+                        <!--Control Panel-->
+                        <div class="control-panel-style pt-3 ps-2 row">
+                             <div id="control-panel" class="col-10 d-flex flex-column align-items-end justify-content-between py-3">
+                                 <ul class="text-decoration-none list-unstyled text-center">
+                                                                    
+                                     <li>
+                                         <div class="admin-navigation-block">
+                                             <div class="indicator"></div>
+                                             <a>View Logs</a>
+                                         </div>
+                                                                    
+                                     </li>
+                                                                    
+                                     <li>
+                                         <div class="admin-navigation-block">
+                                             <div class="indicator indicator-off"></div>
+                                             <a>Edit Entries</a>
+                                         </div>
+                                                                    
+                                     </li>
+                                                                    
+                                     <li>
+                                         <div class="admin-navigation-block">
+                                             <div class="indicator indicator-off"></div>
+                                             <a>Add Entries</a>
+                                         </div>
+                                                                    
+                                     </li>
+                                                                    
+                                     <li>
+                                         <div class="admin-navigation-block">
+                                             <div class="indicator indicator-off"></div>
+                                             <a>Edit Users</a>
+                                         </div>
+                                                                    
+                                     </li>
+                                                                    
+                                     <li>
+                                         <div class="admin-navigation-block">
+                                             <div id="add-user-indicator" class="indicator indicator-off"></div>
+                                             <a>Add Users</a>
+                                         </div>
+                                                                    
+                                     </li>
+                                                                    
+                                 </ul>
+                                 <div class="admin-navigation-actions-block">
+                                                                                                 <a class="btn btn-primary rounded-pill">Sign Out</a>
+                                                                                             </div>
+                            </div>
+                            <div class="col-1 d-flex align-items-center" onclick="$('.control-panel-style').css('width')==='40px'?sideBarExpand():sideBarCollapse();">
+                                <button class="bi bi-arrow-left text-primary border-0 rounded-pill"></button>
+                                <button class="bi bi-arrow-right text-primary border-0 rounded-pill"></button>
+                            </div>
+                        </div>
+        
+        
+                        <!--Employee list View-->
+                        <div id="contentBody" class="mt-5 pt-4" style="margin-left:200px">
+                            @RenderBody()
+                        </div>
+        
+                </main>
     </div>
 
-    <footer class="border-top footer position-fixed bg-white col-12 d-flex justify-content-center" style="height:5vh;bottom:0">
-        &copy; 2023 - CitiSoft Vendor Application Inventory Platform
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -178,8 +168,8 @@
         var period = now.getHours() >= 12 ? "PM" : "AM"
 
         
-        document.getElementById("hour").innerText = hour.toString().padStart(2, '0');;
-        document.getElementById("minute").innerText = minute.toString().padStart(2, '0');;
+        document.getElementById("hour").innerText = hour.toString().padStart(2, '0');
+        document.getElementById("minute").innerText = minute.toString().padStart(2, '0');
         document.getElementById("period").innerText = period;
         //console.log(hour + " " + minute + " " + period);
     }
@@ -189,121 +179,28 @@
 
 
     dateAndTime();
+    
+    $(window).on('load resize', function (){
+        let width = $(window).width();
+                                
+         width <= 992? sideBarCollapse():sideBarExpand();
+    })
+    
+    
+    let sideBarExpand = ()=>{
+                $('.control-panel-style').css('width','').removeClass('justify-content-center');
+                $('#control-panel').removeClass('d-none')
+                $('#contentBody').css('margin-left','200px');
+                $('.bi-arrow-left').removeClass('d-none')
+                $('.bi-arrow-right').addClass('d-none')
+    }
+    
+    let sideBarCollapse = () =>{
+                    $('.control-panel-style').css("width","40px").addClass('justify-content-center');
+                    $('#control-panel').addClass('d-none');
+                    $('#contentBody').css('margin-left','40px');
+                    $('.bi-arrow-left').addClass('d-none')
+                    $('.bi-arrow-right').removeClass('d-none')
+    }
+    
 </script>
-
-
-
-
-
-<script>
-
-    var companyContactContainer = document.getElementById('company-contact-container');
-
-    function AddField(button) {
-
-        //elem --> get the element that called this function
-
-        //get its parent's sibling's id. This will be the container that stores all the input fields
-        var target = ((button.parentNode).previousElementSibling.id);
-        valueContainer = document.getElementById(target);
-
-
-
-        //Create a text field component
-        var container = document.createElement('div');
-        container.classList.add("d-flex", "align-items-center", "justify-content-evenly", "mb-2");
-
-
-        var inputField = document.createElement('input');
-        inputField.classList.add("form-control-light", "full-size");
-
-        var icon = document.createElement('i');
-        icon.classList.add("bi", "bi-trash");
-
-        var removeBtn = document.createElement('span');
-        removeBtn.classList.add("btn", "btn-danger", "rounded", "col-2", "mx-2", "d-flex", "align-items-center", "justify-content-center");
-
-
-        removeBtn.appendChild(icon)
-
-
-        container.appendChild(inputField);
-        container.appendChild(removeBtn);
-
-        //removeBtn.addEventListener('click', removeThis)
-
-        removeBtn.addEventListener('click', removeThis);
-        //add it to the container
-        valueContainer.appendChild(container);
-
-        //a();
-
-    }
-
-    function a() {
-
-
-        let removeBtnList = document.getElementsByClassName('click');
-
-        for (var i = 0; i < removeBtnList.length; i++) {
-            removeBtnList[i].addEventListener('click', removeThis)
-        }
-
-
-        //console.log(removeBtnList[1]);
-    }
-
-
-    function removeThis(button) {
-
-        //console.log("The removeThis function is running");
-        //button.parentElement.remove();
-        console.log(button.target.parentNode);
-        button.target.parentNode.closest('div').remove();
-
-    }
-
-
-
-
-
-
-    function AddContactBlock() {
-
-        //Create company contact block
-        var block = document.createElement('div');
-        block.classList.add("mb-3", "d-flex", "align-top");
-
-        //Create input fields' container
-        var inputContainer = document.createElement('div');
-        inputContainer.classList.add('d-block')
-
-        //Create label
-        var label = = document.createElement('label');
-        label.classList.add("form-label", "citisoft-text-color", "col-3");
-
-
-        //Create country field
-        var countryField = = document.createElement('input');
-        countryField.classList.add("form-control-light", "full-size", "mb-3");
-
-
-        //Create city field
-        var cityField = = document.createElement('input');
-        cityField.classList.add("form-control-light", "full-size", "mb-3");
-
-        //Create contact field
-        var contactField = = document.createElement('input');
-        contactField.classList.add("form-control-light", "full-size", "mb-3");
-
-
-        inputContainer.appendChild(countryField, cityField, contactField);
-
-        block.appendChild(label);
-        block.appendChild(inputContainer);
-
-        companyContactContainer.appendChild(block);
-    }
-
-</script>
-
