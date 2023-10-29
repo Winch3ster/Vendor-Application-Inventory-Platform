@@ -4,12 +4,25 @@ namespace Vendor_Application_Inventory_Platform.Models
 {
     public class Software
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public string serviceClientType { get; set; }
+        public int SoftwareID { get; set; }
 
-        public CloudType cloud { get; set; }
+        public int CompanyID { get; set; }
+        public string SoftwareName { get; set; }
+        public string Description { get; set; }
 
+        public string FinancialServicesClientType { get; set; }
+
+        public CloudType Cloud { get; set; }
+
+        public bool DocumentAttached { get; set; }
+
+    
+        //Entity Relationships
+        public virtual ICollection<Review> Reviews { get; set; }
+        public virtual Company Company { get; set; }
+        public virtual ICollection<BusinessArea> BusinessAreas { get; set; }
+        public virtual ICollection<SoftwareModule> SoftwareModules { get; set; }
+
+        public virtual ICollection<SoftwareType> SoftwareTypes { get; set; }
     }
 }

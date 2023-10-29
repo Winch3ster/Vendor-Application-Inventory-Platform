@@ -61,7 +61,7 @@ body {
 
 .admin-navigation-actions-block{
     position:absolute;
-    bottom: 35px;
+    bottom: 10vh;
     display:flex;
     justify-content:center;
     width: 100%;

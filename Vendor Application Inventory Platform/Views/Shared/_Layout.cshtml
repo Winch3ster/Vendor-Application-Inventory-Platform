@@ -38,33 +38,29 @@
 
 
 <body>
-    <header class="position-fixed top-0">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-            <div class="container-fluid">
+    <header>
+        <nav class="navbar navbar-expand-sm bg-white border-bottom fixed-top">
+            <div class="container-fluid justify-content-between">
 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="font-weight: normal; color: #4688F1;" >CitiSoft</a>
+                <div class="d-flex">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="color: #4688F1;">CitiSoft</a>
 
-                <ul class="navbar-nav flex-grow-1">
+                    <div class="component">
+                        <div id="day"></div>
+                        <div>, </div>
+                        <div id="month"></div>
+                        <div id="date"></div>
+                    </div>
+                </div>
 
-                    <li class="nav-item ml-1">
-                        <div class="component">
-                            <div id="day"></div>
-                            <div>, </div>
-                            <div id="month"></div>
-                            <div id="date"></div>
-                        </div>
-                    </li>
 
-                    <li class="nav-item">
-                        <div class="component float-right">
-                            <div id="hour"></div>
-                            <div>. </div>
-                            <div id="minute"></div>
-                            <div id="period"></div>
-                        </div>
-                    </li>
-                </ul>
 
+                <div class="component">
+                    <div id="hour"></div>
+                    <div>. </div>
+                    <div id="minute"></div>
+                    <div id="period"></div>
+                </div>
 
             </div>
         </nav>
