@@ -1,0 +1,258 @@
+﻿@{
+    Layout = "_AdminControlPanel";
+    ViewData["title"] = "Add Entries";
+}
+
+<div class="container-fluid">
+  
+      <div class="card mt-5">
+        <div class="card-header">
+          Add Countries
+        </div>
+        <form method="POST" id="countryForm" class="d-flex flex-column">
+          <div class="card-body">
+            <div id="country-container">
+                <div class="p-1">
+                    <input type="text" class="form-control" placeholder="Country" pattern="[A-Za-z]+" title="Numbers are not allowed" required>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-2">
+              <div id="addCountryBtn" class="btn btn-primary bi bi-plus" style="width:50px" onclick="addCountry()"></div>
+            </div>
+                  
+          </div>
+          <div class="card-footer d-flex justify-content-end">
+            <div class="btn btn-info me-2" onclick="countryCancel()">Cancel</div>
+            <button class="btn btn-info">Submit</button>
+          </div>
+        </form>
+    
+    
+  </div>
+  <div id="tabs" class="row d-none mt-5">
+    <ul class="nav nav-tabs">
+      <div class="tab-pane fade show active"></div>
+    </ul>
+    <div id="tab-content" class="p-0"></div> 
+  </div>
+  <div class="row mt-3">
+    <div class="col d-flex justify-content-end">
+      <button id="submitBtn" class="btn btn-primary d-none">Submit</button>
+    </div>
+    
+  </div>
+  
+</div>
+
+@section Scripts
+{
+  <script>
+  
+  $('#countryForm').on('submit', function (e){
+    e.preventDefault();
+    let countries = $("[placeholder='Country']");
+        countries.each(function (){
+          $(this).prop('disabled',true);
+        })
+        $("#addCountryBtn").attr('onclick','alert("Press Cancel First")');
+        $(".bi-dash").attr('onclick', 'alert("Press Cancel First")');
+        $("#tabs").removeClass('d-none');
+        $('.nav-tabs').empty();
+        $('#tab-content').empty();
+        $('#submitBtn').removeClass('d-none');
+        countriesToTabs(countries);
+  })
+  
+  let addCountry = () => {
+    let countryField = `<div class="input-group p-1">
+                            <input type="text" class="form-control" placeholder="Country" pattern="[A-Za-z]+" title="Numbers are not allowed" required>
+                            <div class="input-group-append">
+                                 <span class="input-group-text btn btn-danger bi bi-dash" onclick="deleteCountry(event)"></span>
+                            </div>
+                        </div>`
+    $('#country-container').append(countryField);
+  }
+  
+  let countryCancel = () => {
+    let countries = $("[placeholder='Country']");
+    countries.each(function (){
+      $(this).prop('disabled',false);
+    })
+    $("#addCountryBtn").attr('onclick','addCountry()');
+    $(".bi-dash").attr('onclick', 'deleteCountry(event)');
+    $("#tabs").addClass('d-none');
+    $('#submitBtn').addClass('d-none');
+  }
+  
+  let deleteCountry = (e) => {
+    $(e.target).parent().parent().remove();
+  }
+  
+  let countriesToTabs = (countries) => {
+    countries.each(function (){
+        if ($(this).val().trim() !== '') {
+
+                    $('.nav-tabs').append(`
+                        <li class="nav-item">
+                            <a id="${$(this).val()}-tab" class="nav-link" aria-current="page" onclick="tabsActive(event)" href="#${$(this).val()}">${$(this).val()}</a>
+                        </li>
+                    `);
+        
+                    let cityContainer = `
+                        <div id="${$(this).val().replace(/\s/g, '-')}" class="cityContainer border border-top-0 py-4 px-3"></div>
+                    `;
+                    $('#tab-content').append(cityContainer);
+                    
+                   accordionForCities(this);
+                }
+    })
+    tabsActive();
+  }
+  
+  let accordionForCities = (element) => {
+
+    //Check whether its the first default accordion or user triggered add accordion button
+    let country = element?.target?$(element.target).closest('.cityContainer').attr('id'):$(element).val().replace(/\s/g, '-');
+    //Get not used city number for ID to avoid duplicate ID before appending accordion
+    let cityNumTaken=[];
+    $('#'+country+' .accordion-collapse').each(function (){
+      //Always get the last element of split that contains the city number
+      let split = this.id.split('-')
+      let cityTaken = split[split.length-1]
+      cityNumTaken.push(parseInt(cityTaken.match(/\d+/g)))
+      
+    })
+    
+    //Find the ideal city number for accordion ID
+    let cityNumber =1;
+    while(cityNumTaken.includes(cityNumber)){
+      cityNumber++;
+    }
+    let addCitiesBtn = `<div class="d-flex justify-content-center mt-2">
+                            <button class="btn btn-primary bi bi-plus w-25" onclick="accordionForCities(event)"></button>
+                        </div>`;
+    let accordion = `<div class="accordion">
+                             <div class="accordion-item">
+                                 <h2 class="accordion-header">
+                                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${country}-city${cityNumber}" aria-expanded="false" aria-controls="${country}-city${cityNumber}">
+                                     City #${cityNumber}
+                                   </button>
+                                 </h2>
+                                 <div id="${country}-city${cityNumber}" class="accordion-collapse collapse" aria-labelledby="${country}-city${cityNumber}">
+                                   <div class="accordion-body">
+                                     <form method="POST">
+                                                     <div>
+                                                       <input type="checkbox" class="address">
+                                                       <label>Has Address</label>
+                                                       <input class="contact ms-2" type="checkbox">
+                                                       <label>Has Contact</label>
+                                                     </div>
+                                                     <div class="p-2 mt-2">
+                                                       <input type="hidden" class="form-control" name="country" value="${country}">
+                                                       <h5 class="mt-2">City</h5>
+                                                       <input type="text" class="form-control" placeholder="City">
+                                                       <div class="addressField mt-2 d-none">
+                                                         <h5>Address</h5>
+                                                         <input type="text" class="form-control mt-1" placeholder="Address 1">
+                                                         <input type="text" class="form-control mt-1" placeholder="Address 2">
+                                                         <input type="text" class="form-control mt-1" placeholder="Postcode">
+                                                       </div>
+                                                       <div class="contactField mt-2 d-none">
+                                                         <h5>Contact</h5>
+                                                         <input type="number" class="form-control mt-1" placeholder="Contact Number">
+                                                       </div>
+                                                     </div>
+                                                                                              
+                                                   </form>
+                                   </div>
+                                 </div>
+                               </div>
+                           </div>`;
+    //If the accordion is triggered by the user, remove the plus button and append it later after the appended the accordion
+    //Also add delete city button for second city and beyond
+    if (element.target){
+      $(element.target).parent().remove()
+      accordion = $(accordion).find('.accordion-body').append(`<div class="d-flex justify-content-end">
+                                                                                           <button class="btn btn-danger" onclick="deleteCity(event)">Delete City</button>
+                                                                                       </div>`).end();
+    }
+    $('.cityContainer#'+country).append(accordion).append(addCitiesBtn);
+    
+  }
+  
+  let tabsActive = (e) => {
+    
+    let tabs = $('.nav-link');
+    
+    $('.cityContainer').addClass('d-none')
+    if ($('.nav-link.active').length>0){
+      tabs.removeClass('active')
+      $(e.target).addClass('active');
+    }
+    else{
+      tabs.first().addClass('active');
+    }
+    
+    tabs.each(function (){
+                      let id = $(this).attr('id').split('-')[0].replace(/\s/g, '-')
+                      if ($(this).hasClass('active')){
+                        $('#'+id).removeClass('d-none')
+                      }
+                    })
+    
+      
+    
+    
+  }
+  
+  let deleteCity = (e) => {
+    let removeAccordionID = $(e.target).closest('.accordion-collapse').attr('id')
+    let removeAccordionCityNumber = parseInt(removeAccordionID.match(/\d+/g))
+    let country = $(e.target).closest('.cityContainer').attr('id')
+    
+    //Remove the selected accordion
+    let accordion = $(e.target).closest('div.accordion')
+    accordion.remove();
+    
+    //Rearrange the accordion
+    $('#'+country+' .accordion .accordion-collapse').each(function (){
+          let currentAccordionCityNumber = parseInt(this.id.match(/\d+/g));
+          if (currentAccordionCityNumber > removeAccordionCityNumber){
+            let button = $(this).siblings('.accordion-header').children('button');
+            accordion = $('#'+this.id);
+            let arrangedID = currentAccordionCityNumber-1;
+            button.attr('aria-controls', country+'-'+'city'+arrangedID)
+            button.attr('data-bs-target', '#' + country+'-' + 'city' + arrangedID)
+            button.text('City #' + arrangedID)
+            accordion.attr('id', country+'-'+'city'+arrangedID)
+            accordion.attr('aria-labelledby', country+'-'+'city'+arrangedID)
+          }
+     })
+  }
+  
+  $('#tab-content').on('change','input[type="checkbox"]', function(e){
+    
+        let className = $(e.target).attr('class').split(' ')[0];
+        let target = $(e.target).parent().siblings().children('.'+className+'Field');
+        
+        if ($(e.target).is(':checked')){
+          target.removeClass('d-none');
+        }
+        else{
+          target.addClass('d-none')
+          target.find('input').val('');
+        }
+  })
+          
+    let placeholder = document.getElementById("add-entries");
+    
+        let indicatorList = document.getElementsByClassName("indicator");
+    
+        for (let i = 0; i < indicatorList.length; i++){
+            indicatorList[i].classList.add("indicator-off");
+        }
+    
+        placeholder.classList.remove("indicator-off");
+    </script>
+}

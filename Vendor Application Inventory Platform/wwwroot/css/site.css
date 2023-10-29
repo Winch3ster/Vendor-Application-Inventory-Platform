@@ -111,3 +111,11 @@ textarea:focus{
     outline: none;
 }
 
+/*      Admin page CSS       */
+.cityContainer > .accordion{
+    padding-top:10px;
+}
+
+#tabs{
+    margin: 0 .008rem;
+}
