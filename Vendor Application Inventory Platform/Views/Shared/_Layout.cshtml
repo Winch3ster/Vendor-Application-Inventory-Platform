@@ -6,73 +6,62 @@
     <title>@ViewData["Title"] - Vendor_Application_Inventory_Platform</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 
 <style>
 
     .component {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+    
+            #period {
+                color: #4688F1;
+                margin-left: 5px;
+            }
+    
+            #date, #month, #hour, #minute {
+                margin: 5px;
+            }
 
-    #period {
-        color: #4688F1;
-        margin-left: 5px;
-    }
-
-    #date, #month, #hour, #minute {
-        margin: 5px;
-    }
-
-    .full-screen {
-        width: 100vw;
-    }
-
-    .float-right{
-        position: absolute;
-        right: 40px;
-    }
 </style>
 
 
 <body>
     <header class="position-fixed top-0">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-            <div class="container-fluid">
-
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="font-weight: normal; color: #4688F1;" >CitiSoft</a>
-
-                <ul class="navbar-nav flex-grow-1">
-
-                    <li class="nav-item ml-1">
-                        <div class="component">
-                            <div id="day"></div>
-                            <div>, </div>
-                            <div id="month"></div>
-                            <div id="date"></div>
+        <nav class="navbar navbar-expand-sm bg-white border-bottom fixed-top">
+                    <div class="container-fluid justify-content-between">
+                        
+                        <div class="d-flex">
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="color: #4688F1;">CitiSoft</a>
+        
+                            <div class="component">
+                                <div id="day"></div>
+                                <div>, </div>
+                                <div id="month"></div>
+                                <div id="date"></div>
+                            </div>
                         </div>
-                    </li>
-
-                    <li class="nav-item">
-                        <div class="component float-right">
+                        
+        
+        
+                        <div class="component">
                             <div id="hour"></div>
                             <div>. </div>
                             <div id="minute"></div>
                             <div id="period"></div>
+                            <a class="text-decoration-none ms-3" asp-area="" asp-controller="Employee" asp-action="LogOut">Log Out</a>
                         </div>
-                    </li>
-                </ul>
-
-
-            </div>
-        </nav>
+        
+                    </div>
+                </nav>
     </header>
-    <div class="position-relative">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div id="contentBody" class="mt-5 pt-4">
+        @RenderBody()
     </div>
+
 
     <footer class="border-top footer text-muted">
         <div class="container">
@@ -108,10 +97,10 @@
         var period = now.getHours() >= 12 ? "PM" : "AM"
 
         
-        document.getElementById("hour").innerText = hour.toString().padStart(2, '0');;
-        document.getElementById("minute").innerText = minute.toString().padStart(2, '0');;
+        document.getElementById("hour").innerText = hour.toString().padStart(2, '0');
+        document.getElementById("minute").innerText = minute.toString().padStart(2, '0');
         document.getElementById("period").innerText = period;
-        console.log(hour + " " + minute + " " + period);
+        //console.log(hour + " " + minute + " " + period);
     }
 
     setInterval(updateClock, 1000); // Update the clock every second
@@ -119,4 +108,28 @@
 
 
     dateAndTime();
+    
+    $(window).on('load resize', function (){
+        let width = $(window).width();
+                                
+         width <= 992? sideBarCollapse():sideBarExpand();
+    })
+    
+    
+    let sideBarExpand = ()=>{
+                $('.control-panel-style').css('width','').removeClass('justify-content-center');
+                $('#control-panel').removeClass('d-none')
+                $('#contentBody').css('margin-left','200px');
+                $('.bi-arrow-left').removeClass('d-none')
+                $('.bi-arrow-right').addClass('d-none')
+    }
+    
+    let sideBarCollapse = () =>{
+                    $('.control-panel-style').css("width","40px").addClass('justify-content-center');
+                    $('#control-panel').addClass('d-none');
+                    $('#contentBody').css('margin-left','40px');
+                    $('.bi-arrow-left').addClass('d-none')
+                    $('.bi-arrow-right').removeClass('d-none')
+    }
+    
 </script>
