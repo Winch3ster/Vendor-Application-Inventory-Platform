@@ -171,151 +171,207 @@
         <div>
             <h3>Register Company Contacts</h3>
 
-            <div id="company-contact-container">
+            <div class="mb-3 d-flex align-top">
+                <label class="form-label citisoft-text-color col-3">Country</label>
 
+                <div class="multi-value-container">
+                    <div class="multi-value-input-container d-block" id="countryContainer">
 
-                <div class="mb-3 d-flex align-top">
-                    <label class="form-label citisoft-text-color col-3">Company contacts</label>
+                        <div class="d-flex align-items-center justify-content-evenly mb-2">
+                            <input class="form-control-light full-size" / value="">
+                            <span class="btn btn-danger rounded col-2  mx-2 d-flex align-items-center justify-content-center"><i class="bi bi-trash"></i></span>
+                        </div>
 
-                    <div class="d-block">
-                        <input class="form-control-light full-size mb-3" placeholder="Country Name. Eg. Poland" />
-                        <input class="form-control-light full-size mb-3" placeholder="City Name. Eg. Warsaw" />
-                        <input class="form-control-light full-size mb-3" placeholder="Contacts. Eg. +61 2 8317 6698" />
-                    </div>        
+                    </div>
+                    <div class="d-flex justify-content-center" id="test">
+                        <div class="btn btn-primary rounded col-12" onclick="AddField(this)"><i class="bi bi-plus"></i></div>
+                    </div>
                 </div>
-
-
-
-
             </div>
 
-            <!-- Button to add new field -->
-            <div class="btn btn-primary rounded col-2" onclick="AddContactBlock()"><i class="bi bi-plus"></i></div>
+
+
+            <!-- Cities field -->
+            <div class="mb-3 d-flex align-top">
+                <label class="form-label citisoft-text-color col-3">Cities</label>
+
+                <div class="multi-value-container">
+                    <div class="multi-value-input-container d-block" id="countryContainer">
+                        <div class="d-flex align-items-center justify-content-evenly mb-2">
+
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" onclick="GetCountries()">
+                                    Country
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </div>
+
+
+
+
+                            <input class="form-control-light full-size mx-1" />
+                            <span class="btn btn-danger rounded col-2 d-flex align-items-center justify-content-center"><i class="bi bi-trash"></i></span>
+                        </div>
+
+                    </div>
+                    <div class="d-flex justify-content-center" id="test">
+                        <div class="btn btn-primary rounded col-12" onclick="AddField(this)"><i class="bi bi-plus"></i></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
 
         </div>
     </form>
-
-
-
-
-
-
 
 
 </div>
 
 
 
-<script>
+@section Scripts{
+    <script>
 
-    var companyContactContainer = document.getElementById('company-contact-container');
-   
-    function AddField(button) {
+        var companyContactContainer = document.getElementById('company-contact-container');
 
-        //elem --> get the element that called this function 
+        var countryDropDown = document.getElementById('country-drop-down');
 
-        //get its parent's sibling's id. This will be the container that stores all the input fields
-        var target = ((button.parentNode).previousElementSibling.id);
-        valueContainer = document.getElementById(target);
+        function AddField(button) {
 
+            //elem --> get the element that called this function 
 
-
-        //Create a text field component
-        var container = document.createElement('div');
-        container.classList.add("d-flex", "align-items-center", "justify-content-evenly", "mb-2");
+            //get its parent's sibling's id. This will be the container that stores all the input fields
+            var target = ((button.parentNode).previousElementSibling.id);
+            valueContainer = document.getElementById(target);
 
 
-        var inputField = document.createElement('input');
-        inputField.classList.add("form-control-light", "full-size");
 
-        var icon = document.createElement('i');
-        icon.classList.add("bi", "bi-trash");
+            //Create a text field component
+            var container = document.createElement('div');
+            container.classList.add("d-flex", "align-items-center", "justify-content-evenly", "mb-2");
 
-        var removeBtn = document.createElement('span');
-        removeBtn.classList.add("btn", "btn-danger", "rounded", "col-2", "mx-2", "d-flex", "align-items-center", "justify-content-center");
+
+            var inputField = document.createElement('input');
+            inputField.classList.add("form-control-light", "full-size");
+
+            var icon = document.createElement('i');
+            icon.classList.add("bi", "bi-trash");
+
+
+            var removeBtn = document.createElement('span');
+            removeBtn.classList.add("btn", "btn-danger", "rounded", "col-2", "mx-2", "d-flex", "align-items-center", "justify-content-center");
              
 
-        removeBtn.appendChild(icon)
+            removeBtn.appendChild(icon)
 
 
-        container.appendChild(inputField);
-        container.appendChild(removeBtn);
+            container.appendChild(inputField);
+            container.appendChild(removeBtn);
 
-        //removeBtn.addEventListener('click', removeThis)
+            //removeBtn.addEventListener('click', removeThis)
 
-        removeBtn.addEventListener('click', removeThis);
-        //add it to the container 
-        valueContainer.appendChild(container);
+            removeBtn.addEventListener('click', removeThis);
+            //add it to the container 
+            valueContainer.appendChild(container);
 
-        //a();
+            //a();
 
-    }
+        }
 
-    function a(){
+        function a(){
 
         
-        let removeBtnList = document.getElementsByClassName('click');
+            let removeBtnList = document.getElementsByClassName('click');
 
-        for (var i = 0; i < removeBtnList.length; i++){
-            removeBtnList[i].addEventListener('click', removeThis)
+            for (var i = 0; i < removeBtnList.length; i++){
+                removeBtnList[i].addEventListener('click', removeThis)
+            }
+
+
+            //console.log(removeBtnList[1]);
         }
 
 
-        //console.log(removeBtnList[1]);
-    }
+        function removeThis(button) {
 
-
-    function removeThis(button) {
-
-        //console.log("The removeThis function is running");
-        //button.parentElement.remove();
-        console.log(button.target.parentNode);
-        button.target.parentNode.closest('div').remove();
+            //console.log("The removeThis function is running");
+            //button.parentElement.remove();
+            console.log(button.target.parentNode);
+            button.target.parentNode.closest('div').remove();
         
-    }
+        }
 
 
 
 
 
 
-    function AddContactBlock(){
+        function AddContactBlock(){
 
-        //Create company contact block
-        var block = document.createElement('div');
-        block.classList.add("mb-3", "d-flex", "align-top");
+            //Create company contact block
+            var block = document.createElement('div');
+            block.classList.add("mb-3", "d-flex", "align-top");
 
-        //Create input fields' container
-        var inputContainer = document.createElement('div');
-        inputContainer.classList.add('d-block')
+            //Create input fields' container
+            var inputContainer = document.createElement('div');
+            inputContainer.classList.add('d-block')
 
-        //Create label
-        var label = = document.createElement('label');
-        label.classList.add("form-label", "citisoft-text-color", "col-3");
+            //Create label
+            var label =document.createElement('label');
+            label.classList.add("form-label", "citisoft-text-color", "col-3");
+            label.innerHTML = "Company Contact";
+
+            //Create country field
+            var countryField =document.createElement('input');
+            countryField.classList.add("form-control-light", "full-size", "mb-3");
+            countryField.placeholder = "Country Name. Eg. Poland";
+
+            //Create city field
+            var cityField =document.createElement('input');
+            cityField.classList.add("form-control-light", "full-size", "mb-3");
+            cityField.placeholder = "City Name. Eg. Warsaw";
+
+            //Create contact field 
+            var contactField = document.createElement('input');
+            contactField.classList.add("form-control-light", "full-size", "mb-3");
+            contactField.placeholder = "Contacts. Eg. +61 2 8317 6698";
+
+            inputContainer.appendChild(countryField);
+            inputContainer.appendChild(cityField);
+            inputContainer.appendChild(contactField);
+
+            block.appendChild(label);
+            block.appendChild(inputContainer);
+
+            companyContactContainer.appendChild(block);
+        }
 
 
-        //Create country field
-        var countryField = = document.createElement('input');
-        countryField.classList.add("form-control-light", "full-size", "mb-3");
 
 
-        //Create city field
-        var cityField = = document.createElement('input');
-        cityField.classList.add("form-control-light", "full-size", "mb-3");
+        function GetCountries(){
+            var countryContainer = document.getElementById('countryContainer');
 
-        //Create contact field 
-        var contactField = = document.createElement('input');
-        contactField.classList.add("form-control-light", "full-size", "mb-3");
+            let countryList = [];
+
+            let country = countryContainer.children;
 
 
-        inputContainer.appendChild(countryField, cityField, contactField);
+        }
 
-        block.appendChild(label);
-        block.appendChild(inputContainer);
 
-        companyContactContainer.appendChild(block);
-    }
 
-</script>
+
+    </script>
+}
 
 

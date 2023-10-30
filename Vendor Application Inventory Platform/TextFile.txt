@@ -3,3 +3,37 @@
 
 --> The admin contol panel height
 	-> Maybe make the NON-LAYOUT scrollable
+
+
+
+
+     
+backup code Software/Create
+
+<!--
+
+
+ <div id="company-contact-container">
+
+
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Company contacts</label>
+
+                    <div class="d-block">
+                        <input class="form-control-light full-size mb-3" placeholder="Country Name. Eg. Poland" />
+                        <input class="form-control-light full-size mb-3" placeholder="City Name. Eg. Warsaw" />
+                        <input class="form-control-light full-size mb-3" placeholder="Contacts. Eg. +61 2 8317 6698" />
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+            <!-- Button to add new field
+    <div class="btn btn-primary rounded col-2" onclick="AddContactBlock()"><i class="bi bi-plus"></i></div>
+
+
+
+-->
