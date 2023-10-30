@@ -11,7 +11,6 @@
 
         public DateTime EstablishedDate { get; set; }
        
-        public int ContactNumber { get; set; }
 
         public int NumberOfEmployee { get; set; }
 

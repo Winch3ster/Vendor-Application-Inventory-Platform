@@ -5,7 +5,7 @@ namespace Vendor_Application_Inventory_Platform.Models
     public class Review
     {
 
-        public int ID { get; set; }
+        public int ReviewID { get; set; }
 
         public int EmployeeID { get; set; }
 
