@@ -75,7 +75,7 @@
     <div>
         <main role="main" class="container-fluid">
                         <!--Control Panel-->
-                        <div class="control-panel-style pt-3 ps-2 row">
+                        <div class="control-panel-style pt-3 ps-2 row" style="z-index: 999">
                              <div id="control-panel" class="col-10 d-flex flex-column align-items-end justify-content-between py-3">
                                  <ul class="text-decoration-none list-unstyled text-center">
                                                                     
@@ -182,18 +182,21 @@
     
     $(window).on('load resize', function (){
         let width = $(window).width();
-                                
-         width <= 992? sideBarCollapse():sideBarExpand();
+         if ($('.control-panel-style').first().css('width')!=='40px'){
+              width <= 992? sideBarCollapse():sideBarExpand();
+         }                       
+        
     })
     
     
     let sideBarExpand = ()=>{
-                $('.control-panel-style').css('width','').removeClass('justify-content-center');
-                $('#control-panel').removeClass('d-none')
-                $('#contentBody').css('margin-left','200px');
-                $('.bi-arrow-left').removeClass('d-none')
-                $('.bi-arrow-right').addClass('d-none')
-    }
+            let contentBody = $('#contentBody');
+            $('.control-panel-style').css('width','').removeClass('justify-content-center');
+            $('#control-panel').removeClass('d-none')
+            $('.bi-arrow-left').removeClass('d-none')
+            $('.bi-arrow-right').addClass('d-none')
+            $(window).width() <= 992? contentBody.css('margin-left','40px'):contentBody.css('margin-left','200px')
+        }
     
     let sideBarCollapse = () =>{
                     $('.control-panel-style').css("width","40px").addClass('justify-content-center');
