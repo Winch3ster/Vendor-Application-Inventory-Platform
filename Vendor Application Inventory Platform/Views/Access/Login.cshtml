@@ -1,0 +1,30 @@
+﻿@model Vendor_Application_Inventory_Platform.Models.VMLogin
+
+@{
+    Layout = "_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Login</title>
+</head>
+<body>
+<form asp-controller="Access" asp-action="Login" method="POST" class="d-flex flex-column">
+    <h1>Login</h1>
+    <input type="email" class="form-control" placeholder="Email" asp-for="email">
+    <input type="password" class="form-control" placeholder="Password" asp-for="password">
+    <label>
+        <input type="checkbox" class="form-control" asp-for="keepLoggedIn">
+        Remember Me
+    </label>
+    <button type="submit">Login</button>
+    @if (ViewData["ValidateMessage"] != null)
+    {
+        <div>@ViewData["ValidateMessage"]</div>
+    }
+</form>
+</body>
+</html>

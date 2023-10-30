@@ -6,7 +6,6 @@
     <title>@ViewData["Title"] - Vendor_Application_Inventory_Platform</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Vendor_Application_Inventory_Platform.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 
@@ -56,16 +55,15 @@
                     <div>. </div>
                     <div id="minute"></div>
                     <div id="period"></div>
+                    <a class="text-decoration-none ms-3" asp-area="" asp-controller="Employee" asp-action="LogOut">Log Out</a>
                 </div>
 
             </div>
         </nav>
     </header>
-    <div>
         <main role="main" class="container-fluid">
-            <div>
                 <!--Control Panel-->
-                <div class="control-panel-style pt-3 ps-2 vh-100 row">
+                <div class="control-panel-style pt-3 ps-2 row">
                     
                     <div id="control-panel" class="col-10 d-flex flex-column align-items-end">
                         <div class="fs-4 mb-3 ms-4 mt-2">Criteria Selection</div>
@@ -88,10 +86,8 @@
                 <div id="contentBody" class="mt-5 pt-4" style="margin-left:200px">
                     @RenderBody()
                 </div>
-            </div>
 
         </main>
-    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -50,16 +50,17 @@
     </form>
 </div>
 
-
-<script>
+@section Scripts{
+    <script>
+        
+        let placeholder = document.getElementById("add-user-indicator");
     
-    var placeholder = document.getElementById("add-user-indicator");
-
-    var indicatorList = document.getElementsByClassName("indicator");
-
-    for (let i = 0; i < indicatorList.length; i++){
-        indicatorList[i].classList.add("indicator-off");
-    }
-
-    placeholder.classList.remove("indicator-off");
-</script>
+        let indicatorList = document.getElementsByClassName("indicator");
+    
+        for (let i = 0; i < indicatorList.length; i++){
+            indicatorList[i].classList.add("indicator-off");
+        }
+    
+        placeholder.classList.remove("indicator-off");
+    </script>
+}
