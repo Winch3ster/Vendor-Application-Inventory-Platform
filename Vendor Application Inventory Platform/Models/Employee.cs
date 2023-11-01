@@ -1,4 +1,6 @@
-﻿namespace Vendor_Application_Inventory_Platform.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Vendor_Application_Inventory_Platform.Models
 {
     public class Employee
     {
@@ -8,10 +10,12 @@
 
         public string LastName { get; set; }
 
+
         public string Email { get; set; }
 
         public string Password { get; set; }
 
+       
         public bool IsAdmin { get; set; }
 
 

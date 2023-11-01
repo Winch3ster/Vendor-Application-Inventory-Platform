@@ -1,6 +1,7 @@
 ﻿using Vendor_Application_Inventory_Platform.Models;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 {
@@ -32,7 +33,27 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            //remove naming convenion so table names will be singular
+            //Many to many relationship between software and business area
+            modelBuilder.Entity<Software>()
+                .HasMany(software => software.BusinessAreas)
+                .WithMany(businessArea => businessArea.Softwares);
+
+            //Many to many relationship between software and modules
+            modelBuilder.Entity<Software>()
+                .HasMany(software => software.SoftwareModules)
+                .WithMany(module => module.Softwares);
+
+            //Many to many relationship between software and software type
+            modelBuilder.Entity<Software>()
+                .HasMany(software => software.SoftwareTypes)
+                .WithMany(softwareType => softwareType.Softwares);
+
+            //Many to many relationship between company and country
+            modelBuilder.Entity<Company>()
+                .HasMany(company => company.Countries)
+                .WithMany(country => country.Companies);
+
+            base.OnModelCreating(modelBuilder);
 
         }
     }

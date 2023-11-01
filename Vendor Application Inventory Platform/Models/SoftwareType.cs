@@ -1,9 +1,16 @@
-﻿namespace Vendor_Application_Inventory_Platform.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+
+namespace Vendor_Application_Inventory_Platform.Models
 {
     public class SoftwareType
     {
         public int SoftwareTypeID { get; set; }
-        public int SoftwareID { get; set; }
+
+        [Required]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$",
+         ErrorMessage = "Characters are not allowed.")]
+        [DisplayName("Type")]
         public string Type { get; set; }
 
 

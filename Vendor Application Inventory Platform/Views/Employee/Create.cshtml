@@ -1,0 +1,66 @@
+﻿@model Employee
+
+@{
+    ViewData["title"] = "Register employee";
+    Layout = "_AdminControlPanel";
+}
+
+<h3 class="mx-5">
+    Register an Employee to this system
+</h3>
+
+
+<div class="col-9 m-md-5">
+    <form asp-action="Create">
+        <div class="mb-3">
+            <label class="form-label">Employee ID</label>
+            <input asp-for="EmployeeID" class="form-control" placeholder="CS0284192" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Employee First Name</label>
+            <input asp-for="FirstName" class="form-control" placeholder="John" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Employee Last Name</label>
+            <input asp-for="LastName" class="form-control" placeholder="Wick" />
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Employee Email</label>
+            <input asp-for="Email" class="form-control" placeholder="Enter email" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input asp-for="Password" class="form-control" placeholder="Password" />
+            <small id="emailHelp" class="form-text text-muted">Register a password. This password is needed to login to the system!</small>
+        </div>
+
+
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label asp-for="IsAdmin" class="form-check-label">Is an Admin</label>
+        </div>
+
+
+        <button type="submit" value="Create" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+@section Scripts{
+    <script>
+
+        let placeholder = document.getElementById("add-user-indicator");
+
+        let indicatorList = document.getElementsByClassName("indicator");
+
+        for (let i = 0; i < indicatorList.length; i++) {
+            indicatorList[i].classList.add("indicator-off");
+        }
+
+        placeholder.classList.remove("indicator-off");
+    </script>
+}
