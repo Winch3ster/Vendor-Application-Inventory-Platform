@@ -3,6 +3,7 @@ using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Vendor_Application_Inventory_Platform.Data.Services;
+using Vendor_Application_Inventory_Platform.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,10 +21,6 @@ builder.Services.AddControllersWithViews();
 
 //Add services
 builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
-
-
-
-
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
@@ -44,7 +41,7 @@ if (!app.Environment.IsDevelopment())
 
 
 
-DatabaseSeeder.Seed(app);
+//DatabaseSeeder.Seed(app);
 
 
 app.UseHttpsRedirection();

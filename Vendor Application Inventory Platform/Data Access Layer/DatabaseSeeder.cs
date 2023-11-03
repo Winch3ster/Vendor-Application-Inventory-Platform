@@ -15,41 +15,32 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //context is like an instance of the database
                 context.Database.EnsureCreated();
 
-                
-
-
                 //Check if employee table is empty
-                
-                    //if the table is empty, add employee data
-
-                    context.Employees.AddRange(new List<Employee>()
+                //if the table is empty, add employee data
+                if(context.Employees.Any())
                 {
-                    new Employee() {
-                      
-                        FirstName="John",
-                        LastName="William",
-                        Email = "John@example.com",
-                        Password = "123",
-                        IsAdmin=true,
-                    },
-                    new Employee() {
-                  
-                        FirstName = "Henrich",
-                        LastName = "Eddinburg",
-                        Email = "Henrich@example.com",
-                        Password = "Henrich123",
-                        IsAdmin = false,
-                    }
-                });
+                    context.Employees.AddRange(new List<Employee>()
+                    {
+                        new Employee() {
+
+                            FirstName="John",
+                            LastName="William",
+                            Email = "John@example.com",
+                            Password = "123",
+                            IsAdmin=true,
+                        },
+                        new Employee() {
+
+                            FirstName = "Henrich",
+                            LastName = "Eddinburg",
+                            Email = "Henrich@example.com",
+                            Password = "Henrich123",
+                            IsAdmin = false,
+                        }
+                    });
                     context.SaveChanges();
-
-
-                
-               
-
-
+                }
             }
         }
-
     }
 }
