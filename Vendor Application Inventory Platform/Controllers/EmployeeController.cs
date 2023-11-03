@@ -9,6 +9,7 @@ using Vendor_Application_Inventory_Platform.Data.Services;
 namespace Vendor_Application_Inventory_Platform.Controllers
 {
 
+    [Route("[controller]/[action]")]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeServices _service; //Inject the service of actors in here
@@ -17,7 +18,9 @@ namespace Vendor_Application_Inventory_Platform.Controllers
         {
             _service = service;
         }
-
+        
+        [Route("~/Employee")]
+        [Route("~/Employee/Index")]
         public IActionResult Index()
         {
             return View();

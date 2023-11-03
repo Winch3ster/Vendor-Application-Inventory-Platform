@@ -1,53 +1,84 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data.Entity;
+using Microsoft.AspNetCore.Mvc;
 
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Controllers;
 
+[Route("[controller]/[action]")]
 public class AccessController : Controller
 {
-    // GET
+    private readonly AppDbContext _db;
+    public AccessController(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    [Route("~/")]
+    [Route("~/Access/Login")]
     public IActionResult Login()
     {
         ClaimsPrincipal claimUser = HttpContext.User;
-        if (claimUser.Identity.IsAuthenticated)
-            return RedirectToAction("Index", "Employee");
+        if (claimUser.Identity!.IsAuthenticated)
+        {
+            Claim? isAdminClaim = claimUser.Claims.FirstOrDefault(c => c is { Type: "isAdmin", Value: "true" });
+            
+            if (isAdminClaim != null)
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Employee");
+            }
+        }
+
         return View();
     }
     
     [HttpPost]
     public async Task<IActionResult> Login(VMLogin modelLogin)
     {
-        if (modelLogin is { email: "user@example.com", password: "123" })
+        var user =  _db.Employees.FirstOrDefault(e => e.Email == modelLogin.email);
+        if (user!=null)
         {
-            List<Claim> claims = new List<Claim>()
+            if (BCrypt.Net.BCrypt.Verify(modelLogin.password, user.Password))
             {
-                new Claim(ClaimTypes.NameIdentifier, modelLogin.email),
-                new Claim("OtherProperties", "Example Role")
-            };
-
-            ClaimsIdentity claimsIdentity =
-                new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            AuthenticationProperties properties = new AuthenticationProperties()
-            {
-                AllowRefresh = true,
-                IsPersistent = modelLogin.keepLoggedIn
-            };
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity), properties);
-            return RedirectToAction("Index", "Employee");
+                List<Claim> claims = new List<Claim>()
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, modelLogin.email),
+                            new Claim("isAdmin", user.IsAdmin ? "true" : "false")
+                        };
+                        
+                        ClaimsIdentity claimsIdentity =
+                            new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        
+                        AuthenticationProperties properties = new AuthenticationProperties()
+                        {
+                            AllowRefresh = true,
+                            IsPersistent = modelLogin.keepLoggedIn
+                        };
+                        
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(claimsIdentity), properties);
+                        return RedirectToAction("Index", "Employee");
+            }
         }
+        
 
 
 
         ViewData["ValidateMessage"] = "User not found";
         return View();
     }
+    
     
     
 }

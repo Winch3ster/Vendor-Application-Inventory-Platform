@@ -58,7 +58,7 @@
                     </div>
                 </nav>
     </header>
-    <div id="contentBody" class="mt-5 pt-4">
+    <div id="contentBody" class="container mt-5 pt-4">
         @RenderBody()
     </div>
 
@@ -108,28 +108,5 @@
 
 
     dateAndTime();
-    
-    $(window).on('load resize', function (){
-        let width = $(window).width();
-                                
-         width <= 992? sideBarCollapse():sideBarExpand();
-    })
-    
-    
-    let sideBarExpand = ()=>{
-                $('.control-panel-style').css('width','').removeClass('justify-content-center');
-                $('#control-panel').removeClass('d-none')
-                $('#contentBody').css('margin-left','200px');
-                $('.bi-arrow-left').removeClass('d-none')
-                $('.bi-arrow-right').addClass('d-none')
-    }
-    
-    let sideBarCollapse = () =>{
-                    $('.control-panel-style').css("width","40px").addClass('justify-content-center');
-                    $('#control-panel').addClass('d-none');
-                    $('#contentBody').css('margin-left','40px');
-                    $('.bi-arrow-left').addClass('d-none')
-                    $('.bi-arrow-right').removeClass('d-none')
-    }
     
 </script>

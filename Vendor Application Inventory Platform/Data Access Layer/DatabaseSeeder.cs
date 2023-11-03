@@ -1,4 +1,7 @@
-﻿using Vendor_Application_Inventory_Platform.Models;
+﻿using System.Security.Cryptography;
+using System.Text;
+using Vendor_Application_Inventory_Platform.Models;
+using BCrypt.Net;
 
 namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 {
@@ -15,8 +18,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //context is like an instance of the database
                 context.Database.EnsureCreated();
 
-                
-
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword("abc123");
 
                 //Check if employee table is empty
                 
@@ -29,7 +31,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                         FirstName="John",
                         LastName="William",
                         Email = "John@example.com",
-                        Password = "123",
+                        Password = hashedPassword,
                         IsAdmin=true,
                     },
                     new Employee() {
@@ -37,7 +39,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                         FirstName = "Henrich",
                         LastName = "Eddinburg",
                         Email = "Henrich@example.com",
-                        Password = "Henrich123",
+                        Password = hashedPassword,
                         IsAdmin = false,
                     }
                 });

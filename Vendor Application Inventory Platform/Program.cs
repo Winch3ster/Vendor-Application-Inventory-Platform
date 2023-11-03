@@ -15,15 +15,13 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
+builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 //Add services
 builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
-
-
-
-
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
@@ -32,6 +30,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("isAdmin", "true");
+    });
+});
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
@@ -43,10 +49,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 
-
-DatabaseSeeder.Seed(app);
-
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -56,9 +58,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Access}/{action=Login}/{id?}");
+app.UseMvc();
 
 app.Run();
 
