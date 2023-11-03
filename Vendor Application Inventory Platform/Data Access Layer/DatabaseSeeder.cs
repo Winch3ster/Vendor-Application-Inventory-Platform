@@ -7,7 +7,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 {
     public class DatabaseSeeder
     {
-  
+
         public static void Seed(IApplicationBuilder applicationBuilder)
         {
             using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
@@ -21,37 +21,42 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 var hashedPassword = BCrypt.Net.BCrypt.HashPassword("abc123");
 
                 //Check if employee table is empty
-                
-                    //if the table is empty, add employee data
 
-                    context.Employees.AddRange(new List<Employee>()
+                //if the table is empty, add employee data
+
+                var employeesToAdd = new List<Employee>();
+
+                if (!context.Employees.Any())
                 {
-                    new Employee() {
-                      
-                        FirstName="John",
-                        LastName="William",
-                        Email = "John@example.com",
-                        Password = hashedPassword,
-                        IsAdmin=true,
-                    },
-                    new Employee() {
-                  
-                        FirstName = "Henrich",
-                        LastName = "Eddinburg",
-                        Email = "Henrich@example.com",
-                        Password = hashedPassword,
-                        IsAdmin = false,
-                    }
-                });
+                    context.Employees.AddRange(new List<Employee>()
+                    {
+                        new Employee()
+                        {
+                            FirstName = "John",
+                            LastName = "William",
+                            Email = "John@example.com",
+                            Password = hashedPassword,
+                            IsAdmin = true,
+                        },
+                        new Employee()
+                        {
+                            FirstName = "Henrich",
+                            LastName = "Eddinburg",
+                            Email = "Henrich@example.com",
+                            Password = hashedPassword,
+                            IsAdmin = false,
+                        }
+                    });
+
                     context.SaveChanges();
 
 
-                
-               
 
 
+
+                }
             }
-        }
 
+        }
     }
 }
