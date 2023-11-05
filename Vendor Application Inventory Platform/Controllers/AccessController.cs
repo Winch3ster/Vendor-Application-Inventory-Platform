@@ -68,7 +68,15 @@ public class AccessController : Controller
                         
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                             new ClaimsPrincipal(claimsIdentity), properties);
-                        return RedirectToAction("Index", "Employee");
+
+                        if (user.IsAdmin)
+                        {
+                            return RedirectToAction("Index", "Admin");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Employee");
+                        }
             }
         }
         

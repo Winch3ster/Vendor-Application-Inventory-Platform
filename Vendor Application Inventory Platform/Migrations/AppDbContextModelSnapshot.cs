@@ -82,6 +82,38 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.ToTable("SoftwareSoftwareType");
                 });
 
+            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Address", b =>
+                {
+                    b.Property<int>("AddressID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressID"));
+
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PostCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AddressID");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.BusinessArea", b =>
                 {
                     b.Property<int>("BusinessAreaID")
@@ -161,6 +193,29 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.HasKey("CompanyID");
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.CompanyCountry", b =>
+                {
+                    b.Property<int>("CountriesCountryID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompaniesCompanyID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CountryID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CountriesCountryID", "CompaniesCompanyID");
+
+                    b.HasIndex("CompanyID");
+
+                    b.HasIndex("CountryID");
+
+                    b.ToTable("CompanyCountries", "dbo");
                 });
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.ContactNumber", b =>
@@ -400,6 +455,25 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .HasForeignKey("CountryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.CompanyCountry", b =>
+                {
+                    b.HasOne("Vendor_Application_Inventory_Platform.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Vendor_Application_Inventory_Platform.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
 
                     b.Navigation("Country");
                 });

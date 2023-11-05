@@ -24,11 +24,10 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
         public DbSet<Country> Countries { get; set; }
 
         public DbSet<City> Cities { get; set; }
+        
+        public DbSet<Address> Addresses { get; set; }
 
         public DbSet<ContactNumber> ContactNumbers { get; set; }
-
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
