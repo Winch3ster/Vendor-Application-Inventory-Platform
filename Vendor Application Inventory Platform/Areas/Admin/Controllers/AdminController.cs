@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
+using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Data.Services;
 using Vendor_Application_Inventory_Platform.Models;
-using Microsoft.EntityFrameworkCore;
-using Vendor_Application_Inventory_Platform.Data_Access_Layer;
-using Vendor_Application_Inventory_Platform.Models;
 
-namespace Vendor_Application_Inventory_Platform.Controllers
+namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 {
 
 
@@ -16,17 +15,12 @@ namespace Vendor_Application_Inventory_Platform.Controllers
   
     public class AdminController : Controller
     {
-        public readonly IUserEmployeeServices _service;
-        public AdminController(IUserEmployeeServices service)
+        private readonly IUserEmployeeServices _service;
+        private readonly IAdminServices _adminService;
+        public AdminController(IUserEmployeeServices service, IAdminServices adminService)
         {
             _service = service;
-        }
-
-        private readonly AppDbContext _db;
-
-        public AdminController(AppDbContext db)
-        {
-            _db = db;
+            _adminService = adminService;
         }
 
         [Route("~/Admin")]
@@ -41,31 +35,27 @@ namespace Vendor_Application_Inventory_Platform.Controllers
         {
             return View();
         }
-
-        [HttpGet]
-        public IActionResult AddEntries()
-        {
-            return View();
-        }
-
+        
         [Route("~/Admin/Employees")]
         public async Task<IActionResult> Employees() //This method will be called by default
         {
             //get data from actors table only as this is controller for actors data only
-
-
+        
+        
             //If here is,the interface and service class must be async as well
             var allEmployeesData = await _service.GetAllAsync();//Convert the data to list
-
+        
             return View(allEmployeesData); //pass the data list to the view
         }
-            var objCountries = _db.Companies
-                .Where(c => c.CompanyID == 2)
-                .SelectMany(c => c.Countries)
-                .Select(country => country.CountryName).ToList();
+
+        [HttpGet]
+        public IActionResult AddEntries()
+        {
+            var objCountries = _adminService.CountryNamesByCompany(2).ToList();
             
             return View(objCountries);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -73,75 +63,81 @@ namespace Vendor_Application_Inventory_Platform.Controllers
         {
             if (ModelState.IsValid)
             {
-                var company = _db.Companies.Find(2);
-
+                var company = _adminService.FindCompanyById(2);
+                var thisCompanyCountriesName = _adminService.CountryNamesByCompany(2).ToArray();
+                
                 foreach (var countryName in countryNames)
                 {
                     if (company != null)
                     {
-                        var countryExistsInDatabase = _db.Companies
-                            .SelectMany(c => c.Countries)
-                            .Select(country => country.CountryName)
-                            .ToList();
+                        var countryExistsInDatabase = _adminService.CountryNamesInDb();
                         
                         if (!countryExistsInDatabase.Contains(countryName))
                         {
-                            var country = new Country
-                            {
-                                CountryName = countryName,
-                                Companies = new List<Company> { company }
-                            };
-
-                            _db.Countries.Add(country);
-                            _db.SaveChanges();
+                            _adminService.CreateNewCountry(countryName, company);
                         }
                         else
                         {
-                            var existingCountry = _db.Countries.FirstOrDefault(c => c.CountryName == countryName);
+                            var existingCountry = _adminService.CountryExistOrNot(countryName);
                             
+                            if (existingCountry != null)
+                            {
+                                _adminService.ConnectCountryToCompany(company, existingCountry);
+                            }
+                        }
+                        
+                        if (thisCompanyCountriesName != null)
+                        {
+                            var deleteCountries = thisCompanyCountriesName.Except(countryNames).ToArray();
+                            if (deleteCountries.Any())
+                            {
+                                foreach (var country in deleteCountries)
+                                {
+                                    _adminService.DeleteCountry(country, 2);
+                                }
+                            }
+
                         }
                     }
                 }
-
-
-
+                
+                return Json(new { success = true , countryNames = thisCompanyCountriesName});
+                
+            }
+            return Json(new { success = false });
+        }
 
         //Get request Admin/Employees/id
         public async Task<IActionResult> EmployeeDetails(int id)
         {
             //check if that actor exist in database
             var employeeDetails = await _service.GetByIdAsync(id);
-
-            //If dowsnt exist return message
+        
+            //If doesnt exist return message
             if (employeeDetails == null)
             {
-                return View("NotFound");
+                // return View("NotFound");
             }
             return View(employeeDetails);
-
-                return Json(new { success = true });
-            }
-
-
+        
         }
+
+
 
 
         // GET: /Employees/Update/1
         [HttpGet]
         [ActionName("Update")]
         //[Route("~/Admin/Employee/Update/{id}")]
-       
-      
-
         public async Task<IActionResult> Edit(int id)
         {
             var employee = await _service.GetByIdAsync(id);
-
+        
             if (employee == null)
             {
-                return View("NotFound");
+                // return View("NotFound");
             }
-
+        
             return View(employee);
         }
 
@@ -151,7 +147,7 @@ namespace Vendor_Application_Inventory_Platform.Controllers
         [ActionName("Update")]
         //[Route("~/Admin/Employee/Update/{id}")]
         //[Route("Employee/Update/{id}")]
-
+        
         public async Task<IActionResult> Edit(int id, Employee employee)
         {
             if (ModelState.IsValid)
@@ -159,11 +155,9 @@ namespace Vendor_Application_Inventory_Platform.Controllers
                 await _service.UpdateAsync(id, employee);
                 return RedirectToAction("Employees");
             }
-
+        
             return View(employee);
         }
 
-            return Json(new { success = false });
-        }
     }
 }

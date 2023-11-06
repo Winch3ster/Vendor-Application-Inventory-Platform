@@ -9,5 +9,6 @@ namespace Vendor_Application_Inventory_Platform.Models
         public int CityID { get; set; }
 
         public virtual City City { get; set; }
+
     }
 }

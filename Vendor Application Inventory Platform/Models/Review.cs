@@ -20,5 +20,6 @@ namespace Vendor_Application_Inventory_Platform.Models
         public virtual Employee Employee { get; set; }
 
         public virtual Software Software { get; set; }
+
     }
 }

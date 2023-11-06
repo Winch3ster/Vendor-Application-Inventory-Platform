@@ -24,6 +24,13 @@
         public virtual ICollection<Software> Softwares { get; set; }
 
         public virtual ICollection<Country> Countries { get; set; }
+        
+        public Company()
+        {
+            Softwares = new List<Software>();
+            Countries = new List<Country>();
+        }
+
 
     }
 }

@@ -14,5 +14,10 @@ namespace Vendor_Application_Inventory_Platform.Models
         public string Description { get; set; }
 
         public virtual ICollection<Software> Softwares { get; set; }
+        public BusinessArea()
+        {
+            Softwares = new List<Software>();
+        }
+
     }
 }

@@ -22,5 +22,11 @@ namespace Vendor_Application_Inventory_Platform.Models
 
 
         public ICollection<Review>? Reviews { get; set; }
+        
+        public Employee()
+        {
+            Reviews = new List<Review>();
+        }
+
     }
 }

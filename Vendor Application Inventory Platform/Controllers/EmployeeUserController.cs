@@ -80,7 +80,7 @@ namespace Vendor_Application_Inventory_Platform.Controllers
             //If dowsnt exist return message
             if (employeeDetails == null)
             {
-                return View("NotFound");
+                // return View("NotFound");
             }
             return View(employeeDetails);
 

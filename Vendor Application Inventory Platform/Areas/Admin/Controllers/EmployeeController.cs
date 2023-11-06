@@ -89,10 +89,10 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
             var actorDetails = await _service.GetByIdAsync(id);
 
-            //If dowsnt exist return message
+            //If doesnt exist return message
             if (actorDetails == null)
             {
-                return View("NotFound");
+                // return View("NotFound");
             }
 
             await _service.DeleteAsync(id);

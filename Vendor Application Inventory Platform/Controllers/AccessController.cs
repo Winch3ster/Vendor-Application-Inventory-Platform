@@ -1,13 +1,10 @@
-﻿using System.Data.Entity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
+using Vendor_Application_Inventory_Platform.Data.Services;
 using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Controllers;
@@ -15,12 +12,14 @@ namespace Vendor_Application_Inventory_Platform.Controllers;
 [Route("[controller]/[action]")]
 public class AccessController : Controller
 {
-    private readonly AppDbContext _db;
-    public AccessController(AppDbContext db)
-    {
-        _db = db;
-    }
+    
+    private readonly IAccessServices _service; //Inject the service of actors in here
 
+    public AccessController(IAccessServices service)
+    {
+        _service = service;
+    }
+    
     [Route("~/")]
     [Route("~/Access/Login")]
     public IActionResult Login()
@@ -46,10 +45,11 @@ public class AccessController : Controller
     [HttpPost]
     public async Task<IActionResult> Login(VMLogin modelLogin)
     {
-        var user =  _db.Employees.FirstOrDefault(e => e.Email == modelLogin.email);
+        var user = _service.FindUserWithEmail(modelLogin.email);
         if (user!=null)
         {
-            if (BCrypt.Net.BCrypt.Verify(modelLogin.password, user.Password))
+            bool comparePassword = _service.ComparePasswordsWithBCrypt(modelLogin.password, user.Password);
+            if (comparePassword)
             {
                 List<Claim> claims = new List<Claim>()
                         {

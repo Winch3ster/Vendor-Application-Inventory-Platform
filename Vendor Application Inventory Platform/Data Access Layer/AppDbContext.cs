@@ -16,7 +16,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Software> Softwares { get; set; }
 
-        public DbSet<Company> Companies { get; set; }
+        public DbSet<Company?> Companies { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<BusinessArea> BusinessAreas { get; set; }
         public DbSet<SoftwareModule> SoftwareModules { get; set; }
@@ -25,8 +25,6 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 
         public DbSet<City> Cities { get; set; }
         
-        public DbSet<Address> Addresses { get; set; }
-
         public DbSet<ContactNumber> ContactNumbers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

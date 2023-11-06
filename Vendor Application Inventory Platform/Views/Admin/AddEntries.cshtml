@@ -30,7 +30,7 @@
                   else
                   {
                     <div class="input-group p-1">
-                      <input type="text" class="form-control" placeholder="Country" value="@Model.ElementAt(i)" pattern="[A-Za-z]+" title="Numbers are not allowed" required>
+                      <input type="text" class="form-control" placeholder="Country" value="@Model.ElementAt(i)" pattern="[A-Za-z ]+" title="Numbers are not allowed" required>
                       <div class="input-group-append">
                         <span class="input-group-text btn btn-danger bi bi-dash" onclick="deleteCountry(event)"></span>
                       </div>
@@ -125,7 +125,7 @@
             $('.progress').hide();
             
             if (data.success){
-              countriesToTabs(countryInputs);
+              countriesToTabs(data.countryNames);
             }
             else{
               alert('Something went wrong')
@@ -141,7 +141,7 @@
   
   let addCountry = () => {
     let countryField = `<div class="input-group p-1">
-                            <input type="text" class="form-control" placeholder="Country" pattern="[A-Za-z]+" title="Numbers are not allowed" required>
+                            <input type="text" class="form-control" placeholder="Country" pattern="[A-Za-z ]+" title="Numbers are not allowed" required>
                             <div class="input-group-append">
                                  <span class="input-group-text btn btn-danger bi bi-dash" onclick="deleteCountry(event)"></span>
                             </div>
@@ -165,22 +165,22 @@
     $(e.target).parent().parent().remove();
   }
   
-  let countriesToTabs = (countries) => {
-    countries.each(function (){
-        if ($(this).val().trim() !== '') {
+  let countriesToTabs = (countryNames) => {
+    $.each(countryNames, function (index, value){
+        if (value.trim() !== '') {
 
                     $('.nav-tabs').append(`
                         <li class="nav-item">
-                            <a id="${$(this).val()}-tab" class="nav-link" aria-current="page" onclick="tabsActive(event)" href="#${$(this).val()}">${$(this).val()}</a>
+                            <a id="${value}-tab" class="nav-link" aria-current="page" onclick="tabsActive(event)" href="#${value}">${value}</a>
                         </li>
                     `);
         
                     let cityContainer = `
-                        <div id="${$(this).val().replace(/\s/g, '-')}" class="cityContainer border border-top-0 py-4 px-3"></div>
+                        <div id="${value.replace(/\s/g, '-')}" class="cityContainer border border-top-0 py-4 px-3"></div>
                     `;
                     $('#tab-content').append(cityContainer);
                     
-                   accordionForCities(this);
+                   accordionForCities(value);
                 }
     })
     tabsActive();
@@ -189,7 +189,7 @@
   let accordionForCities = (element) => {
 
     //Check whether its the first default accordion or user triggered add accordion button
-    let country = element?.target?$(element.target).closest('.cityContainer').attr('id'):$(element).val().replace(/\s/g, '-');
+    let country = element?.target?$(element.target).closest('.cityContainer').attr('id'):element.replace(/\s/g, '-');
     //Get not used city number for ID to avoid duplicate ID before appending accordion
     let cityNumTaken=[];
     $('#'+country+' .accordion-collapse').each(function (){

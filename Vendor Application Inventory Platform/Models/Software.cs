@@ -24,5 +24,15 @@ namespace Vendor_Application_Inventory_Platform.Models
         public virtual ICollection<SoftwareModule> SoftwareModules { get; set; }
 
         public virtual ICollection<SoftwareType> SoftwareTypes { get; set; }
+        
+        
+        public Software()
+        {
+            Reviews = new List<Review>();
+            BusinessAreas = new List<BusinessArea>();
+            SoftwareModules = new List<SoftwareModule>();
+            SoftwareTypes = new List<SoftwareType>();
+        }
+
     }
 }

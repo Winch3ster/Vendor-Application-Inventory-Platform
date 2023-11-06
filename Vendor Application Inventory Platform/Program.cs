@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 //using Vendor_Application_Inventory_Platform.Data.Services;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
+using Vendor_Application_Inventory_Platform.Data.Services;
+using EmployeeServices = Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services.EmployeeServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +27,11 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 //Add services
 builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
 
+builder.Services.AddScoped<IAccessServices, AccessServices>();
 
+builder.Services.AddScoped<IAdminServices, AdminServices>();
+
+builder.Services.AddScoped<IUserEmployeeServices, UserEmployeeService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
@@ -60,8 +66,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(

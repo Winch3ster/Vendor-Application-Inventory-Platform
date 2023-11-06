@@ -4,12 +4,12 @@ using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Data.Services
 {
-    public class EmployeeServices : IUserEmployeeServices //Dealing with database
+    public class UserEmployeeService : IUserEmployeeServices //Dealing with database
     {
         //Inject database to this class
         private AppDbContext _context;
 
-        public EmployeeServices(AppDbContext c)
+        public UserEmployeeService(AppDbContext c)
         {
             _context = c;
         }

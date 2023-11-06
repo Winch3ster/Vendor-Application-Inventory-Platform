@@ -10,5 +10,6 @@
 
         public virtual Country Country { get; set; }
         public virtual ContactNumber ContactNumber { get; set; }
+
     }
 }
