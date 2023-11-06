@@ -26,8 +26,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 
                 var employeesToAdd = new List<Employee>();
 
-                if (!context.Employees.Any())
-                {
+
                     context.Employees.AddRange(new List<Employee>()
                     {
                         new Employee()
@@ -54,7 +53,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 
 
 
-                }
+                
             }
 
         }

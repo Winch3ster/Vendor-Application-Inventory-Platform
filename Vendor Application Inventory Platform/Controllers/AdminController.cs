@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Vendor_Application_Inventory_Platform.Data.Services;
 using Vendor_Application_Inventory_Platform.Models;
+using Microsoft.EntityFrameworkCore;
+using Vendor_Application_Inventory_Platform.Data_Access_Layer;
+using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Controllers
 {
@@ -19,6 +22,13 @@ namespace Vendor_Application_Inventory_Platform.Controllers
             _service = service;
         }
 
+        private readonly AppDbContext _db;
+
+        public AdminController(AppDbContext db)
+        {
+            _db = db;
+        }
+
         [Route("~/Admin")]
         [Route("~/Admin/Index")]
         public IActionResult Index()
@@ -32,6 +42,7 @@ namespace Vendor_Application_Inventory_Platform.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult AddEntries()
         {
             return View();
@@ -48,6 +59,49 @@ namespace Vendor_Application_Inventory_Platform.Controllers
 
             return View(allEmployeesData); //pass the data list to the view
         }
+            var objCountries = _db.Companies
+                .Where(c => c.CompanyID == 2)
+                .SelectMany(c => c.Countries)
+                .Select(country => country.CountryName).ToList();
+            
+            return View(objCountries);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateCountry(string[] countryNames)
+        {
+            if (ModelState.IsValid)
+            {
+                var company = _db.Companies.Find(2);
+
+                foreach (var countryName in countryNames)
+                {
+                    if (company != null)
+                    {
+                        var countryExistsInDatabase = _db.Companies
+                            .SelectMany(c => c.Countries)
+                            .Select(country => country.CountryName)
+                            .ToList();
+                        
+                        if (!countryExistsInDatabase.Contains(countryName))
+                        {
+                            var country = new Country
+                            {
+                                CountryName = countryName,
+                                Companies = new List<Company> { company }
+                            };
+
+                            _db.Countries.Add(country);
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+                            var existingCountry = _db.Countries.FirstOrDefault(c => c.CountryName == countryName);
+                            
+                        }
+                    }
+                }
 
 
 
@@ -65,6 +119,8 @@ namespace Vendor_Application_Inventory_Platform.Controllers
             }
             return View(employeeDetails);
 
+                return Json(new { success = true });
+            }
 
 
         }
@@ -107,5 +163,7 @@ namespace Vendor_Application_Inventory_Platform.Controllers
             return View(employee);
         }
 
+            return Json(new { success = false });
+        }
     }
 }
