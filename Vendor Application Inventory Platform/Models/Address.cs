@@ -23,6 +23,6 @@ namespace Vendor_Application_Inventory_Platform.Models
 
         [Required]
         [DisplayName("Postcode")]
-        public int PostCode { get; set;}
+        public int PostCode { get; set; }
     }
 }

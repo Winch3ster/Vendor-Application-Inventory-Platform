@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Vendor_Application_Inventory_Platform</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+
+    <style>
+        .component {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #period {
+            color: #4688F1;
+            margin-left: 5px;
+        }
+
+        #date, #month, #hour, #minute {
+            margin: 5px;
+        }
+
+        #control-panel > ul > li {
+            width: 120%;
+            padding: 10px;
+        }
+
+            #control-panel > ul > li > div {
+                align-items: center;
+                display: flex;
+                height: 40px;
+            }
+
+    </style>
+
+</head>
+
+
+
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm bg-white border-bottom fixed-top">
+            <div class="container-fluid justify-content-between">
+
+                <div class="d-flex">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="color: #4688F1;">CitiSoft</a>
+
+                    <div class="component">
+                        <div id="day"></div>
+                        <div>, </div>
+                        <div id="month"></div>
+                        <div id="date"></div>
+                    </div>
+                </div>
+
+
+
+                <div class="component">
+                    <div id="hour"></div>
+                    <div>. </div>
+                    <div id="minute"></div>
+                    <div id="period"></div>
+                    <a class="text-decoration-none ms-3" asp-area="" asp-controller="Employee" asp-action="LogOut">Log Out</a>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+    <div>
+        <main role="main" class="container-fluid">
+            <!--Control Panel-->
+            <div class="control-panel-style pt-3 ps-2 row" style="z-index: 999">
+                <div id="control-panel" class="col-10 d-flex flex-column align-items-end justify-content-between py-3">
+                    <ul class="text-decoration-none list-unstyled text-center">
+
+                        <li>
+                            <div class="admin-navigation-block">
+                                <div class="indicator"></div>
+                                <a>View Logs</a>
+                            </div>
+
+                        </li>
+
+                        <li>
+                            <div class="admin-navigation-block">
+                                <div class="indicator indicator-off"></div>
+                                <a>Edit Entries</a>
+                            </div>
+
+                        </li>
+
+                        <li>
+                            <div class="admin-navigation-block">
+                                <div id="add-entries" class="indicator indicator-off"></div>
+                                <a>Add Entries</a>
+                            </div>
+
+                        </li>
+
+                        <li>
+                            <div class="admin-navigation-block">
+                                <div class="indicator indicator-off"></div>
+                                <a>Edit Users</a>
+                            </div>
+
+                        </li>
+
+                        <li>
+                            <div class="admin-navigation-block">
+                                <div id="add-user-indicator" class="indicator indicator-off"></div>
+                                <a>Add Users</a>
+                            </div>
+
+                        </li>
+
+                    </ul>
+                    <div class="admin-navigation-actions-block">
+                        <a class="btn btn-primary rounded-pill">Sign Out</a>
+                    </div>
+                </div>
+                <div class="col-1 d-flex align-items-center" onclick="$('.control-panel-style').css('width')==='40px'?sideBarExpand():sideBarCollapse();">
+                    <button class="bi bi-arrow-left text-primary border-0 rounded-pill"></button>
+                    <button class="bi bi-arrow-right text-primary border-0 rounded-pill"></button>
+                </div>
+            </div>
+
+
+            <!--Employee list View-->
+            <div id="contentBody" class="mt-5 pt-4" style="margin-left:200px">
+                @RenderBody()
+            </div>
+
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+<script>
+    //Get the time on local device
+    const now = new Date();
+
+    function dateAndTime() {
+        //Display day and date
+        document.getElementById("day").innerText = now.toLocaleString("en-US", { weekday: 'long' });
+        document.getElementById("month").innerText = now.toLocaleString("en-US", { month: 'long' });
+        document.getElementById("date").innerText = now.getDate().toString();
+    }
+
+    function updateClock() {
+
+        //A digital clock for the header --> HH:MM AM/PM
+
+        let hour = now.getHours() % 12;
+        let minute = now.getMinutes();
+
+        var period = now.getHours() >= 12 ? "PM" : "AM"
+
+
+        document.getElementById("hour").innerText = hour.toString().padStart(2, '0');
+        document.getElementById("minute").innerText = minute.toString().padStart(2, '0');
+        document.getElementById("period").innerText = period;
+        //console.log(hour + " " + minute + " " + period);
+    }
+
+    setInterval(updateClock, 1000); // Update the clock every second
+    updateClock(); // Display the initial time
+
+
+    dateAndTime();
+
+    $(window).on('load resize', function () {
+        let width = $(window).width();
+        if ($('.control-panel-style').first().css('width') !== '40px') {
+            width <= 992 ? sideBarCollapse() : sideBarExpand();
+        }
+
+    })
+
+
+    let sideBarExpand = () => {
+        let contentBody = $('#contentBody');
+        $('.control-panel-style').css('width', '').removeClass('justify-content-center');
+        $('#control-panel').removeClass('d-none')
+        $('.bi-arrow-left').removeClass('d-none')
+        $('.bi-arrow-right').addClass('d-none')
+        $(window).width() <= 992 ? contentBody.css('margin-left', '40px') : contentBody.css('margin-left', '200px')
+    }
+
+    let sideBarCollapse = () => {
+        $('.control-panel-style').css("width", "40px").addClass('justify-content-center');
+        $('#control-panel').addClass('d-none');
+        $('#contentBody').css('margin-left', '40px');
+        $('.bi-arrow-left').addClass('d-none')
+        $('.bi-arrow-right').removeClass('d-none')
+    }
+
+</script>

@@ -10,7 +10,7 @@
         public string Description { get; set; }
 
         public DateTime EstablishedDate { get; set; }
-       
+
 
         public int NumberOfEmployee { get; set; }
 

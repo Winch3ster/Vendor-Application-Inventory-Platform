@@ -16,7 +16,7 @@ namespace Vendor_Application_Inventory_Platform.Models
 
         public bool DocumentAttached { get; set; }
 
-    
+
         //Entity Relationships
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual Company Company { get; set; }

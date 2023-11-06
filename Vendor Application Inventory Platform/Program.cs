@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
-using Vendor_Application_Inventory_Platform.Data.Services;
+//using Vendor_Application_Inventory_Platform.Data.Services;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,10 +20,11 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
 builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 //Add services
 builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
+
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
@@ -29,6 +32,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     option.LoginPath = "/Access/Login";
     option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
 });
+
 
 builder.Services.AddAuthorization(options =>
 {
@@ -49,14 +53,25 @@ if (!app.Environment.IsDevelopment())
 }
 
 
+
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseAuthentication();
-
 app.UseAuthorization();
+app.UseAuthentication();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+});
+
+
+
 
 app.UseMvc();
 

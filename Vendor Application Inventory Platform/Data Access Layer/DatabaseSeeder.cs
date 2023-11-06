@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using Vendor_Application_Inventory_Platform.Models;
 using BCrypt.Net;
+using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 {

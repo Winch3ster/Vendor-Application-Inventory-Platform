@@ -1,0 +1,73 @@
+﻿@using Vendor_Application_Inventory_Platform.Models;
+@using Vendor_Application_Inventory_Platform.Areas.Admin.Controllers;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model Employee
+
+@{
+    ViewData["title"] = "Register employee";
+    Layout = "_AdminControlPanel";
+}
+
+<h3 class="mx-5">
+    Register an Employee to this system
+</h3>
+
+
+<div class="col-9 m-md-5">
+    <!--Create employee form -->
+    <form asp-area="Admin" asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label class="form-label">Employee First Name</label>
+            <input asp-for="FirstName" class=" form-control" placeholder="John" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Employee Last Name</label>
+            <input asp-for="LastName" class="form-control" placeholder="Wick" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Employee Email</label>
+            <input asp-for="Email" class="form-control" placeholder="Enter email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input asp-for="Password" class="form-control" placeholder="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+            <small id="emailHelp" class="form-text text-muted">Register a password. This password is needed to login to the system!</small>
+        </div>
+
+
+        <div class="mb-3 form-check">
+            <input asp-for="IsAdmin" type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label">Is an Admin</label>
+        </div>
+
+
+
+        <button asp-area="Admin"  type="submit" value="Create" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+@section Scripts{
+    <script>
+
+        let placeholder = document.getElementById("add-user-indicator");
+
+        let indicatorList = document.getElementsByClassName("indicator");
+
+        for (let i = 0; i < indicatorList.length; i++) {
+            indicatorList[i].classList.add("indicator-off");
+        }
+
+        placeholder.classList.remove("indicator-off");
+    </script>
+}
