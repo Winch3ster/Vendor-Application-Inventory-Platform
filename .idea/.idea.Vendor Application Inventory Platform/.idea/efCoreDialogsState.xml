@@ -5,10 +5,19 @@
       <map>
         <entry key="Common:3854c746-93f2-4cfb-a5c3-a5b3ea2da7de:dbContext" value="Vendor_Application_Inventory_Platform.Data_Access_Layer.AppDbContext" />
         <entry key="Common:buildConfiguration" value="Debug" />
+        <entry key="Common:dbContextFolder" value="Context" />
+        <entry key="Common:dbContextName" value="MyDbContext" />
+        <entry key="Common:generateOnConfiguring" value="true" />
         <entry key="Common:noBuild" value="false" />
         <entry key="Common:outputFolder" value="Migrations" />
+        <entry key="Common:provider" value="Microsoft.EntityFrameworkCore.SqlServer" />
+        <entry key="Common:schemas" value="" />
+        <entry key="Common:tables" value="" />
         <entry key="Common:targetFramework" value="net6.0" />
+        <entry key="Common:useAttributes" value="false" />
+        <entry key="Common:useDatabaseNames" value="false" />
         <entry key="Common:useDefaultConnection" value="true" />
+        <entry key="Common:usePluralizer" value="true" />
       </map>
     </option>
   </component>

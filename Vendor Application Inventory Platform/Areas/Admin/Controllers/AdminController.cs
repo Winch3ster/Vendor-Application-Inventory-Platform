@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
+using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Data.Services;
 using Vendor_Application_Inventory_Platform.Models;
@@ -61,12 +64,30 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateCountry(string[] countryNames)
         {
+            List<string> updatedCountryNames = new List<string>();
             if (ModelState.IsValid)
             {
                 var company = _adminService.FindCompanyById(2);
                 var thisCompanyCountriesName = _adminService.CountryNamesByCompany(2).ToArray();
-                
+
                 foreach (var countryName in countryNames)
+                {
+                    var trimmedCountryName = Regex.Replace(countryName.Trim(), @"\s+", " ");
+
+                    var finalCountryName = trimmedCountryName.ToUpper();
+                    
+                    updatedCountryNames.Add(finalCountryName);
+                    
+                }
+                
+                bool hasDuplicates = updatedCountryNames.Count() != updatedCountryNames.Distinct().Count();
+
+                if (hasDuplicates)
+                {
+                    return Json(new { message = "Duplicate Country Names" });
+                }
+
+                foreach (var countryName in updatedCountryNames)
                 {
                     if (company != null)
                     {
@@ -78,17 +99,15 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                         }
                         else
                         {
-                            var existingCountry = _adminService.CountryExistOrNot(countryName);
+                            var existingCountry = _adminService.RetrieveCountry(countryName);
                             
-                            if (existingCountry != null)
-                            {
-                                _adminService.ConnectCountryToCompany(company, existingCountry);
-                            }
+                            _adminService.ConnectCountryToCompany(company, existingCountry);
+                            
                         }
                         
                         if (thisCompanyCountriesName != null)
                         {
-                            var deleteCountries = thisCompanyCountriesName.Except(countryNames).ToArray();
+                            var deleteCountries = thisCompanyCountriesName.Except(updatedCountryNames.ToArray()).ToArray();
                             if (deleteCountries.Any())
                             {
                                 foreach (var country in deleteCountries)
@@ -101,11 +120,51 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                     }
                 }
                 
-                return Json(new { success = true , countryNames = thisCompanyCountriesName});
+                return Json(new { success = true , countryNames = _adminService.CountryNamesByCompany(2).ToArray()});
                 
             }
             return Json(new { success = false });
         }
+        
+        
+        [HttpPost]
+        public IActionResult CreateCities([FromBody] CityField cityField)
+        {
+            if (ModelState.IsValid)
+            {
+                bool hasAddress = cityField.HasAddress;
+                bool hasContact = cityField.HasContact;
+                string country = cityField.Country;
+                string cityName = cityField.CityName;
+
+                if (hasAddress)
+                {
+                    string? address1 = cityField.Address1;
+                    string? address2 = cityField.Address2;
+                    string? postcode = cityField.Postcode;
+                }
+
+                if (hasContact)
+                {
+                    string? contactNumber = cityField.ContactNumber;
+                }
+
+                Country countryObj = _adminService.RetrieveCountry(country);
+                _adminService.CreateNewCity(cityName, countryObj);
+
+            }
+            else
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .FirstOrDefault();
+
+                return Json(new { errors = errors, country = cityField.Country, city = cityField.CityName});
+            }
+            return Json("ok");
+        }
+        
 
         //Get request Admin/Employees/id
         public async Task<IActionResult> EmployeeDetails(int id)

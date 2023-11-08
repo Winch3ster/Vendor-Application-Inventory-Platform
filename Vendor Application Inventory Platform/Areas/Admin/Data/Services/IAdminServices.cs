@@ -11,10 +11,12 @@ public interface IAdminServices
 
     public void CreateNewCountry(string countryName, Company company);
 
-    public Country CountryExistOrNot(string countryName);
+    public Country RetrieveCountry(string countryName);
 
     public void ConnectCountryToCompany(Company company, Country country);
 
     public void DeleteCountry(string countryName, int companyId);
+
+    public void CreateNewCity(string cityName, Country country);
 
 }

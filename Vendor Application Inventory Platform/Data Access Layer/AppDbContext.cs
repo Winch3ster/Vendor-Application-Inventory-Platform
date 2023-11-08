@@ -49,6 +49,11 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
             modelBuilder.Entity<Company>()
                 .HasMany(company => company.Countries)
                 .WithMany(country => country.Companies);
+            
+            modelBuilder.Entity<City>()
+                .HasOne(city => city.Address)
+                .WithOne(address => address.city)
+                .HasForeignKey<Address>(a => a.CityID);
 
             base.OnModelCreating(modelBuilder);
 

@@ -45,7 +45,7 @@ public class AdminServices : IAdminServices
         _db.SaveChanges();   
     }
 
-    public Country CountryExistOrNot(string countryName)
+    public Country RetrieveCountry(string countryName)
     {
         return _db.Countries.FirstOrDefault(c => c.CountryName == countryName) ?? throw new InvalidOperationException();
     }
@@ -70,4 +70,17 @@ public class AdminServices : IAdminServices
             _db.SaveChanges();
         }
     }
+
+    public void CreateNewCity(string cityName, Country country)
+    {
+        var city = new City
+        {
+            CityName = cityName
+        };
+        
+        country.Cities?.Add(city);
+        _db.SaveChanges();   
+        
+    }
+    
 }
