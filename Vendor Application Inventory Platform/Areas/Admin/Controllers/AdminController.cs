@@ -1,10 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
-using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Data.Services;
 using Vendor_Application_Inventory_Platform.Models;
 
@@ -54,9 +52,52 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult AddEntries()
         {
-            var objCountries = _adminService.CountryNamesByCompany(2).ToList();
-            
-            return View(objCountries);
+            List<string> countriesNames = _adminService.CountryNamesByCompany(2).ToList();
+            var countryViewModels = new List<AddEntriesViewModel.CountryViewModel>();
+
+            foreach (var countryName in countriesNames)
+            {
+                var cities = _adminService.ListCities(2, countryName).ToList();
+
+                var cityViewModels = new List<AddEntriesViewModel.CityViewModel>();
+
+                foreach (var city in cities)
+                {
+                    var address = _adminService.GetAddress(city.CityID);
+                    var contact = _adminService.GetContact(city.CityID);
+
+                    var cityViewModel = new AddEntriesViewModel.CityViewModel
+                    {
+                        CityName = city.CityName,
+                        Address = new AddEntriesViewModel.AddressViewModel
+                        {
+                            AddressLine1 = address?.AddressLine1,
+                            AddressLine2 = address?.AddressLine2,
+                            PostCode = address?.PostCode,
+                        },
+                        Contact = new AddEntriesViewModel.ContactViewModel
+                        {
+                            ContactNumber = contact?.Number,
+                        },
+                    };
+
+                    cityViewModels.Add(cityViewModel);
+                }
+
+                var countryViewModel = new AddEntriesViewModel.CountryViewModel
+                {
+                    CountryName = countryName,
+                    Cities = cityViewModels,
+                };
+                countryViewModels.Add(countryViewModel);
+            }
+
+            var viewModel = new AddEntriesViewModel()
+            {
+                Countries = countryViewModels,
+            };
+
+            return View(viewModel);
         }
 
 
@@ -91,19 +132,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 {
                     if (company != null)
                     {
-                        var countryExistsInDatabase = _adminService.CountryNamesInDb();
-                        
-                        if (!countryExistsInDatabase.Contains(countryName))
+                        if (!thisCompanyCountriesName!.Contains(countryName))
                         {
                             _adminService.CreateNewCountry(countryName, company);
                         }
-                        else
-                        {
-                            var existingCountry = _adminService.RetrieveCountry(countryName);
-                            
-                            _adminService.ConnectCountryToCompany(company, existingCountry);
-                            
-                        }
+                        
                         
                         if (thisCompanyCountriesName != null)
                         {
@@ -128,30 +161,60 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         
         
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult CreateCities([FromBody] CityField cityField)
         {
             if (ModelState.IsValid)
             {
+                City? city = null;
                 bool hasAddress = cityField.HasAddress;
                 bool hasContact = cityField.HasContact;
                 string country = cityField.Country;
-                string cityName = cityField.CityName;
+                string cityName = Regex.Replace(cityField.CityName.Trim(), @"\s+", " ").ToUpper();
+                
+                List<string> citiesNames = _adminService.ListCities(2, cityField.Country).Select(c=>c.CityName).ToList();
+                
+                Country countryObj = _adminService.RetrieveCountry(country);
+                
+                if (!citiesNames.Contains(cityName))
+                {
+                    
+                    city = _adminService.CreateNewCity(cityName, countryObj);
+                    
+                }
+                else
+                {
+                    city = _adminService.FindCity(2, countryObj.CountryName, cityName);
+                }
+                
+                if (hasContact)
+                {
+                    string? contactNumber = cityField.ContactNumber;
+                    if (contactNumber != null) 
+                        _adminService.CreateNewContact(contactNumber, city);
+                }
+                else
+                {
+                    _adminService.DeleteContact(city);
+                }
 
+                    
                 if (hasAddress)
                 {
                     string? address1 = cityField.Address1;
                     string? address2 = cityField.Address2;
                     string? postcode = cityField.Postcode;
-                }
 
-                if (hasContact)
+                    if (address1 != null && address2 != null && postcode != null)
+                    {
+                        _adminService.CreateNewAddress(address1, address2, postcode, city);
+                    }
+                }
+                else
                 {
-                    string? contactNumber = cityField.ContactNumber;
+                    _adminService.DeleteAddress(city);
                 }
-
-                Country countryObj = _adminService.RetrieveCountry(country);
-                _adminService.CreateNewCity(cityName, countryObj);
-
+                    
             }
             else
             {
@@ -162,7 +225,27 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
                 return Json(new { errors = errors, country = cityField.Country, city = cityField.CityName});
             }
-            return Json("ok");
+            return Json(new {success=true});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteCities([FromBody] DeleteCityField deleteCityField)
+        {
+            if (deleteCityField.deleteCities != null)
+                foreach (var deleteCity in deleteCityField.deleteCities)
+                {
+                    City? city = _adminService.FindCity(2, deleteCity.Country.ToUpper(), deleteCity.City.ToUpper());
+
+                    if (city != null)
+                    {
+                        _adminService.DeleteCity(city);
+                    }
+
+                    
+                }
+
+            return Json(new { success = true });
         }
         
 

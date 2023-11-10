@@ -7,16 +7,28 @@ public interface IAdminServices
 
     Company? FindCompanyById(int companyId);
 
-    List<string> CountryNamesInDb();
-
     public void CreateNewCountry(string countryName, Company company);
 
     public Country RetrieveCountry(string countryName);
 
-    public void ConnectCountryToCompany(Company company, Country country);
-
     public void DeleteCountry(string countryName, int companyId);
 
-    public void CreateNewCity(string cityName, Country country);
+    public City CreateNewCity(string cityName, Country country);
 
+    List<City> ListCities(int companyId, string countryName);
+
+    City FindCity(int companyId, string countryName, string cityName);
+
+    public void DeleteCity(City city);
+
+    public void CreateNewContact(string contactNum, City city);
+
+    public void CreateNewAddress(string? address1, string? address2, string? postcode, City city);
+
+    public void DeleteContact(City city);
+
+    public void DeleteAddress(City city);
+
+    public Address? GetAddress(int cityId);
+    public ContactNumber? GetContact(int cityId);
 }

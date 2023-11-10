@@ -4,7 +4,6 @@
     {
         public int CityID { get; set; }
         public int CountryID { get; set; }
-        public int ContactID { get; set; }
         public string CityName { get; set; }
 
 

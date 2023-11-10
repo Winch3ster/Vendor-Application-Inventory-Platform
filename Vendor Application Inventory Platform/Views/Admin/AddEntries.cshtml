@@ -1,11 +1,12 @@
-﻿@model List<string>
+﻿@using Newtonsoft.Json
+@model Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels.AddEntriesViewModel
 @{
     Layout = "_AdminControlPanel";
     ViewData["title"] = "Add Entries";
 }
 
 <div class="container-fluid">
-  
+    @Html.AntiForgeryToken()
       <div class="card mt-5">
         <div class="card-header">
           Add Countries
@@ -17,20 +18,20 @@
           @Html.AntiForgeryToken()
           <div class="card-body">
             <div id="country-container">
-              @if (Model.Any())
+              @if (Model.Countries.Any())
               {
-                @for (var i = 0; i < Model.Count(); i++)
+                @for (var i = 0; i < Model.Countries.Count(); i++)
                 {
                   @if (i == 0)
                   {
                     <div class="p-1">
-                      <input type="text" class="form-control text-uppercase" placeholder="Country" value="@Model.ElementAt(i)" pattern="[A-Za-z ]+" title="Alphabet and spaces only" required>
+                      <input type="text" class="form-control text-uppercase" placeholder="Country" value="@Model.Countries[i].CountryName" pattern="[A-Za-z ]+" title="Alphabet and spaces only" required>
                     </div>
                   }
                   else
                   {
                     <div class="input-group p-1">
-                      <input type="text" class="form-control text-uppercase" placeholder="Country" value="@Model.ElementAt(i)" pattern="[A-Za-z ]+" title="Numbers are not allowed" required>
+                      <input type="text" class="form-control text-uppercase" placeholder="Country" value="@Model.Countries[i].CountryName" pattern="[A-Za-z ]+" title="Numbers are not allowed" required>
                       <div class="input-group-append">
                         <span class="input-group-text btn btn-danger bi bi-dash" onclick="deleteCountry(event)"></span>
                       </div>
@@ -83,16 +84,50 @@
 @section Scripts
 {
   <script>
+  $(document).ready(function(){
+    //Check if model is presented in the page
+    //I presented, lock the submit button and loop through all available countries, cities, and the rest
+    if (@Model.Countries.Any().ToString().ToLower()){
+      let countries = @Html.Raw(JsonConvert.SerializeObject(Model.Countries))
+      let countryNames= [];
+      disableCountryInputs();
+      
+      for (let i=0; i < countries.length; i++){
+        countryNames.push(countries[i].CountryName)
+      }
+      
+    countriesToTabs(countryNames, countries);
+      
+    }
+    
+  })
+     
+
+  let deleteCities=[];
+  function disableCountryInputs(){
+    let countryInputs = $("[placeholder='Country']");
+          countryInputs.each(function () {
+           $(this).prop('disabled',true);
+         });
+          
+    $("#addCountryBtn").attr('onclick','alert("Press Cancel First")');
+            $(".bi-dash").attr('onclick', 'alert("Press Cancel First")');
+            $("#tabs").removeClass('d-none');
+            $('.nav-tabs').empty();
+            $('#tab-content').empty();
+            $('#submitBtn').removeClass('d-none');
+            $('#CountrySubmitBtn').prop('disabled',true)
+  }
   
   $('#countryForm').on('submit', function (e){
     e.preventDefault();
+    disableCountryInputs();
     let countries = [];
     let countryInputs = $("[placeholder='Country']");
-    let csrfToken = $('input[name="__RequestVerificationToken"]').val();
+    let csrfToken = $('#countryForm > input[name="__RequestVerificationToken"]').val();
 
     
      countryInputs.each(function () {
-       $(this).prop('disabled',true);
        countries.push($(this).val());
      });
      
@@ -100,13 +135,6 @@
       $('.progress-bar').css('width', '0%');
      
      const formData = { 'countryNames': countries };
-        $("#addCountryBtn").attr('onclick','alert("Press Cancel First")');
-        $(".bi-dash").attr('onclick', 'alert("Press Cancel First")');
-        $("#tabs").removeClass('d-none');
-        $('.nav-tabs').empty();
-        $('#tab-content').empty();
-        $('#submitBtn').removeClass('d-none');
-        $('#CountrySubmitBtn').prop('disabled',true)
         
         $.post({
           url:"@Url.Action("CreateCountry")",
@@ -130,7 +158,13 @@
             $('.progress').hide();
             
             if (data.success){
-              countriesToTabs(data.countryNames);
+              if (@Model.Countries.Any().ToString().ToLower()){
+                let countries = @Html.Raw(JsonConvert.SerializeObject(Model.Countries))
+                countriesToTabs(data.countryNames, countries)
+              }
+              else{
+               countriesToTabs(data.countryNames); 
+              }
             }
             else if (data.message){
               alert(data.message);
@@ -173,13 +207,13 @@
     $(e.target).parent().parent().remove();
   }
   
-  let countriesToTabs = (countryNames) => {
+  let countriesToTabs = (countryNames, countries) => {
     $.each(countryNames, function (index, value){
         if (value.trim() !== '') {
 
                     $('.nav-tabs').append(`
                         <li class="nav-item">
-                            <a id="${value}-tab" class="nav-link" aria-current="page" onclick="tabsActive(event)" href="#${value}">${value}</a>
+                            <a id="${value.replace(/\s/g, '-')}-tab" class="nav-link" aria-current="page" onclick="tabsActive(event)" href="#${value.replace(/\s/g, '-')}">${value}</a>
                         </li>
                     `);
         
@@ -188,13 +222,39 @@
                     `;
                     $('#tab-content').append(cityContainer);
                     
-                   accordionForCities(value);
+                    //Makes multiple accordion based on Model or makes one default
+                   if (countries){
+                     for (let i=0; i< countries.length; i++){
+                       if (countries[i].CountryName!==value){
+                         continue;
+                       }
+                       if (countries[i].Cities.length!==0){
+                         for(let j=0; j< countries[i].Cities.length;j++){
+                           accordionForCities(value, countries[i].Cities[j]);
+                         }
+                       }
+                       else{
+                         accordionForCities(value);
+                       }
+                       
+                     }
+                   }
+                   else{
+                     accordionForCities(value);
+                   }
+                   
                 }
     })
     tabsActive();
   }
   
-  let accordionForCities = (element) => {
+  let accordionForCities = (element, CityModel) => {
+    let cityName = "",address = null, contact = null;
+    if (CityModel){
+      cityName=CityModel.CityName;
+      address=CityModel.Address;
+      contact=CityModel.Contact;
+    }
 
     //Check whether its the first default accordion or user triggered add accordion button
     let country = element?.target?$(element.target).closest('.cityContainer').attr('id'):element.replace(/\s/g, '-');
@@ -226,7 +286,7 @@
                                  <div id="${country}-city${cityNumber}" class="accordion-collapse collapse" aria-labelledby="${country}-city${cityNumber}">
                                    <div class="accordion-body">
                                      <form>
-                                      @Html.AntiForgeryToken()
+                                                     @Html.AntiForgeryToken()
                                                      <div>
                                                        <input type="checkbox" class="address">
                                                        <label>Has Address</label>
@@ -234,18 +294,18 @@
                                                        <label>Has Contact</label>
                                                      </div>
                                                      <div class="p-2 mt-2">
-                                                       <input type="hidden" class="form-control" name="country" value="${country}">
+                                                       <input type="hidden" class="form-control" name="country" value="${country.replace('-', " ")}">
                                                        <h5 class="mt-2">City</h5>
-                                                       <input type="text" class="form-control" name="cityName" placeholder="City" required>
+                                                       <input type="text" class="form-control text-uppercase" name="cityName" placeholder="City" value="${cityName}" required>
                                                        <div class="addressField mt-2 d-none">
                                                          <h5>Address</h5>
-                                                         <input type="text" class="form-control mt-1" name="address1" placeholder="Address 1">
-                                                         <input type="text" class="form-control mt-1" name="address2" placeholder="Address 2">
-                                                         <input type="text" class="form-control mt-1" name="postcode" placeholder="Postcode">
+                                                         <input type="text" class="form-control mt-1" name="address1" placeholder="Address 1" value="${address ? address.AddressLine1 ?? "" : ""}">
+                                                         <input type="text" class="form-control mt-1" name="address2" placeholder="Address 2" value="${address ? address.AddressLine2 ?? "" : ""}">
+                                                         <input type="text" class="form-control mt-1" name="postcode" placeholder="Postcode" value="${address ? address.PostCode ?? "" : ""}">
                                                        </div>
                                                        <div class="contactField mt-2 d-none">
                                                          <h5>Contact</h5>
-                                                         <input type="number" class="form-control mt-1" placeholder="Contact Number">
+                                                         <input type="number" class="form-control mt-1" name="contact" placeholder="Contact Number" value="${contact ? contact.ContactNumber ?? "" : ""}">
                                                        </div>
                                                      </div>
                                                    </form>
@@ -253,15 +313,34 @@
                                  </div>
                                </div>
                            </form>`;
-    //If the accordion is triggered by the user, remove the plus button and append it later after the appended the accordion
-    //Also add delete city button for second city and beyond
-    if (element.target){
+    //If the accordion not the first accordion, remove the plus button and append it later after the appended the accordion
+    //Also added delete city button for second city and beyond
+    if ($('#'+country).children('.accordion').length!==0){
       $(element.target).parent().remove()
       accordion = $(accordion).find('.accordion-body').append(`<div class="d-flex justify-content-end">
                                                                                            <button class="btn btn-danger" onclick="deleteCity(event)">Delete City</button>
                                                                                        </div>`).end();
     }
-    $('.cityContainer#'+country).append(accordion).append(addCitiesBtn);
+    
+    if (element.target){
+      $('.cityContainer#'+country).append(accordion).append(addCitiesBtn);
+    }
+    else{
+      if ($('#'+country).children('.accordion').length!==0){
+        $('#'+country).find('.bi-plus').parent().remove();
+      }
+      $('.cityContainer#'+country).append(accordion).append(addCitiesBtn);
+    }
+    
+    //Check Address and/or contact checkbox field for different cities
+    if (address !=null && address.AddressLine1 !==null && address.AddressLine2 !==null && address.PostCode !=null){
+      $(`#${country}-city${cityNumber}`).find('.address').prop('checked', true).change();
+    }
+    
+    if (contact !=null && contact.ContactNumber != null){
+      $(`#${country}-city${cityNumber}`).find('.contact').prop('checked', true).change();
+    }
+    
     
   }
   
@@ -279,7 +358,8 @@
     }
     
     tabs.each(function (){
-                      let id = $(this).attr('id').split('-')[0].replace(/\s/g, '-')
+                      let split = $(this).attr('id').split('-');
+                      let id = split.slice(0, -1).join('-');
                       if ($(this).hasClass('active')){
                         $('#'+id).removeClass('d-none')
                       }
@@ -291,6 +371,12 @@
   }
   
   let deleteCity = (e) => {
+    //Push Cities Name that are deleted into an array
+    let target = $(e.target).parent().siblings().children('div');
+    deleteCities.push({
+      Country: target.children('[name=country]').val(),
+      City: target.children('[name=cityName]').val()
+    });
     let removeAccordionID = $(e.target).closest('.accordion-collapse').attr('id')
     let removeAccordionCityNumber = parseInt(removeAccordionID.match(/\d+/g))
     let country = $(e.target).closest('.cityContainer').attr('id')
@@ -328,6 +414,7 @@
           target.find('input').val('');
         }
   })
+  
   
   //Check if user pressed the final submit button
   $('#submitBtn').click(function (){
@@ -370,6 +457,7 @@
                         accordionBtn.click();
                       }
                       this.reportValidity();
+                      
               return false;
             }
             
@@ -382,48 +470,96 @@
         submitBtn.children('span').addClass('d-none');
         $('.spinner-border').removeClass('d-none');
         
+        let deleteRequest=null;
+        
+        if (deleteCities.length!==0){
+          deleteRequest = new Promise((resolve, reject)=>{
+            let data = {
+               deleteCities: deleteCities
+            }
+            
+            let csrfToken = $('.container-fluid > [name="__RequestVerificationToken"]').val();
+            $.post({
+                 url:'@Url.Action("DeleteCities")',
+                 data:JSON.stringify(data),
+                 dataType:"json",
+                 contentType: 'application/json',
+                 headers: {
+                     "RequestVerificationToken": csrfToken
+                 },
+                 success:function (data){
+                   if (data.success){
+                     resolve();
+                   }
+                 },
+                 error:function (){
+                   alert('Failed to delete country')
+                 }
+            })
+          })
+                   
+        }
+       
+       
         $('.accordion-body > form').each(function (){
-          
-          //Get the data for each of the form
-          const data = {
-            HasAddress: $(this).find(".address").prop("checked"),
-                 
-            HasContact: $(this).find(".contact").prop("checked"),
-            
-            CityName: $(this).find(".form-control[placeholder='City']").val(),
-               
-            Address1: $(this).find(".form-control[placeholder='Address 1']").val(),
-               
-            Address2: $(this).find(".form-control[placeholder='Address 2']").val(),
-               
-            Postcode: $(this).find(".form-control[placeholder='Postcode']").val(),
-                    
-            ContactNumber: $(this).find(".form-control[placeholder='Contact Number']").val(),
-              
-            Country: $(this).find("input[name='country']").val()
-            
-            };
-          
-          //replaces empty string with null
-          for (const key in data) {
-              if (data[key] === "") {
-                  data[key] = null;
-              }
-          }
-          
-          finalSubmit(data);
-          
-        })
-       }
+                     
+                     //Get the data for each of the form
+                     const data = {
+                       HasAddress: $(this).find(".address").prop("checked"),
+                            
+                       HasContact: $(this).find(".contact").prop("checked"),
+                       
+                       CityName: $(this).find(".form-control[placeholder='City']").val(),
+                          
+                       Address1: $(this).find(".form-control[placeholder='Address 1']").val(),
+                          
+                       Address2: $(this).find(".form-control[placeholder='Address 2']").val(),
+                          
+                       Postcode: $(this).find(".form-control[placeholder='Postcode']").val(),
+                               
+                       ContactNumber: $(this).find(".form-control[placeholder='Contact Number']").val(),
+                         
+                       Country: $(this).find("input[name='country']").val(),
+                       
+                       Csrf: $(this).find('input[name="__RequestVerificationToken"]').val()
+
+                       };
+                     
+                     
+                     //replaces empty string with null
+                     for (const key in data) {
+                         if (data[key] === "") {
+                             data[key] = null;
+                         }
+                     }
+                     
+                     
+                     if (deleteRequest===null){
+                       finalSubmit(data)
+                     }
+                     else{
+                       deleteRequest.then(function (){
+                        finalSubmit(data)
+                        })
+                     }
+                     
+                   })
+        
+        
+        }
+       
   })
   
   function finalSubmit(data){
-    
           $.post({
               url:'@Url.Action("CreateCities")',
               data: JSON.stringify(data),
               dataType:"json",
               contentType: 'application/json',
+              async:false,
+              headers: {
+                  "RequestVerificationToken": data.Csrf
+              },
               success:function (data){
                 if (data.errors){
                   alert(`${data.errors}\n\nCountry: ${data.country}\nCity: ${data.city}`)
@@ -432,7 +568,13 @@
               error:function (){
                 alert('Failed to submit, please try again')
               }
+          }).done(function (){
+            let submitBtn = $('#submitBtn');
+            submitBtn.prop('disabled', false);
+            submitBtn.children('span').removeClass('d-none');
+            $('.spinner-border').addClass('d-none');
           })
+            
   }
           
     let placeholder = document.getElementById("add-entries");

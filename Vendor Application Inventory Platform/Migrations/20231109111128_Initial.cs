@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vendor_Application_Inventory_Platform.Migrations
 {
     /// <inheritdoc />
-    public partial class entitiesCreation : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -93,7 +93,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                 {
                     SoftwareTypeID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SoftwareID = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -133,7 +132,7 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CountryID = table.Column<int>(type: "int", nullable: false),
                     ContactID = table.Column<int>(type: "int", nullable: false),
-                    CityName = table.Column<int>(type: "int", nullable: false)
+                    CityName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -271,6 +270,30 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    AddressID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CityID = table.Column<int>(type: "int", nullable: false),
+                    AddressLine1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AddressLine2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Region = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostCode = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.AddressID);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Cities_CityID",
+                        column: x => x.CityID,
+                        principalTable: "Cities",
+                        principalColumn: "CityID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ContactNumbers",
                 columns: table => new
                 {
@@ -289,6 +312,12 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         principalColumn: "CityID",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_CityID",
+                table: "Addresses",
+                column: "CityID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BusinessAreaSoftware_SoftwaresSoftwareID",
@@ -340,6 +369,9 @@ namespace Vendor_Application_Inventory_Platform.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Addresses");
+
             migrationBuilder.DropTable(
                 name: "BusinessAreaSoftware");
 

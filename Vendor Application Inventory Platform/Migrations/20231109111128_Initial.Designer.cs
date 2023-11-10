@@ -12,8 +12,8 @@ using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 namespace Vendor_Application_Inventory_Platform.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231101125436_addedEmployeeIdCol")]
-    partial class addedEmployeeIdCol
+    [Migration("20231109111128_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,44 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.ToTable("SoftwareSoftwareType");
                 });
 
+            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Address", b =>
+                {
+                    b.Property<int>("AddressID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressID"));
+
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CityID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PostCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AddressID");
+
+                    b.HasIndex("CityID")
+                        .IsUnique();
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.BusinessArea", b =>
                 {
                     b.Property<int>("BusinessAreaID")
@@ -110,8 +148,9 @@ namespace Vendor_Application_Inventory_Platform.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CityID"));
 
-                    b.Property<int>("CityName")
-                        .HasColumnType("int");
+                    b.Property<string>("CityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ContactID")
                         .HasColumnType("int");
@@ -207,18 +246,15 @@ namespace Vendor_Application_Inventory_Platform.Migrations
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Employee", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("EmployeeID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeID"));
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmployeeID")
-                        .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -235,7 +271,7 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("EmployeeID");
 
                     b.ToTable("Employees");
                 });
@@ -399,6 +435,17 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Address", b =>
+                {
+                    b.HasOne("Vendor_Application_Inventory_Platform.Models.City", "city")
+                        .WithOne("Address")
+                        .HasForeignKey("Vendor_Application_Inventory_Platform.Models.Address", "CityID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("city");
+                });
+
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.City", b =>
                 {
                     b.HasOne("Vendor_Application_Inventory_Platform.Models.Country", "Country")
@@ -453,6 +500,9 @@ namespace Vendor_Application_Inventory_Platform.Migrations
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.City", b =>
                 {
+                    b.Navigation("Address")
+                        .IsRequired();
+
                     b.Navigation("ContactNumber")
                         .IsRequired();
                 });
