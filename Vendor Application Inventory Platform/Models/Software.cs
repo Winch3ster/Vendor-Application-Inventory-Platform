@@ -10,13 +10,21 @@ namespace Vendor_Application_Inventory_Platform.Models
         public string SoftwareName { get; set; }
         public string Description { get; set; }
 
-        public string FinancialServicesClientType { get; set; }
 
         public CloudType Cloud { get; set; }
 
         public bool DocumentAttached { get; set; }
 
 
+
+
+        public List<Software_Area> Software_Areas { get; set; }
+
+
+
+
+
+        /*
         //Entity Relationships
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual Company Company { get; set; }
@@ -33,6 +41,6 @@ namespace Vendor_Application_Inventory_Platform.Models
             SoftwareModules = new List<SoftwareModule>();
             SoftwareTypes = new List<SoftwareType>();
         }
-
+        */
     }
 }

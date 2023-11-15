@@ -27,35 +27,26 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
         
         public DbSet<ContactNumber> ContactNumbers { get; set; }
 
+        public DbSet<Software_Area> Software_Areas { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             //Many to many relationship between software and business area
-            modelBuilder.Entity<Software>()
-                .HasMany(software => software.BusinessAreas)
-                .WithMany(businessArea => businessArea.Softwares);
+            //One to many relationship of software and Software_Area
+            modelBuilder.Entity<Software_Area>()
+                .HasOne(s => s.software)
+                .WithMany(sa => sa.Software_Areas)
+                .HasForeignKey(si => si.softwareID);
+            //One to many relationship of BusinessArea and Software_Area
+            modelBuilder.Entity<Software_Area>()
+                .HasOne(a => a.businessArea)
+                .WithMany(sa => sa.Software_Areas)
+                .HasForeignKey(si => si.areaID);
 
-            //Many to many relationship between software and modules
-            modelBuilder.Entity<Software>()
-                .HasMany(software => software.SoftwareModules)
-                .WithMany(module => module.Softwares);
 
-            //Many to many relationship between software and software type
-            modelBuilder.Entity<Software>()
-                .HasMany(software => software.SoftwareTypes)
-                .WithMany(softwareType => softwareType.Softwares);
 
-            //Many to many relationship between company and country
-            modelBuilder.Entity<Company>()
-                .HasMany(company => company.Countries)
-                .WithMany(country => country.Companies);
-            
-            modelBuilder.Entity<City>()
-                .HasOne(city => city.Address)
-                .WithOne(address => address.city)
-                .HasForeignKey<Address>(a => a.CityID);
 
-            base.OnModelCreating(modelBuilder);
+
 
         }
     }

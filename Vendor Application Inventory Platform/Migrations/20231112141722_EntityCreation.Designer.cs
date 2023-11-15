@@ -12,8 +12,8 @@ using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 namespace Vendor_Application_Inventory_Platform.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231109111128_Initial")]
-    partial class Initial
+    [Migration("20231112141722_EntityCreation")]
+    partial class EntityCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,20 +98,12 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AddressLine2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CityID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PostCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Region")
+                    b.Property<string>("PostCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -151,9 +143,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.Property<string>("CityName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ContactID")
-                        .HasColumnType("int");
 
                     b.Property<int>("CountryID")
                         .HasColumnType("int");

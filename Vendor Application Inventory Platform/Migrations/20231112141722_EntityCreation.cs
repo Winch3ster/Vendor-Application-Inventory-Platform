@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vendor_Application_Inventory_Platform.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class EntityCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -131,7 +131,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     CityID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CountryID = table.Column<int>(type: "int", nullable: false),
-                    ContactID = table.Column<int>(type: "int", nullable: false),
                     CityName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -277,10 +276,8 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CityID = table.Column<int>(type: "int", nullable: false),
                     AddressLine1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AddressLine2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Region = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PostCode = table.Column<int>(type: "int", nullable: false)
+                    AddressLine2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

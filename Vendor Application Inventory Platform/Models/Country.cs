@@ -7,7 +7,7 @@ namespace Vendor_Application_Inventory_Platform.Models
         public int CountryID { get; set; }
         public string CountryName { get; set; }
 
-
+        /*
         public virtual ICollection<Company> Companies { get; set; }
         public virtual ICollection<City>? Cities { get; set; }
         
@@ -17,6 +17,7 @@ namespace Vendor_Application_Inventory_Platform.Models
             Companies = new List<Company>();
             Cities = new List<City>();
         }
+        */
 
     }
 }

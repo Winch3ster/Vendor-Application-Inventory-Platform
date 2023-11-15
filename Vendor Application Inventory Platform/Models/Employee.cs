@@ -20,13 +20,13 @@ namespace Vendor_Application_Inventory_Platform.Models
         
         public bool IsAdmin { get; set; }
 
-
+        /*
         public ICollection<Review>? Reviews { get; set; }
         
         public Employee()
         {
             Reviews = new List<Review>();
         }
-
+        */
     }
 }

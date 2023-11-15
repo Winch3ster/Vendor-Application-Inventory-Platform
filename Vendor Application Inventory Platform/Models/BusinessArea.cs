@@ -13,11 +13,9 @@ namespace Vendor_Application_Inventory_Platform.Models
         [DisplayName("Buiness area")]
         public string Description { get; set; }
 
-        public virtual ICollection<Software> Softwares { get; set; }
-        public BusinessArea()
-        {
-            Softwares = new List<Software>();
-        }
+        //Navigations Properties
+        public List<Software_Area> Software_Areas { get; set; }
+
 
     }
 }

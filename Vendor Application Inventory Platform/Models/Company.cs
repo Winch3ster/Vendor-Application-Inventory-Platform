@@ -20,7 +20,7 @@
         public DateTime LastReviewDate { get; set; }
 
 
-
+        /*
         public virtual ICollection<Software> Softwares { get; set; }
 
         public virtual ICollection<Country> Countries { get; set; }
@@ -30,7 +30,7 @@
             Softwares = new List<Software>();
             Countries = new List<Country>();
         }
-
+        */
 
     }
 }

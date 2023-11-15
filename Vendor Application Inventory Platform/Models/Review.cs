@@ -16,10 +16,11 @@ namespace Vendor_Application_Inventory_Platform.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime ReviewDate { get; set; }
 
-
+        /*
         public virtual Employee Employee { get; set; }
 
         public virtual Software Software { get; set; }
+        */
 
     }
 }

@@ -14,6 +14,7 @@ namespace Vendor_Application_Inventory_Platform.Models
         public string Module { get; set; }
 
 
+        /*
         public virtual ICollection<Software> Softwares { get; set; }
         
         
@@ -21,5 +22,6 @@ namespace Vendor_Application_Inventory_Platform.Models
         {
             Softwares = new List<Software>();
         }
+        */
     }
 }
