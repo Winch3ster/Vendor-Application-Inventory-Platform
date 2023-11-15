@@ -20,6 +20,8 @@ namespace Vendor_Application_Inventory_Platform.Models
         
         public bool IsAdmin { get; set; }
 
+        public List<Review> reviews { get; set; }
+
         /*
         public ICollection<Review>? Reviews { get; set; }
         

@@ -6,11 +6,10 @@
         public int CountryID { get; set; }
         public string CityName { get; set; }
 
-        /*
-        public virtual Country Country { get; set; }
-        public virtual ContactNumber ContactNumber { get; set; }
-        public virtual Address Address { get; set; }
-        */
+      
+        public Country country { get; set; }
+        public ContactNumber contactNumber { get; set; }
+        public Address address { get; set; }
 
     }
 }

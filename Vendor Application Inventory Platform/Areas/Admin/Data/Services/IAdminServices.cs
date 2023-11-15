@@ -3,6 +3,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 
 public interface IAdminServices
 {
+    
     List<string> CountryNamesByCompany(int companyId);
 
     Company? FindCompanyById(int companyId);
@@ -31,4 +32,5 @@ public interface IAdminServices
 
     public Address? GetAddress(int cityId);
     public ContactNumber? GetContact(int cityId);
+    
 }

@@ -9,7 +9,7 @@ using Vendor_Application_Inventory_Platform.Models;
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 {
 
-
+    /*
 
     [Authorize(Policy = "AdminPolicy")]
     [Route("[controller]/[action]/")]
@@ -302,4 +302,5 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         }
 
     }
+    */
 }

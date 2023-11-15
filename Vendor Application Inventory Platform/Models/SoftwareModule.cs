@@ -13,6 +13,7 @@ namespace Vendor_Application_Inventory_Platform.Models
         [DisplayName("Module")]
         public string Module { get; set; }
 
+        public List<Software_Module> Software_Modules { get; set; }
 
         /*
         public virtual ICollection<Software> Softwares { get; set; }

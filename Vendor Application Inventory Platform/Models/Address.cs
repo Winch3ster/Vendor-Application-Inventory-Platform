@@ -20,6 +20,7 @@ public class Address
     [DisplayName("Postcode")]
     public string? PostCode { get; set; }
         
+    public string State { get; set; }
     public virtual City city { get; set; }
 
 }

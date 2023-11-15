@@ -21,13 +21,23 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
         public DbSet<BusinessArea> BusinessAreas { get; set; }
         public DbSet<SoftwareModule> SoftwareModules { get; set; }
         public DbSet<SoftwareType> SoftwareTypes { get; set; }
+        public DbSet<FinancialServicesClientType> FinancialServicesClientTypes { get; set; }
         public DbSet<Country> Countries { get; set; }
 
         public DbSet<City?> Cities { get; set; }
         
         public DbSet<ContactNumber> ContactNumbers { get; set; }
 
+
+        //Join tables
         public DbSet<Software_Area> Software_Areas { get; set; }
+
+        public DbSet<Software_Module> Software_Modules { get; set; }
+        public DbSet<Software_Type> Software_Types { get; set; }
+
+        public DbSet<Software_FinancialServicesClientType> Software_FinancialServicesClientTypes { get; set; }
+        public DbSet<Company_Country> Company_Country { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -45,7 +55,101 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 
 
 
+            //Many to many relationship between software and software module
+            //One to many relationship of software and Software_Module
+            modelBuilder.Entity<Software_Module>()
+                .HasOne(s => s.software)
+                .WithMany(sm => sm.Software_Modules)
+                .HasForeignKey(si => si.softwareID);
 
+            //One to many relationship of SoftwareModule and Software_Module
+            modelBuilder.Entity<Software_Module>()
+                .HasOne(m => m.softwareModule)
+                .WithMany(sm => sm.Software_Modules)
+                .HasForeignKey(si => si.moduleID);
+
+
+
+
+
+            //Many to many relationship between software and software type
+            //One to many relationship of software and Software_Type
+            modelBuilder.Entity<Software_Type>()
+                .HasOne(s => s.software)
+                .WithMany(sm => sm.Software_Types)
+                .HasForeignKey(si => si.softwareID);
+
+            //One to many relationship of SoftwareType and Software_Type
+            modelBuilder.Entity<Software_Type>()
+                .HasOne(m => m.softwareType)
+                .WithMany(sm => sm.Software_Types)
+                .HasForeignKey(si => si.typeID);
+
+
+            //Many to many relationship between software and financial services client type
+            //One to many relationship of software and Software_FinancialServicesClientType
+            modelBuilder.Entity<Software_FinancialServicesClientType>()
+                .HasOne(s => s.software)
+                .WithMany(sf => sf.Software_FinancialServicesClientTypes)
+                .HasForeignKey(si => si.softwareID);
+
+            //One to many relationship of FinancialServicesClientType and Software_FinancialServicesClientType
+            modelBuilder.Entity<Software_FinancialServicesClientType>()
+                .HasOne(f => f.financialServicesClientType)
+                .WithMany(sf => sf.Software_FinancialServicesClientTypes)
+                .HasForeignKey(fi => fi.financialServicesClientTypeID);
+
+
+
+            //Many to many relationship between company and country
+            //One to many relationship of company and Company_Country
+            modelBuilder.Entity<Company_Country>()
+                .HasOne(comp => comp.company)
+                .WithMany(companyCompany => companyCompany.Company_Countries)
+                .HasForeignKey(compid => compid.companyID);
+
+            //One to many relationship of Country and Company_Country
+            modelBuilder.Entity<Company_Country>()
+                .HasOne(coun => coun.country)
+                .WithMany(companyCompany => companyCompany.Company_Countries)
+                .HasForeignKey(counid => counid.countryID);
+
+
+            //One to may relationship between company and software
+            modelBuilder.Entity<Software>()
+                .HasKey(b => b.SoftwareID);
+
+            modelBuilder.Entity<Software>()
+                .HasOne(s => s.Company)
+                .WithMany(c => c.Softwares)
+                .HasForeignKey(c => c.CompanyID);
+
+
+
+
+            // Configure the one-to-many relationship between Country and Cities
+            modelBuilder.Entity<City>()
+                .HasOne(c => c.country)
+                .WithMany(country => country.Cities)
+                .HasForeignKey(c => c.CountryID)
+                .OnDelete(DeleteBehavior.Cascade); //Delete the cities associated when country is deleted
+
+
+            // Configure the one-to-many relationship between review and software
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.software)
+                .WithMany(s => s.reviews)
+                .HasForeignKey(r => r.SoftwareID)
+                .OnDelete(DeleteBehavior.Cascade); //When software is deleted, delete the review also 
+
+
+
+            // Configure the one-to-many relationship between user and review
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.employee) //One review has one user
+                .WithMany(e => e.reviews) //One user has many reviews
+                .HasForeignKey(r => r.EmployeeID) //The review has user foreign key
+                .OnDelete(DeleteBehavior.Cascade); //When software is deleted, delete the review also 
 
 
         }

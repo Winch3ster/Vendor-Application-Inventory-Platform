@@ -14,6 +14,8 @@ namespace Vendor_Application_Inventory_Platform.Models
         public string Type { get; set; }
 
 
+        public List<Software_Type> Software_Types { get; set; }
+
         /*
         public virtual ICollection<Software> Softwares { get; set; }
         

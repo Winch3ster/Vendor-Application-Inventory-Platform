@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 
@@ -11,9 +12,11 @@ using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 namespace Vendor_Application_Inventory_Platform.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231113050749_addedSoftwareCompany")]
+    partial class addedSoftwareCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,14 +47,9 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("AddressID");
 
-                    b.HasIndex("CityID")
-                        .IsUnique();
+                    b.HasIndex("CityID");
 
                     b.ToTable("Addresses");
                 });
@@ -89,8 +87,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("CityID");
-
-                    b.HasIndex("CountryID");
 
                     b.ToTable("Cities");
                 });
@@ -169,13 +165,12 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.Property<int>("CityID")
                         .HasColumnType("int");
 
-                    b.Property<long>("Number")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
 
                     b.HasKey("ContactNumberID");
 
-                    b.HasIndex("CityID")
-                        .IsUnique();
+                    b.HasIndex("CityID");
 
                     b.ToTable("ContactNumbers");
                 });
@@ -254,9 +249,8 @@ namespace Vendor_Application_Inventory_Platform.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewID"));
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Description")
+                        .HasColumnType("int");
 
                     b.Property<int>("EmployeeID")
                         .HasColumnType("int");
@@ -268,10 +262,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ReviewID");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("SoftwareID");
 
                     b.ToTable("Reviews");
                 });
@@ -437,23 +427,12 @@ namespace Vendor_Application_Inventory_Platform.Migrations
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Address", b =>
                 {
                     b.HasOne("Vendor_Application_Inventory_Platform.Models.City", "city")
-                        .WithOne("address")
-                        .HasForeignKey("Vendor_Application_Inventory_Platform.Models.Address", "CityID")
+                        .WithMany()
+                        .HasForeignKey("CityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("city");
-                });
-
-            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.City", b =>
-                {
-                    b.HasOne("Vendor_Application_Inventory_Platform.Models.Country", "country")
-                        .WithMany("Cities")
-                        .HasForeignKey("CountryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("country");
                 });
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Company_Country", b =>
@@ -477,32 +456,13 @@ namespace Vendor_Application_Inventory_Platform.Migrations
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.ContactNumber", b =>
                 {
-                    b.HasOne("Vendor_Application_Inventory_Platform.Models.City", "city")
-                        .WithOne("contactNumber")
-                        .HasForeignKey("Vendor_Application_Inventory_Platform.Models.ContactNumber", "CityID")
+                    b.HasOne("Vendor_Application_Inventory_Platform.Models.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("city");
-                });
-
-            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Review", b =>
-                {
-                    b.HasOne("Vendor_Application_Inventory_Platform.Models.Employee", "employee")
-                        .WithMany("reviews")
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Vendor_Application_Inventory_Platform.Models.Software", "software")
-                        .WithMany("reviews")
-                        .HasForeignKey("SoftwareID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("employee");
-
-                    b.Navigation("software");
+                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Software", b =>
@@ -597,15 +557,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.Navigation("Software_Areas");
                 });
 
-            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.City", b =>
-                {
-                    b.Navigation("address")
-                        .IsRequired();
-
-                    b.Navigation("contactNumber")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Company", b =>
                 {
                     b.Navigation("Company_Countries");
@@ -615,14 +566,7 @@ namespace Vendor_Application_Inventory_Platform.Migrations
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Country", b =>
                 {
-                    b.Navigation("Cities");
-
                     b.Navigation("Company_Countries");
-                });
-
-            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Employee", b =>
-                {
-                    b.Navigation("reviews");
                 });
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.FinancialServicesClientType", b =>
@@ -639,8 +583,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.Navigation("Software_Modules");
 
                     b.Navigation("Software_Types");
-
-                    b.Navigation("reviews");
                 });
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.SoftwareModule", b =>
