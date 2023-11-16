@@ -8,7 +8,7 @@ using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Controllers
 {
-
+    [Authorize(Policy = "Authentication")]
     [Route("[controller]/[action]")]
     public class EmployeeController : Controller
     {

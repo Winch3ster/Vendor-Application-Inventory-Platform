@@ -18,13 +18,13 @@ public interface IAdminServices
 
     List<City> ListCities(int companyId, string countryName);
 
-    City FindCity(int companyId, string countryName, string cityName);
+    City? FindCity(int companyId, string countryName, string cityName);
 
     public void DeleteCity(City city);
 
-    public void CreateNewContact(string contactNum, City city);
+    public void CreateNewContact(string contactNum, City? city);
 
-    public void CreateNewAddress(string? address1, string? address2, string? postcode, City city);
+    public void CreateNewAddress(string? address1, string? address2, string? postcode, string? state, City city);
 
     public void DeleteContact(City city);
 

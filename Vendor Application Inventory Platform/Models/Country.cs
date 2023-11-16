@@ -12,17 +12,5 @@ namespace Vendor_Application_Inventory_Platform.Models
 
         public ICollection<City>? Cities { get; set; }
 
-        /*
-        public virtual ICollection<Company> Companies { get; set; }
-        
-        
-        public Country()
-        {
-            // Initialize the navigation properties in the constructor
-            Companies = new List<Company>();
-            Cities = new List<City>();
-        }
-        */
-
     }
 }

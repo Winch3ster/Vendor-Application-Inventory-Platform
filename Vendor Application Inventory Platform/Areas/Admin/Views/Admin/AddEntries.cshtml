@@ -208,6 +208,7 @@
   }
   
   let countriesToTabs = (countryNames, countries) => {
+    let Countries = countries
     $.each(countryNames, function (index, value){
         if (value.trim() !== '') {
 
@@ -223,20 +224,27 @@
                     $('#tab-content').append(cityContainer);
                     
                     //Makes multiple accordion based on Model or makes one default
-                   if (countries){
-                     for (let i=0; i< countries.length; i++){
-                       if (countries[i].CountryName!==value){
-                         continue;
-                       }
-                       if (countries[i].Cities.length!==0){
-                         for(let j=0; j< countries[i].Cities.length;j++){
-                           accordionForCities(value, countries[i].Cities[j]);
+                   if (Countries){
+                     for (let i=0; i< Countries.length; i++){
+                       if (Countries[i].CountryName==value){
+                         if (Countries[i].Cities.length!==0){
+                           for(let j=0; j< Countries[i].Cities.length;j++){
+                             accordionForCities(value, Countries[i].Cities[j]);
+                           }
+                         }
+                         else{
+                           accordionForCities(value);
                          }
                        }
-                       else{
-                         accordionForCities(value);
+                       else{  
+                         let backendCountryNames = Countries.map(country=> country.CountryName);
+                         
+                         //Country that are just created in the front end and not exists in the view model yet
+                         let frontEndCreatedCountry = countryNames.filter(name => !backendCountryNames.includes(name))
+                         if (frontEndCreatedCountry.length!==0){
+                           location.reload();
+                         }
                        }
-                       
                      }
                    }
                    else{
@@ -294,7 +302,7 @@
                                                        <label>Has Contact</label>
                                                      </div>
                                                      <div class="p-2 mt-2">
-                                                       <input type="hidden" class="form-control" name="country" value="${country.replace('-', " ")}">
+                                                       <input type="hidden" class="form-control" name="country" value="${country.replace(/-/g, ' ')}">
                                                        <h5 class="mt-2">City</h5>
                                                        <input type="text" class="form-control text-uppercase" name="cityName" placeholder="City" value="${cityName}" required>
                                                        <div class="addressField mt-2 d-none">
@@ -302,6 +310,7 @@
                                                          <input type="text" class="form-control mt-1" name="address1" placeholder="Address 1" value="${address ? address.AddressLine1 ?? "" : ""}">
                                                          <input type="text" class="form-control mt-1" name="address2" placeholder="Address 2" value="${address ? address.AddressLine2 ?? "" : ""}">
                                                          <input type="text" class="form-control mt-1" name="postcode" placeholder="Postcode" value="${address ? address.PostCode ?? "" : ""}">
+                                                         <input type="text" class="form-control mt-1" name="state" placeholder="State" value="${address ? address.State ?? "" : ""}">
                                                        </div>
                                                        <div class="contactField mt-2 d-none">
                                                          <h5>Contact</h5>
@@ -521,9 +530,12 @@
                          
                        Country: $(this).find("input[name='country']").val(),
                        
+                       State: $(this).find("input[name='state']").val(),
+                       
                        Csrf: $(this).find('input[name="__RequestVerificationToken"]').val()
 
                        };
+                     
                      
                      
                      //replaces empty string with null

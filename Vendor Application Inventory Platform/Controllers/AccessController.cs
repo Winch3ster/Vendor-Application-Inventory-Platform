@@ -31,7 +31,7 @@ public class AccessController : Controller
             
             if (isAdminClaim != null)
             {
-                return RedirectToAction("Index", "Admin");
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
             }
             else
             {
@@ -71,7 +71,7 @@ public class AccessController : Controller
 
                         if (user.IsAdmin)
                         {
-                            return RedirectToAction("Index", "Admin");
+                            return RedirectToAction("Index", "Admin", new { area = "Admin" });
                         }
                         else
                         {

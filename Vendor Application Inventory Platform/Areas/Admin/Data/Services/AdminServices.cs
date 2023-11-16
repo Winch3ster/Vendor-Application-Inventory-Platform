@@ -18,12 +18,7 @@ public class AdminServices : IAdminServices
 
     public List<string> CountryNamesByCompany(int companyId)
     {
-        /*
-        var objCountries = _db.Companies
-            .Where(c => c.CompanyID == companyId)
-            .SelectMany(c => c.Countries)
-            .Select(country => country.CountryName).ToList();
-        */
+        
         var objCountries = _db.Company_Country
             .Where(cc => cc.companyID == companyId)
             .Select(cc => cc.country.CountryName)
@@ -35,19 +30,16 @@ public class AdminServices : IAdminServices
 
     public Company? FindCompanyById(int id)
     {
-        //return _db.Companies.Include(company => company.Company_Countries).FirstOrDefault(c => c.CompanyID == id);
-        return _db.Companies.FirstOrDefault(c => c.CompanyID == id);
+        return _db.Companies.Include(company => company.Company_Countries).FirstOrDefault(c => c.CompanyID == id);
     }
 
     public void CreateNewCountry(string countryName, Company company)
     {
-        //TO BE EDITED HOW TO SAVE THE DATA THEN????????
         var country = new Country
         {
             CountryName = countryName,
-            //Companies = new List<Company> { company }
+            Company_Countries = new List<Company_Country> { new Company_Country { companyID = company.CompanyID } }
         };
-        _db.SaveChanges();
 
 
         _db.Countries.Add(country);
@@ -61,56 +53,22 @@ public class AdminServices : IAdminServices
 
     public void DeleteCountry(string countryName, int companyId)
     {
+        
+        var companyCountry = _db.Company_Country
+            .FirstOrDefault(cc => cc.companyID == companyId && cc.country.CountryName == countryName);
 
-        //Why delete country need company??
-
-        /*
-        var country = _db.Companies
-            .Where(c => c.CompanyID == companyId)
-            .SelectMany(c => c.Countries)
-            .FirstOrDefault(country => country.CountryName == countryName);
-        */
-
-
-        // Step 1: Find the Country entity by name
-        var country = _db.Countries.FirstOrDefault(c => c.CountryName == countryName);
-
-        // Step 2: Find the Company entity by ID
-        var company = _db.Companies.FirstOrDefault(c => c.CompanyID == companyId);
-
-
-
-        // Check if both Country and Company are found
-        if (country != null && company != null)
+        if (companyCountry != null)
         {
-            // Step 3: Identify the Company_Country entry to be removed
-            var companyCountry = _db.Company_Country
-                .FirstOrDefault(cc => cc.companyID == companyId && cc.countryID == country.CountryID);
+            _db.Company_Country.Remove(companyCountry);
 
-            // Step 4: Remove the Company_Country entry
-            if (companyCountry != null)
+            var country = _db.Countries.FirstOrDefault(c => c.CountryID == companyCountry.countryID);
+            if (country != null)
             {
-                _db.Company_Country.Remove(companyCountry);
-
-                // Step 5: Optionally, check if the country has any remaining associations
-                var remainingAssociations = _db.Company_Country.Any(cc => cc.countryID == country.CountryID);
-
-                // If no remaining associations, delete the Country entry
-                if (!remainingAssociations)
-                {
-                    _db.Countries.Remove(country);
-                }
-
-                // Step 6: Save changes to persist the modifications
-                _db.SaveChanges();
+                _db.Countries.Remove(country);
             }
+
+            _db.SaveChanges();
         }
-
-
-        //if (country != null) 
-        //    _db.Countries.Remove(country);
-
-        //_db.SaveChanges();
         
     }
 
@@ -122,7 +80,7 @@ public class AdminServices : IAdminServices
             CityName = cityName
         };
 
-        country.Cities?.Add(city);
+        _db.Cities.Add(city);
         _db.SaveChanges();
 
         return city;
@@ -130,60 +88,23 @@ public class AdminServices : IAdminServices
 
     public List<City> ListCities(int companyId, string countryName)
     {
-        // 1 company can be in many country
-        // and
-        // 1 Country can have many companies
-
-        //Now I want to list all the cities that this company is in 
-
-        //Step 1: Select all the country that this company is in
-        //Step 2: Based on the selected countries, list the country's cities
-
-
-        //List cities based on 2 criteria --> company id and country name
-
-        //Step 1: Find all the countries
-        return _db.Company_Country.Where(cc => cc.companyID == companyId).Select(cc => cc.country).Where(country => country.CountryName == countryName).SelectMany(country => country.Cities!)
+        
+        var cities = _db.Company_Country
+            .Where(cc => cc.companyID == companyId && cc.country.CountryName == countryName)
+            .SelectMany(cc => cc.country.Cities!)
             .ToList();
 
-       
-        
-        /*
-        return _db.Companies
-            .Where(c => c.CompanyID == companyId)
-            .SelectMany(c => c.Countries)
-            .Where(country => country.CountryName == countryName)
-            .SelectMany(country => country.Cities!)
-            .ToList();
-        
-
-       */
+        return cities;
     }
 
-    public City FindCity(int companyId, string countryName, string cityName)
+    public City? FindCity(int companyId, string countryName, string cityName)
     {
-        //I want to find a city based on the company, which country it is in and the city name
-        //Step 1: Find all countries that this company is in
-        //Step 2: Based on the filtered countries, I want to find the country that has 'countryName' name
-        //Step 3: Once I have the country I can get the city via its name
-
-
-        var city = _db.Cities
-        .Where(c => c.country.Company_Countries.Any(cc => cc.companyID == companyId) &&
-                    c.country.CountryName == countryName &&
-                    c.CityName == cityName).FirstOrDefault();
+        var city = _db.Company_Country
+            .Where(cc => cc.companyID == companyId && cc.country.CountryName == countryName)
+            .SelectMany(cc => cc.country.Cities!)
+            .FirstOrDefault(city => city.CityName == cityName);
 
         return city;
-
-
-        /*
-        return _db.Companies
-            .Where(company=>company.CompanyID==companyId)
-            .SelectMany(company=>company.Countries)
-            .Where(country=>country.CountryName==countryName)
-            .SelectMany(country=>country.Cities)
-            .FirstOrDefault(city=>city.CityName==cityName);
-        */
     }
 
     public void DeleteCity(City city)
@@ -192,13 +113,13 @@ public class AdminServices : IAdminServices
         _db.SaveChanges();
     }
 
-    public void CreateNewContact(string contactNum, City city)
+    public void CreateNewContact(string contactNum, City? city)
     {
         ContactNumber? contactExist = _db.ContactNumbers.FirstOrDefault(c => c.CityID == city.CityID);
 
         if (contactExist != null)
         {
-            contactExist.Number = int.Parse(contactNum);
+            contactExist.Number = long.Parse(contactNum);
             _db.ContactNumbers.Update(contactExist);
         }
         else
@@ -214,7 +135,7 @@ public class AdminServices : IAdminServices
         _db.SaveChanges();
     }
     
-    public void CreateNewAddress(string? address1, string? address2, string? postcode, City city)
+    public void CreateNewAddress(string? address1, string? address2, string? postcode, string? state, City city)
     {
         Address? addressExist = _db.Addresses.FirstOrDefault(c => c.CityID == city.CityID);
 
@@ -223,6 +144,7 @@ public class AdminServices : IAdminServices
             addressExist.AddressLine1 = address1;
             addressExist.AddressLine2 = address2;
             addressExist.PostCode = postcode;
+            addressExist.State = state;
             _db.Addresses.Update(addressExist);
         }
         else
@@ -232,7 +154,8 @@ public class AdminServices : IAdminServices
                 CityID = city.CityID,
                 AddressLine1 = address1,
                 AddressLine2 = address2,
-                PostCode = postcode
+                PostCode = postcode,
+                State = state
             };
 
             _db.Addresses.Add(address);

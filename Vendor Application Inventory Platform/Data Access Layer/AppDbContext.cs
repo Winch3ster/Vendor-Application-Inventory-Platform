@@ -67,6 +67,8 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 .HasOne(m => m.softwareModule)
                 .WithMany(sm => sm.Software_Modules)
                 .HasForeignKey(si => si.moduleID);
+            
+            modelBuilder.Entity<FinancialServicesClientType>().ToTable("FinancialServicesClientType");
 
 
 

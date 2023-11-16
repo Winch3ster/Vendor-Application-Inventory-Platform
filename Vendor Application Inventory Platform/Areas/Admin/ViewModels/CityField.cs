@@ -18,6 +18,8 @@ public class CityField
     [StringLength(100, MinimumLength = 4, ErrorMessage = "Post Code must be at least 4 characters up to 100 characters.")]
     public string? Postcode { get; set; }
     
+    public string? State { get; set; }
+    
     [StringLength(15, MinimumLength = 10, ErrorMessage = "Contact number must be a number with a length between 10 and 15 characters.")]
     public string? ContactNumber { get; set; }
 }

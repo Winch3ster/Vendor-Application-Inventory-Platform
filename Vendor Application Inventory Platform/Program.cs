@@ -44,8 +44,12 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy =>
     {
-        policy.RequireAuthenticatedUser();
         policy.RequireClaim("isAdmin", "true");
+    });
+    
+    options.AddPolicy("Authentication", policy =>
+    {
+        policy.RequireAuthenticatedUser();
     });
 });
 
@@ -78,7 +82,7 @@ app.UseEndpoints(endpoints =>
 
 
 app.UseMvc();
-DatabaseSeeder.Seed(app);
+// DatabaseSeeder.Seed(app);
 app.Run();
 
 

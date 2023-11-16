@@ -9,9 +9,10 @@ using Vendor_Application_Inventory_Platform.Models;
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 {
 
-    /*
-
+    
+    [Authorize(Policy = "Authentication")]
     [Authorize(Policy = "AdminPolicy")]
+    [Area("Admin")]
     [Route("[controller]/[action]/")]
   
     public class AdminController : Controller
@@ -52,12 +53,12 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult AddEntries()
         {
-            List<string> countriesNames = _adminService.CountryNamesByCompany(2).ToList();
+            List<string> countriesNames = _adminService.CountryNamesByCompany(1).ToList();
             var countryViewModels = new List<AddEntriesViewModel.CountryViewModel>();
 
             foreach (var countryName in countriesNames)
             {
-                var cities = _adminService.ListCities(2, countryName).ToList();
+                var cities = _adminService.ListCities(1, countryName).ToList();
 
                 var cityViewModels = new List<AddEntriesViewModel.CityViewModel>();
 
@@ -74,6 +75,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                             AddressLine1 = address?.AddressLine1,
                             AddressLine2 = address?.AddressLine2,
                             PostCode = address?.PostCode,
+                            State = address?.State,
                         },
                         Contact = new AddEntriesViewModel.ContactViewModel
                         {
@@ -108,8 +110,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             List<string> updatedCountryNames = new List<string>();
             if (ModelState.IsValid)
             {
-                var company = _adminService.FindCompanyById(2);
-                var thisCompanyCountriesName = _adminService.CountryNamesByCompany(2).ToArray();
+                var company = _adminService.FindCompanyById(1);
+                var thisCompanyCountriesName = _adminService.CountryNamesByCompany(1).ToArray();
 
                 foreach (var countryName in countryNames)
                 {
@@ -145,7 +147,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                             {
                                 foreach (var country in deleteCountries)
                                 {
-                                    _adminService.DeleteCountry(country, 2);
+                                    _adminService.DeleteCountry(country, 1);
                                 }
                             }
 
@@ -153,7 +155,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                     }
                 }
                 
-                return Json(new { success = true , countryNames = _adminService.CountryNamesByCompany(2).ToArray()});
+                return Json(new { success = true , countryNames = _adminService.CountryNamesByCompany(1).ToArray()});
                 
             }
             return Json(new { success = false });
@@ -172,7 +174,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 string country = cityField.Country;
                 string cityName = Regex.Replace(cityField.CityName.Trim(), @"\s+", " ").ToUpper();
                 
-                List<string> citiesNames = _adminService.ListCities(2, cityField.Country).Select(c=>c.CityName).ToList();
+                List<string> citiesNames = _adminService.ListCities(1, cityField.Country).Select(c=>c.CityName).ToList();
                 
                 Country countryObj = _adminService.RetrieveCountry(country);
                 
@@ -184,7 +186,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 }
                 else
                 {
-                    city = _adminService.FindCity(2, countryObj.CountryName, cityName);
+                    city = _adminService.FindCity(1, countryObj.CountryName, cityName);
                 }
                 
                 if (hasContact)
@@ -204,10 +206,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                     string? address1 = cityField.Address1;
                     string? address2 = cityField.Address2;
                     string? postcode = cityField.Postcode;
+                    string? state = cityField.State;
 
                     if (address1 != null && address2 != null && postcode != null)
                     {
-                        _adminService.CreateNewAddress(address1, address2, postcode, city);
+                        _adminService.CreateNewAddress(address1, address2, postcode, state, city);
                     }
                 }
                 else
@@ -235,7 +238,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             if (deleteCityField.deleteCities != null)
                 foreach (var deleteCity in deleteCityField.deleteCities)
                 {
-                    City? city = _adminService.FindCity(2, deleteCity.Country.ToUpper(), deleteCity.City.ToUpper());
+                    City? city = _adminService.FindCity(1, deleteCity.Country.ToUpper(), deleteCity.City.ToUpper());
 
                     if (city != null)
                     {
@@ -302,5 +305,5 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         }
 
     }
-    */
+    
 }

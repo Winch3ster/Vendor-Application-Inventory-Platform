@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 {
+    [Authorize(Policy = "Authentication")]
+    [Authorize(Policy = "AdminPolicy")]
+    [Area("Admin")]
     public class SoftwareController : Controller
     {
         public readonly ISoftwareServices _services;

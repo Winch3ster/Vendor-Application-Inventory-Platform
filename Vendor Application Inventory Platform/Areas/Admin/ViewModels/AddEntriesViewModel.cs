@@ -23,12 +23,12 @@ public class AddEntriesViewModel
         public string? AddressLine1 { get; set; }
         public string? AddressLine2 { get; set; }
         public string? PostCode { get; set; }
-
+        public string? State { get; set; }
     }
 
     public class ContactViewModel
     {
-        public int? ContactNumber { get; set; }
+        public long? ContactNumber { get; set; }
         
     }
 }
