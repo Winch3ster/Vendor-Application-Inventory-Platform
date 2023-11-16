@@ -29,9 +29,12 @@ builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
 
 builder.Services.AddScoped<IAccessServices, AccessServices>();
 
-builder.Services.AddScoped<IAdminServices, AdminServices>();
+builder.Services.AddScoped<ICompanyServices, CompanyServices>();
 
 builder.Services.AddScoped<IUserEmployeeServices, UserEmployeeService>();
+
+builder.Services.AddScoped<ISoftwareServices, SoftwareServices>();
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {

@@ -1,8 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
-using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Services;
 using Vendor_Application_Inventory_Platform.Models;
 
@@ -18,11 +16,9 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
     public class AdminController : Controller
     {
         private readonly IUserEmployeeServices _service;
-        private readonly IAdminServices _adminService;
-        public AdminController(IUserEmployeeServices service, IAdminServices adminService)
+        public AdminController(IUserEmployeeServices service)
         {
             _service = service;
-            _adminService = adminService;
         }
 
         [Route("~/Admin")]
@@ -48,207 +44,6 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             var allEmployeesData = await _service.GetAllAsync();//Convert the data to list
         
             return View(allEmployeesData); //pass the data list to the view
-        }
-
-        [HttpGet]
-        public IActionResult AddEntries()
-        {
-            List<string> countriesNames = _adminService.CountryNamesByCompany(1).ToList();
-            var countryViewModels = new List<AddEntriesViewModel.CountryViewModel>();
-
-            foreach (var countryName in countriesNames)
-            {
-                var cities = _adminService.ListCities(1, countryName).ToList();
-
-                var cityViewModels = new List<AddEntriesViewModel.CityViewModel>();
-
-                foreach (var city in cities)
-                {
-                    var address = _adminService.GetAddress(city.CityID);
-                    var contact = _adminService.GetContact(city.CityID);
-
-                    var cityViewModel = new AddEntriesViewModel.CityViewModel
-                    {
-                        CityName = city.CityName,
-                        Address = new AddEntriesViewModel.AddressViewModel
-                        {
-                            AddressLine1 = address?.AddressLine1,
-                            AddressLine2 = address?.AddressLine2,
-                            PostCode = address?.PostCode,
-                            State = address?.State,
-                        },
-                        Contact = new AddEntriesViewModel.ContactViewModel
-                        {
-                            ContactNumber = contact?.Number,
-                        },
-                    };
-
-                    cityViewModels.Add(cityViewModel);
-                }
-
-                var countryViewModel = new AddEntriesViewModel.CountryViewModel
-                {
-                    CountryName = countryName,
-                    Cities = cityViewModels,
-                };
-                countryViewModels.Add(countryViewModel);
-            }
-
-            var viewModel = new AddEntriesViewModel()
-            {
-                Countries = countryViewModels,
-            };
-
-            return View(viewModel);
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateCountry(string[] countryNames)
-        {
-            List<string> updatedCountryNames = new List<string>();
-            if (ModelState.IsValid)
-            {
-                var company = _adminService.FindCompanyById(1);
-                var thisCompanyCountriesName = _adminService.CountryNamesByCompany(1).ToArray();
-
-                foreach (var countryName in countryNames)
-                {
-                    var trimmedCountryName = Regex.Replace(countryName.Trim(), @"\s+", " ");
-
-                    var finalCountryName = trimmedCountryName.ToUpper();
-                    
-                    updatedCountryNames.Add(finalCountryName);
-                    
-                }
-                
-                bool hasDuplicates = updatedCountryNames.Count() != updatedCountryNames.Distinct().Count();
-
-                if (hasDuplicates)
-                {
-                    return Json(new { message = "Duplicate Country Names" });
-                }
-
-                foreach (var countryName in updatedCountryNames)
-                {
-                    if (company != null)
-                    {
-                        if (!thisCompanyCountriesName!.Contains(countryName))
-                        {
-                            _adminService.CreateNewCountry(countryName, company);
-                        }
-                        
-                        
-                        if (thisCompanyCountriesName != null)
-                        {
-                            var deleteCountries = thisCompanyCountriesName.Except(updatedCountryNames.ToArray()).ToArray();
-                            if (deleteCountries.Any())
-                            {
-                                foreach (var country in deleteCountries)
-                                {
-                                    _adminService.DeleteCountry(country, 1);
-                                }
-                            }
-
-                        }
-                    }
-                }
-                
-                return Json(new { success = true , countryNames = _adminService.CountryNamesByCompany(1).ToArray()});
-                
-            }
-            return Json(new { success = false });
-        }
-        
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateCities([FromBody] CityField cityField)
-        {
-            if (ModelState.IsValid)
-            {
-                City? city = null;
-                bool hasAddress = cityField.HasAddress;
-                bool hasContact = cityField.HasContact;
-                string country = cityField.Country;
-                string cityName = Regex.Replace(cityField.CityName.Trim(), @"\s+", " ").ToUpper();
-                
-                List<string> citiesNames = _adminService.ListCities(1, cityField.Country).Select(c=>c.CityName).ToList();
-                
-                Country countryObj = _adminService.RetrieveCountry(country);
-                
-                if (!citiesNames.Contains(cityName))
-                {
-                    
-                    city = _adminService.CreateNewCity(cityName, countryObj);
-                    
-                }
-                else
-                {
-                    city = _adminService.FindCity(1, countryObj.CountryName, cityName);
-                }
-                
-                if (hasContact)
-                {
-                    string? contactNumber = cityField.ContactNumber;
-                    if (contactNumber != null) 
-                        _adminService.CreateNewContact(contactNumber, city);
-                }
-                else
-                {
-                    _adminService.DeleteContact(city);
-                }
-
-                    
-                if (hasAddress)
-                {
-                    string? address1 = cityField.Address1;
-                    string? address2 = cityField.Address2;
-                    string? postcode = cityField.Postcode;
-                    string? state = cityField.State;
-
-                    if (address1 != null && address2 != null && postcode != null)
-                    {
-                        _adminService.CreateNewAddress(address1, address2, postcode, state, city);
-                    }
-                }
-                else
-                {
-                    _adminService.DeleteAddress(city);
-                }
-                    
-            }
-            else
-            {
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .FirstOrDefault();
-
-                return Json(new { errors = errors, country = cityField.Country, city = cityField.CityName});
-            }
-            return Json(new {success=true});
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteCities([FromBody] DeleteCityField deleteCityField)
-        {
-            if (deleteCityField.deleteCities != null)
-                foreach (var deleteCity in deleteCityField.deleteCities)
-                {
-                    City? city = _adminService.FindCity(1, deleteCity.Country.ToUpper(), deleteCity.City.ToUpper());
-
-                    if (city != null)
-                    {
-                        _adminService.DeleteCity(city);
-                    }
-
-                    
-                }
-
-            return Json(new { success = true });
         }
         
 

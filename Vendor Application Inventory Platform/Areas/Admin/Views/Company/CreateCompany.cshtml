@@ -1,0 +1,144 @@
+﻿@model Vendor_Application_Inventory_Platform.Models.Company
+
+@{
+    ViewData["title"] = "Create Company";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminControlPanel.cshtml";
+}
+
+<div class="col-9 m-md-5">
+    <p>Register new company</p>
+    <hr />
+    <h3>Company Information</h3>
+    
+    <form id="companyForm" class="mt-4">
+        @Html.AntiForgeryToken()
+        <!-- Company Name -->
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Company Name</label>
+                    <input id="CompanyName" class="form-control-light" value="@Model?.CompanyName" required />
+                </div>
+                
+                <!-- Company Website URL -->
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Company Website URL</label>
+                    <input id="CompanyWebsite" class="form-control-light" value="@Model?.WebsiteURL" required />
+                </div>
+                
+                <!-- Established Year -->
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Established Year</label>
+                    <input id="EstablishedYear" type="date" class="form-control-light" value="@Model?.EstablishedDate.ToString("yyyy-MM-dd")" required />
+                </div>
+                
+                <!-- Company employee count -->
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Number of Employees</label>
+                    <input type="number" id="EmployeeCount" class="form-control-light" value="@Model?.NumberOfEmployee" required />
+                </div>
+                
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Company Description</label>
+                    <textarea id="description" class="form-control-light">@Model?.Description</textarea>
+                </div>
+                
+                <!-- Internal Professional Services -->
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Internal Professional Services</label>
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                            <input id="InternalProfessionalServicesYes" class="form-check-input" type="radio" name="gridRadios" value="true" @(Model?.InternalProfessionalServices == true ? "checked" : "") required />
+                            <label class="form-check-label" for="InternalProfessionalServicesYes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input id="InternalProfessionalServicesNo" class="form-check-input" type="radio" name="gridRadios" value="false" @(Model?.InternalProfessionalServices == false ? "checked" : "") required />
+                            <label class="form-check-label" for="InternalProfessionalServicesNo">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Last Demo Date -->
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Last Demo Date</label>
+                    <input id="LastDemoDate" type="date" class="form-control-light" value="@Model?.LastDemoDate.ToString("yyyy-MM-dd")" required />
+                </div>
+                
+                <!-- Last Review Date -->
+                <div class="mb-3 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Last Review Date</label>
+                    <input id="LastReviewDate" type="date" class="form-control-light" value="@Model?.LastReviewDate.ToString("yyyy-MM-dd")" required />
+                </div>
+        
+        <div class="d-flex justify-content-end">
+            <button id="SubmitCompanyBtn" class="btn btn-info">Next</button>
+        </div>
+    </form>
+    
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function(){
+            $('#SubmitCompanyBtn').click(function(e){
+                e.preventDefault();
+                
+                $('#SubmitCompanyBtn').prop('disabled',true)
+                
+                let url;
+                let companyId = @((Model?.CompanyID) ?? -1);
+
+                if (companyId){
+                    url = "@Url.Action("CreateCompany")" + "?id="+companyId
+                }
+                else{
+                    url = "@Url.Action("CreateCompany")";
+                }
+                
+                let csrfToken = $('[name="__RequestVerificationToken"]').val();
+
+                // Get the form
+                const form = $('#companyForm')[0];
+
+                // Use reportValidity to show browser's built-in validation message
+                if (form.reportValidity()) {
+                    // Collect form data
+                    const formData = {
+                        CompanyName: $('#CompanyName').val(),
+                        WebsiteURL: $('#CompanyWebsite').val(),
+                        EstablishedDate: $('#EstablishedYear').val(),
+                        NumberOfEmployee: $('#EmployeeCount').val(),
+                        InternalProfessionalServices: $('input[name="gridRadios"]:checked').val(),
+                        LastDemoDate: $('#LastDemoDate').val(),
+                        LastReviewDate: $('#LastReviewDate').val(),
+                        Description: $('#description').val()
+                    };
+
+                    // Ajax POST request
+                    $.post({
+                        url: url,
+                        dataType:"json",
+                        contentType: 'application/json',
+                        data: JSON.stringify(formData),
+                        headers: {
+                           "RequestVerificationToken": csrfToken
+                        },
+                        success: function (data) {
+                            if (data.success){
+                                window.location.href = "@Url.Action("CreateCompanyDetails")" + "?id="+data.companyID;
+                            }
+                        },
+                        error: function (data) {
+                            alert(data.errors);
+                        }
+                    }).done($('#SubmitCompanyBtn').prop('disabled',false));
+                }
+            });
+        });
+    </script>
+}
+
+

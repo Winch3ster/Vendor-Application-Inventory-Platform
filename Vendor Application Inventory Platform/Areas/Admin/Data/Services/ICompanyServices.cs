@@ -1,7 +1,8 @@
-﻿using Vendor_Application_Inventory_Platform.Models;
+﻿using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
+using Vendor_Application_Inventory_Platform.Models;
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 
-public interface IAdminServices
+public interface ICompanyServices
 {
     
     List<string> CountryNamesByCompany(int companyId);
@@ -32,5 +33,9 @@ public interface IAdminServices
 
     public Address? GetAddress(int cityId);
     public ContactNumber? GetContact(int cityId);
-    
+
+    public Company CreateNewCompany(CreateCompanyField createCompanyField);
+
+    public Company? UpdateCompany(int companyId, CreateCompanyField createCompanyField);
+
 }

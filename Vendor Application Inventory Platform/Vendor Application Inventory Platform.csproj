@@ -39,4 +39,9 @@
     <AdditionalFiles Include="Areas\Admin\Views\Admin\Update.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Software\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Software\Index.cshtml" />
+  </ItemGroup>
+
 </Project>

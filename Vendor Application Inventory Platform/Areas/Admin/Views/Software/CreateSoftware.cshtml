@@ -1,8 +1,9 @@
-﻿@model Software
+﻿@model Vendor_Application_Inventory_Platform.Models.Software
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["title"] = "Register Software";
-    Layout = "_AdminControlPanel";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminControlPanel.cshtml";
 }
 
 <div class="col-9 m-md-5">
@@ -11,12 +12,26 @@
     <h3>Software Information</h3>
 
 
-    <form class="mt-2">
-
+    <form class="mt-4">
+        <!-- Company -->
+        <div class="d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Company</label>
+            <select class="form-select" name="company">
+                <option selected>Select Company</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+        </div>
+        
+        <div class="col-12">
+            <div class="col-9 mb-3 mt-1 citisoft-text-color float-end">Company Don't Exist? <a asp-controller="Company" asp-action="CreateCompany">Create</a></div>
+        </div>
+        
         <!-- Software name -->
-        <div class="mb-3 d-flex align-top">
+        <div class="col-12 mb-3 d-flex align-top">
             <label class="form-label citisoft-text-color col-3">Software Name</label>
-            <input class="form-control-light " />
+            <input class="form-control-light" />
         </div>
 
 
@@ -91,146 +106,7 @@
                 </div>
             </div>
         </div>
-
-
-        <h3>Company Information</h3>
-
-        <!-- Company Name -->
-        <div class="mb-3 d-flex align-top">
-            <label class="form-label citisoft-text-color col-3">Company Name</label>
-            <input class="form-control-light " />
-        </div>
-
-        <!-- Company Website URL -->
-        <div class="mb-3 d-flex align-top">
-            <label class="form-label citisoft-text-color col-3">Company Website URL</label>
-            <input class="form-control-light " />
-        </div>
-
-        <!-- Established Year -->
-        <div class="mb-3 d-flex align-top">
-            <label class="form-label citisoft-text-color col-3">Established Year</label>
-            <input type="number" placeholder="2023" class="form-control-light" />
-        </div>
-
-        <!-- Company employee count -->
-        <div class="mb-3 d-flex align-top">
-            <label class="form-label citisoft-text-color col-3">Number of Employees</label>
-            <input class="form-control-light " />
-        </div>
-
-
-
-        <div class="mb-3 d-flex align-top">
-            <label class="form-label citisoft-text-color col-3">Internal Professional Services</label>
-
-            <div class="col-sm-10">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1">
-                    <label class="form-check-label" for="gridRadios1">
-                        Yes
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                    <label class="form-check-label" for="gridRadios2">
-                        No
-                    </label>
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <!--last demo date -->
-        <div class="mb-3 d-flex align-top">
-            <label class="form-label citisoft-text-color col-3">Last Demo Date</label>
-            <input type="date" class="form-control-light " />
-        </div>
-
-
-
-        <!-- last review date -->
-        <div class="mb-3 d-flex align-top">
-            <label class="form-label citisoft-text-color col-3">Last Review Date</label>
-            <input type="date" class="form-control-light " />
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-        <!-- Company contacts -->
-        <div>
-            <h3>Register Company Contacts</h3>
-
-            <div class="mb-3 d-flex align-top">
-                <label class="form-label citisoft-text-color col-3">Country</label>
-
-                <div class="multi-value-container">
-                    <div class="multi-value-input-container d-block" id="countryContainer">
-
-                        <div class="d-flex align-items-center justify-content-evenly mb-2">
-                            <input class="form-control-light full-size" value="">
-                            <span class="btn btn-danger rounded col-2  mx-2 d-flex align-items-center justify-content-center"><i class="bi bi-trash"></i></span>
-                        </div>
-
-                    </div>
-                    <div class="d-flex justify-content-center" id="test">
-                        <div class="btn btn-primary rounded col-12" onclick="AddField(this)"><i class="bi bi-plus"></i></div>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <!-- Cities field -->
-            <div class="mb-3 d-flex align-top">
-                <label class="form-label citisoft-text-color col-3">Cities</label>
-
-                <div class="multi-value-container">
-                    <div class="multi-value-input-container d-block" id="countryContainer">
-                        <div class="d-flex align-items-center justify-content-evenly mb-2">
-
-                            <div class="dropdown">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" onclick="GetCountries()">
-                                    Country
-                                </a>
-
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </div>
-
-
-
-
-                            <input class="form-control-light full-size mx-1" />
-                            <span class="btn btn-danger rounded col-2 d-flex align-items-center justify-content-center"><i class="bi bi-trash"></i></span>
-                        </div>
-
-                    </div>
-                    <div class="d-flex justify-content-center" id="test">
-                        <div class="btn btn-primary rounded col-12" onclick="AddField(this)"><i class="bi bi-plus"></i></div>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
-
-        </div>
+        
     </form>
 
 
@@ -241,33 +117,33 @@
 @section Scripts{
     <script>
 
-        var companyContactContainer = document.getElementById('company-contact-container');
+        let companyContactContainer = document.getElementById('company-contact-container');
 
-        var countryDropDown = document.getElementById('country-drop-down');
+        let countryDropDown = document.getElementById('country-drop-down');
 
         function AddField(button) {
 
             //elem --> get the element that called this function 
 
             //get its parent's sibling's id. This will be the container that stores all the input fields
-            var target = ((button.parentNode).previousElementSibling.id);
+            let target = ((button.parentNode).previousElementSibling.id);
             valueContainer = document.getElementById(target);
 
 
 
             //Create a text field component
-            var container = document.createElement('div');
+            let container = document.createElement('div');
             container.classList.add("d-flex", "align-items-center", "justify-content-evenly", "mb-2");
 
 
-            var inputField = document.createElement('input');
+            let inputField = document.createElement('input');
             inputField.classList.add("form-control-light", "full-size");
 
-            var icon = document.createElement('i');
+            let icon = document.createElement('i');
             icon.classList.add("bi", "bi-trash");
 
 
-            var removeBtn = document.createElement('span');
+            let removeBtn = document.createElement('span');
             removeBtn.classList.add("btn", "btn-danger", "rounded", "col-2", "mx-2", "d-flex", "align-items-center", "justify-content-center");
              
 
@@ -292,7 +168,7 @@
         
             let removeBtnList = document.getElementsByClassName('click');
 
-            for (var i = 0; i < removeBtnList.length; i++){
+            for (let i = 0; i < removeBtnList.length; i++){
                 removeBtnList[i].addEventListener('click', removeThis)
             }
 
@@ -318,30 +194,30 @@
         function AddContactBlock(){
 
             //Create company contact block
-            var block = document.createElement('div');
+            let block = document.createElement('div');
             block.classList.add("mb-3", "d-flex", "align-top");
 
             //Create input fields' container
-            var inputContainer = document.createElement('div');
+            let inputContainer = document.createElement('div');
             inputContainer.classList.add('d-block')
 
             //Create label
-            var label =document.createElement('label');
+            let label =document.createElement('label');
             label.classList.add("form-label", "citisoft-text-color", "col-3");
             label.innerHTML = "Company Contact";
 
             //Create country field
-            var countryField =document.createElement('input');
+            let countryField =document.createElement('input');
             countryField.classList.add("form-control-light", "full-size", "mb-3");
             countryField.placeholder = "Country Name. Eg. Poland";
 
             //Create city field
-            var cityField =document.createElement('input');
+            let cityField =document.createElement('input');
             cityField.classList.add("form-control-light", "full-size", "mb-3");
             cityField.placeholder = "City Name. Eg. Warsaw";
 
             //Create contact field 
-            var contactField = document.createElement('input');
+            let contactField = document.createElement('input');
             contactField.classList.add("form-control-light", "full-size", "mb-3");
             contactField.placeholder = "Contacts. Eg. +61 2 8317 6698";
 
@@ -359,7 +235,7 @@
 
 
         function GetCountries(){
-            var countryContainer = document.getElementById('countryContainer');
+            let countryContainer = document.getElementById('countryContainer');
 
             let countryList = [];
 

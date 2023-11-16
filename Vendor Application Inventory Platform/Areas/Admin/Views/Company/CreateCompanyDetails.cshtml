@@ -1,8 +1,8 @@
 ﻿@using Newtonsoft.Json
-@model Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels.AddEntriesViewModel
+@model Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels.CreateCompanyDetailsViewModel
 @{
     Layout = "_AdminControlPanel";
-    ViewData["title"] = "Add Entries";
+    ViewData["title"] = "Company Details";
 }
 
 <div class="container-fluid">
@@ -84,7 +84,10 @@
 @section Scripts
 {
   <script>
+  let id = @Model.companyId;
+      
   $(document).ready(function(){
+    
     //Check if model is presented in the page
     //I presented, lock the submit button and loop through all available countries, cities, and the rest
     if (@Model.Countries.Any().ToString().ToLower()){
@@ -137,7 +140,7 @@
      const formData = { 'countryNames': countries };
         
         $.post({
-          url:"@Url.Action("CreateCountry")",
+          url:"@Url.Action("CreateCountry")" + "?id="+ id,
           data:formData,
           dataType: 'json',
           headers: {
@@ -489,7 +492,7 @@
             
             let csrfToken = $('.container-fluid > [name="__RequestVerificationToken"]').val();
             $.post({
-                 url:'@Url.Action("DeleteCities")',
+                 url:'@Url.Action("DeleteCities")' + "?id="+ id,
                  data:JSON.stringify(data),
                  dataType:"json",
                  contentType: 'application/json',
@@ -564,7 +567,7 @@
   
   function finalSubmit(data){
           $.post({
-              url:'@Url.Action("CreateCities")',
+              url:'@Url.Action("CreateCities")' + "?id="+ id,
               data: JSON.stringify(data),
               dataType:"json",
               contentType: 'application/json',

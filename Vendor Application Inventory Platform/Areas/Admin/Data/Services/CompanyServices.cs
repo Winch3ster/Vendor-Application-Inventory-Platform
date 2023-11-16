@@ -1,17 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 
-public class AdminServices : IAdminServices
+public class CompanyServices : ICompanyServices
 {
     
     private readonly AppDbContext _db;
 
-    public AdminServices(AppDbContext db)
+    public CompanyServices(AppDbContext db)
     {
         _db = db;
     }
@@ -193,6 +194,46 @@ public class AdminServices : IAdminServices
     public ContactNumber? GetContact(int cityId)
     {
         return _db.ContactNumbers.FirstOrDefault(contact => contact.CityID==cityId);
+    }
+
+    public Company CreateNewCompany(CreateCompanyField createCompanyField)
+    {
+        var newCompany = new Company
+        {
+            CompanyName = createCompanyField.CompanyName,
+            WebsiteURL = createCompanyField.WebsiteURL,
+            Description = createCompanyField.Description,
+            EstablishedDate = DateTime.Parse(createCompanyField.EstablishedDate),
+            NumberOfEmployee = int.Parse(createCompanyField.NumberOfEmployee),
+            InternalProfessionalServices = bool.Parse(createCompanyField.InternalProfessionalServices),
+            LastDemoDate = DateTime.Parse(createCompanyField.LastDemoDate),
+            LastReviewDate = DateTime.Parse(createCompanyField.LastReviewDate) 
+        };
+
+        _db.Companies.Add(newCompany);
+        _db.SaveChanges();
+        return newCompany;
+    }
+
+    public Company? UpdateCompany(int companyId, CreateCompanyField createCompanyField)
+    {
+        var company = _db.Companies.FirstOrDefault(c => c.CompanyID == companyId);
+        
+        if (company != null)
+        {
+            company.CompanyName = createCompanyField.CompanyName;
+            company.WebsiteURL = createCompanyField.WebsiteURL;
+            company.Description = createCompanyField.Description;
+            company.EstablishedDate = DateTime.Parse(createCompanyField.EstablishedDate);
+            company.NumberOfEmployee = int.Parse(createCompanyField.NumberOfEmployee);
+            company.InternalProfessionalServices = bool.Parse(createCompanyField.InternalProfessionalServices);
+            company.LastDemoDate = DateTime.Parse(createCompanyField.LastDemoDate);
+            company.LastReviewDate = DateTime.Parse(createCompanyField.LastReviewDate);
+
+            _db.SaveChanges();
+        }
+        
+        return company;
     }
     
 }
