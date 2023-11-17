@@ -1,0 +1,156 @@
+﻿@using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
+@using Vendor_Application_Inventory_Platform.Areas.User.Controllers;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+
+@model SoftwareVM 
+@{
+    Layout = "_EmployeeControlPanel";
+    ViewData["title"] = "Details";
+}
+
+
+
+<div class="row">
+    <div class="col-md-6 border">
+        <img src="#" class="w-100" height="200" alt="company logo" />
+    </div>
+    <div class="col-md-6">
+
+        <div class="fs-5 fw-bold mb-2">@Model.SoftwareName</div>
+
+
+        <div class="mb-2">
+            <span class="text-primary">Company Name: </span>
+            @Model.CompanyName
+        </div>
+        <div class="mb-2">
+            <span class="text-primary">Business Areas: </span>
+            <div class="standard-margin-left">
+
+                @foreach (var businessArea in Model.businessAreas)
+                {
+                    <div>@businessArea.Description</div>
+                }
+            </div>
+            
+        </div>
+        <div class="mb-2">Rating <span class="text-info">4.9</span>/5</div>
+        <button class="btn btn-primary">Official Website</button>
+    </div>
+</div>
+<div class="mt-5 border-top pt-3">
+    <h5>Software Description</h5>
+    <p>
+       @Model.SoftwareDescription
+    </p>
+</div>
+
+<!-- Loop throught the contact data-->
+
+<div class="row mt-5 border-top pt-3">
+    <h5>Company Information</h5>
+    <div class="row mt-3">
+        <div class="mb-2"><span class="text-primary">Name: </span>@Model.CompanyName</div>
+        <div class="mb-2"><span class="text-primary">Established Date: </span>@Model.companyEstablishedDate.Year</div>
+        
+        
+        
+        <div class="col-sm-6">
+            <p class="text-primary">Locations</p>
+
+            @foreach (var country in Model.companyContactData)
+            {
+                foreach (var city in country.Value)
+                {
+                    <div>[@country.Key.ToString()], @city.Key.ToString()</div>
+                }
+            }
+            
+        </div>
+
+
+
+        <div class="col-sm-6">
+            <p class="text-primary">Contacts</p>
+
+            @foreach (var country in Model.companyContactData)
+            {
+                foreach (var city in country.Value)
+                {
+                    foreach (var contact in city.Value)
+                    {
+                        if(contact.Key == "Contact Number")
+                        {
+                            <div>[@city.Key.ToString()] + @contact.Value </div>
+                        }
+                        
+                    }
+                    
+                }
+            }
+
+
+           
+        </div>
+    </div>
+</div>
+
+<!-- Review section -->
+<div class="mt-5 border-top pt-3 row gy-3">
+    <h5 class="col-5">Reviews</h5>
+
+    @foreach( var review in Model.reviews)
+    {
+        <div class="standard-margin-left col-7 light-gray-bg rounded py-1">
+            <div class="d-flex align-items-center">
+                
+                <span class="text-primary" style="margin-right:15px">@review.employeeFirstName @review.employeeLastName</span>
+                <span> @review.ReviewDate </span>
+            </div>
+            
+            <p>@review.Description</p>
+        </div>
+    }
+    
+</div>
+
+
+<!-- Drop review -->
+<div id="review" class="mt-5 standard-margin-left">
+   
+    <form asp-action="AddComment" method="post">
+        <div class="mb-3 d-flex align-top">
+            <input type="hidden" name="softwareId" asp-for = "softwareID" />
+            <label  class="form-label citisoft-text-color p-2" for="userReview">Drop your review here</label>
+            <textarea class="form-control-light" placeholder="Your review..." id="userReview" for="userReview" name="userReview"></textarea>
+            <span asp-validation-for="newReview.Description" class="text-danger"></span>
+        </div>
+        <div class="col-12 d-flex justify-content-center"><button type="submit" class="btn btn-primary">Submit</button></div>
+    </form>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="mt-5 border-top pt-3 row">
+    <div class="col-12 text-center mb-2"><h5>See also</h5></div>
+    <div class="col-sm-4 border">
+        <img src="#" height="200" class="w-100">
+    </div>
+    <div class="col-sm-4 border">
+        <img src="#" height="200" class="w-100">
+    </div>
+    <div class="col-sm-4 border">
+        <img src="#" height="200" class="w-100">
+    </div>
+</div>
+
+<div class="mt-5"></div>

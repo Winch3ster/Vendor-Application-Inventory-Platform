@@ -9,6 +9,9 @@ namespace Vendor_Application_Inventory_Platform.Models
 
         public int EmployeeID { get; set; }
 
+        public string employeeFirstName { get; set; }
+
+        public string employeeLastName { get; set; }
         public int SoftwareID { get; set; }
         public string Description { get; set; }
 

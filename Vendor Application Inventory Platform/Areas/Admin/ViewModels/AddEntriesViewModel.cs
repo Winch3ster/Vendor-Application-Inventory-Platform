@@ -28,7 +28,7 @@ public class AddEntriesViewModel
 
     public class ContactViewModel
     {
-        public int? ContactNumber { get; set; }
+        public long? ContactNumber { get; set; }
         
     }
 }

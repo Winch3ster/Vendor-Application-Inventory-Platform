@@ -78,7 +78,7 @@ app.UseEndpoints(endpoints =>
 
 
 app.UseMvc();
-DatabaseSeeder.Seed(app);
+//DatabaseSeeder.Seed(app);
 app.Run();
 
 

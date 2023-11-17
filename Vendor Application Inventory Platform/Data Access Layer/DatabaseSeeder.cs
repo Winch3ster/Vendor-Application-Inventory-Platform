@@ -417,8 +417,9 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //Reviews seeding
 
                 //Step 1: Get the user from database (This is similar to user logging into the system)
-                Employee userLoggedIn = context.Employees.FirstOrDefault(e => e.EmployeeID == 1002); //Assuming the first user drop the comment 
+                //Assuming the first user drop the comment 
 
+                Employee userLoggedIn = context.Employees.FirstOrDefault(e => e.EmployeeID == 1002); 
 
 
                 //Step 2: Get the software from database (This is similar to user viewing the product/software)
@@ -429,6 +430,8 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 
                     new Review() {
                         employee = userLoggedIn,
+                        employeeFirstName = userLoggedIn.FirstName, 
+                        employeeLastName = userLoggedIn.LastName,   
                         EmployeeID = userLoggedIn.EmployeeID,
                         software = softwareInView,
                         SoftwareID = softwareInView.SoftwareID,
@@ -437,6 +440,8 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                     },
                     new Review() {
                         employee = userLoggedIn,
+                        employeeFirstName = userLoggedIn.FirstName,
+                        employeeLastName = userLoggedIn.LastName,
                         EmployeeID = userLoggedIn.EmployeeID,
                         software = softwareInView,
                         SoftwareID = softwareInView.SoftwareID,
@@ -445,7 +450,6 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                     }
 
                 };
-
 
                 //Step 5: Save it in databse
                 context.Reviews.AddRange(reviews);
