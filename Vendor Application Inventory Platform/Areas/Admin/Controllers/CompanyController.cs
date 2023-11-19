@@ -55,6 +55,10 @@ public class CompanyController: Controller
                 {
                     int companyId = id ?? 0;
                     Company? company = _companyService.UpdateCompany(companyId, createCompanyField);
+                    if (company == null)
+                    {
+                        return NotFound();
+                    }
                     return Json(new { success = true, companyID = company!.CompanyID });
                 }
                 else

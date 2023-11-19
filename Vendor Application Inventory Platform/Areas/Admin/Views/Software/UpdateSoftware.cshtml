@@ -1,4 +1,5 @@
-﻿@model Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels.CreateSoftwareViewModel
+﻿@using Vendor_Application_Inventory_Platform.Data.Enum
+@model Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels.UpdateSoftwareViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
@@ -111,7 +112,7 @@
                 {
                     @foreach (var company in Model.Companies)
                     {
-                        <option value="@company.CompanyID">@company.CompanyName</option>
+                        <option value="@company.CompanyID" selected="@(company.CompanyID == Model.companyId ? "selected" : null)">@company.CompanyName</option>
                     }
                 }
             </select>
@@ -125,14 +126,14 @@
         <!-- Software name -->
         <div class="col-12 mb-3 d-flex align-top">
             <label class="form-label citisoft-text-color col-3">Software Name</label>
-            <input type="text" id="softwareName" class="form-control-light" required/>
+            <input type="text" id="softwareName" class="form-control-light" value="@Model.software!.SoftwareName" required/>
         </div>
 
 
         <!-- Software description -->
         <div class="mb-3 d-flex align-top">
             <label class="form-label citisoft-text-color col-3">Software Description</label>
-            <textarea id="softwareDescription" class="form-control-light" required></textarea>
+            <textarea id="softwareDescription" class="form-control-light" required>@Model.software.Description</textarea>
         </div>
 
 
@@ -142,23 +143,50 @@
 
             <div class="multi-value-container">
                 <div class="row multi-value-input-container d-block" id="businessAreaValueContainer">
-                    <div class="d-flex">
-                        <div class="col-9">
-                            <select class="form-select mb-2" required>
-                                <option selected value="">Select Business Area</option>
-                                @if (Model.BusinessAreas != null && Model.BusinessAreas.Any())
+                            @if (Model.BusinessAreas != null && Model.BusinessAreas.Any())
+                            {
+                                var i = 1;
+                                @foreach (var linkedArea in Model.LinkedBusinessAreas)
                                 {
-                                    @foreach (var area in Model.BusinessAreas)
+                                    if (i == 1)
                                     {
-                                        <option value="@area.BusinessAreaID">@area.Description</option>
+                                        <div class="d-flex">
+                                        <div class="col-9">
+                                        <select class="form-select mb-2" required>
+                                            <option selected value="">Select Business Area</option>
+                                            @foreach (var area in Model.BusinessAreas)
+                                            {
+                                                <option value="@area.BusinessAreaID" selected="@(area.BusinessAreaID == linkedArea.BusinessAreaID ? "selected" : null)">
+                                                    @area.Description
+                                                </option>
+                                            }
+                                        </select>
+                                        </div>
+                                        <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#businessAreaModal">Create</div>
+                                        </div>    
                                     }
-                                }
-                                
-                            </select>
-                        </div>
+                                    else{
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <select class="form-select mb-2" required="">
+                                                    <option value="">Select Business Area</option>
+                                                    @foreach (var area in Model.BusinessAreas)
+                                                    {
+                                                        <option value="@area.BusinessAreaID" selected="@(area.BusinessAreaID == linkedArea.BusinessAreaID ? "selected" : null)">
+                                                            @area.Description
+                                                        </option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <button type="button" class="btn btn-danger w-100 bi bi-trash" onclick="removeThis(event)"></button>
+                                            </div>
+                                        </div>
+                                    }
 
-                        <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#businessAreaModal">Create</div>
-                    </div>
+                                    i++;
+                                }
+                            }
                 </div>
                 <div class="col-12 d-flex justify-content-center mt-2">
                     <div class="btn btn-primary rounded col-12" onclick="AddField(this, 'area')" style="width:50px"><i class="bi bi-plus"></i></div>
@@ -173,23 +201,51 @@
 
             <div class="multi-value-container">
                 <div class="multi-value-input-container d-block" id="modulesValueContainer">
-                    <div class="d-flex">
-                        <div class="col-9">
-                            <select class="form-select mb-2" required>
-                                <option selected value="">Select Modules</option>
-                                @if (Model.SoftwareModules!=null && Model.SoftwareModules.Any())
+                                @if (Model.SoftwareModules != null && Model.SoftwareModules.Any())
+                            {
+                                var i = 1;
+                                @foreach (var linkedModule in Model.LinkedSoftwareModules)
                                 {
-                                    @foreach (var module in Model.SoftwareModules)
+                                    if (i == 1)
                                     {
-                                        <option value="@module.SoftwareModuleID">@module.Module</option>
+                                        <div class="d-flex">
+                                        <div class="col-9">
+                                        <select class="form-select mb-2" required>
+                                            <option selected value="">Select Modules</option>
+                                            @foreach (var module in Model.SoftwareModules)
+                                            {
+                                                <option value="@module.SoftwareModuleID" selected="@(module.SoftwareModuleID == linkedModule.SoftwareModuleID ? "selected" : null)">
+                                                    @module.Module
+                                                </option>
+                                            }
+                                        </select>
+                                        </div>
+                                        <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#softwareModuleModal">Create</div>
+                                        </div>    
                                     }
-                                }
-                                
-                            </select>
-                        </div>
+                                    else{
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <select class="form-select mb-2" required="">
+                                                    <option value="">Select Modules</option>
+                                                    @foreach (var module in Model.SoftwareModules)
+                                                    {
+                                                        <option value="@module.SoftwareModuleID" selected="@(module.SoftwareModuleID == linkedModule.SoftwareModuleID ? "selected" : null)">
+                                                            @module.Module
+                                                        </option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <button type="button" class="btn btn-danger w-100 bi bi-trash" onclick="removeThis(event)"></button>
+                                            </div>
+                                        </div>
+                                    }
 
-                        <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#softwareModuleModal">Create</div>
-                    </div>
+                                    i++;
+                                }
+                            }
+                             
 
                 </div>
                 <div class="d-flex justify-content-center">
@@ -204,22 +260,51 @@
 
             <div class="multi-value-container">
                 <div class="multi-value-input-container d-block" id="softwareTypesValueContainer">
-                    <div class="d-flex">
-                        <div class="col-9">
-                            <select class="form-select mb-2" required>
-                                <option selected>Select Software Types</option>
-                                @if (Model.SoftwareTypes!=null && Model.SoftwareTypes.Any())
+                                @if (Model.SoftwareTypes != null && Model.SoftwareTypes.Any())
+                            {
+                                var i = 1;
+                                @foreach (var linkedType in Model.LinkedSoftwareTypes)
                                 {
-                                    @foreach (var type in Model.SoftwareTypes)
+                                    if (i == 1)
                                     {
-                                        <option value="@type.SoftwareTypeID">@type.Type</option>
+                                        <div class="d-flex">
+                                        <div class="col-9">
+                                        <select class="form-select mb-2" required>
+                                            <option selected value="">Select Software Types</option>
+                                            @foreach (var type in Model.SoftwareTypes)
+                                            {
+                                                <option value="@type.SoftwareTypeID" selected="@(type.SoftwareTypeID == linkedType.SoftwareTypeID ? "selected" : null)">
+                                                    @type.Type
+                                                </option>
+                                            }
+                                        </select>
+                                        </div>
+                                         <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#softwareTypeModal">Create</div>
+                                        </div>    
                                     }
-                                }
-                            </select>
-                        </div>
+                                    else{
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <select class="form-select mb-2" required="">
+                                                    <option value="">Select Software Types</option>
+                                                   @foreach (var type in Model.SoftwareTypes)
+                                                   {
+                                                       <option value="@type.SoftwareTypeID" selected="@(type.SoftwareTypeID == linkedType.SoftwareTypeID ? "selected" : null)">
+                                                           @type.Type
+                                                       </option>
+                                                   }
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <button type="button" class="btn btn-danger w-100 bi bi-trash" onclick="removeThis(event)"></button>
+                                            </div>
+                                        </div>
+                                    }
 
-                        <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#softwareTypeModal">Create</div>
-                    </div>
+                                    i++;
+                                }
+                            }
+                            
 
                 </div>
                 <div class="d-flex justify-content-center">
@@ -234,22 +319,50 @@
 
             <div class="multi-value-container">
                 <div class="multi-value-input-container d-block" id="fscTypesValueContainer">
-                    <div class="d-flex">
-                        <div class="col-9">
-                            <select class="form-select mb-2" required>
-                                <option selected>Select Types</option>
-                                @if (Model.FinancialServicesClientTypes!=null && Model.FinancialServicesClientTypes.Any())
+                                @if (Model.FinancialServicesClientTypes != null && Model.FinancialServicesClientTypes.Any())
                                 {
-                                    @foreach (var financialService in Model.FinancialServicesClientTypes)
+                                    var i = 1;
+                                    @foreach (var linkedType in Model.LinkedFinancialServicesClientTypes)
                                     {
-                                        <option value="@financialService.FinancialServicesClientTypeID">@financialService.Description</option>
+                                        if (i == 1)
+                                        {
+                                            <div class="d-flex">
+                                            <div class="col-9">
+                                            <select class="form-select mb-2" required>
+                                                <option selected value="">Select Types</option>
+                                                @foreach (var type in Model.FinancialServicesClientTypes)
+                                                {
+                                                    <option value="@type.FinancialServicesClientTypeID" selected="@(type.FinancialServicesClientTypeID == linkedType.FinancialServicesClientTypeID ? "selected" : null)">
+                                                        @type.Description
+                                                    </option>
+                                                }
+                                            </select>
+                                            </div>
+                                           <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#financialServiceModal">Create</div>
+                                            </div>    
+                                        }
+                                        else{
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <select class="form-select mb-2" required="">
+                                                        <option value="">Select Types</option>
+                                                       @foreach (var type in Model.FinancialServicesClientTypes)
+                                                       {
+                                                           <option value="@type.FinancialServicesClientTypeID" selected="@(type.FinancialServicesClientTypeID == linkedType.FinancialServicesClientTypeID ? "selected" : null)">
+                                                               @type.Description
+                                                           </option>
+                                                       }
+                                                    </select>
+                                                </div>
+                                                <div class="col-3">
+                                                    <button type="button" class="btn btn-danger w-100 bi bi-trash" onclick="removeThis(event)"></button>
+                                                </div>
+                                            </div>
+                                        }
+                                
+                                        i++;
                                     }
                                 }
-                            </select>
-                        </div>
-
-                        <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#financialServiceModal">Create</div>
-                    </div>
 
                 </div>
                 <div class="d-flex justify-content-center">
@@ -268,19 +381,19 @@
 
             <div class="col-sm-10">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="cloudRadios" id="cloudRadios1" value="Enabled" required>
+                    <input class="form-check-input" type="radio" name="cloudRadios" id="cloudRadios1" value="Enabled" checked="@(Model.software.Cloud == CloudType.Enabled ? "checked" : null)" required>
                     <label class="form-check-label" for="cloudRadios1">
                         Enabled
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="cloudRadios" id="cloudRadios2" value="Native" required>
+                    <input class="form-check-input" type="radio" name="cloudRadios" id="cloudRadios2" value="Native" checked="@(Model.software.Cloud == CloudType.Native ? "checked" : null)" required>
                     <label class="form-check-label" for="cloudRadios2">
                         Native
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="cloudRadios" id="cloudRadios3" value="Based" required>
+                    <input class="form-check-input" type="radio" name="cloudRadios" id="cloudRadios3" value="Based" checked="@(Model.software.Cloud == CloudType.Based ? "checked" : null)" required>
                     <label class="form-check-label" for="cloudRadios3">
                         Based
                     </label>
@@ -602,6 +715,8 @@
                         e.preventDefault();
                         
                         let csrfToken = $('#softwareForm > [name="__RequestVerificationToken"]').val();
+                        
+                        let softwareID = @Model?.software.SoftwareID;
         
                         $('#SubmitSoftwareBtn').prop('disabled', true);
                         
@@ -635,7 +750,7 @@
                             
         
                             $.post({
-                                url: "@Url.Action("CreateSoftware")",
+                                url: "@Url.Action("UpdateSoftware")" + "?id="+softwareID,
                                 dataType: "json",
                                 contentType: 'application/json',
                                 data: JSON.stringify(formData),

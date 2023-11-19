@@ -42,6 +42,9 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Software\Create.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Software\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\UpdateSoftware\CreateSoftware.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\UpdateSoftware\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\UpdateSoftware\Index.cshtml" />
   </ItemGroup>
 
 </Project>
