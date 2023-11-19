@@ -124,13 +124,20 @@
         </div>
 
         <!-- Software name -->
-        <div class="col-12 mb-3 d-flex align-top">
-            <label class="form-label citisoft-text-color col-3">Software Name</label>
-            <input type="text" id="softwareName" class="form-control-light" value="@Model.software!.SoftwareName" required/>
-        </div>
+    <div class="col-12 mb-3 d-flex align-top">
+        <label class="form-label citisoft-text-color col-3">Software Name</label>
+        <input type="text" id="softwareName" class="form-control-light" value="@Model.software!.SoftwareName" required/>
+    </div>
+    
+    <!-- Pdf Upload -->
+            <div class="mb-3 d-flex align-top">
+                <label class="form-label citisoft-text-color col-3">Upload PDF</label>
+                <input type="file" id="fileInput" name="pdfFile" accept=".pdf" class="form-control"/>
+                <span class="d-flex align-items-center ms-2 citisoft-text-color text-nowrap">@Model?.pdfDocument?.FileName</span>
+            </div>
 
-
-        <!-- Software description -->
+    <a asp-action="ViewPdf" asp-route-id="@Model.software.SoftwareID">View PDF</a>
+    <!-- Software description -->
         <div class="mb-3 d-flex align-top">
             <label class="form-label citisoft-text-color col-3">Software Description</label>
             <textarea id="softwareDescription" class="form-control-light" required>@Model.software.Description</textarea>
@@ -415,7 +422,6 @@
 
 @section Scripts{
     <script>
-        
         let companyContactContainer = document.getElementById('company-contact-container');
 
         let countryDropDown = document.getElementById('country-drop-down');
@@ -710,66 +716,66 @@
                         }
                     })
             })
-            
             $('#softwareForm').on('submit', function (e) {
-                        e.preventDefault();
-                        
-                        let csrfToken = $('#softwareForm > [name="__RequestVerificationToken"]').val();
-                        
-                        let softwareID = @Model?.software.SoftwareID;
-        
-                        $('#SubmitSoftwareBtn').prop('disabled', true);
-                        
-                            const formData = {
-                                CompanyID: $('#companySelect').val(),
-                                SoftwareName: $('#softwareName').val(),
-                                Description: $('#softwareDescription').val(),
-                                CloudOption: $('input[name="cloudRadios"]:checked').val(),
-                                Modules:[],
-                                SoftwareTypes:[],
-                                BusinessArea:[],
-                                FinancialServiceClientType:[],
-                            };
-                            
-                            $('#modulesValueContainer').find('select').each(function (){
-                                formData.Modules.push(parseInt($(this).val()))
-                            })
-
-
-                            $('#softwareTypesValueContainer').find('select').each(function (){
-                                formData.SoftwareTypes.push(parseInt($(this).val()))
-                            })
-
-                            $('#businessAreaValueContainer').find('select').each(function (){
-                                formData.BusinessArea.push(parseInt($(this).val()))
-                            })
-
-                            $('#fscTypesValueContainer').find('select').each(function (){
-                                formData.FinancialServiceClientType.push(parseInt($(this).val()))
-                            })
-                            
-        
-                            $.post({
-                                url: "@Url.Action("UpdateSoftware")" + "?id="+softwareID,
-                                dataType: "json",
-                                contentType: 'application/json',
-                                data: JSON.stringify(formData),
-                                headers: {
-                                    "RequestVerificationToken": csrfToken
-                                },
-                                success: function (data) {
-                                    if (data.success) {
-                                        alert(data.message)
-                                    }
-                                    else{
-                                        alert(data.message)
-                                    }
-                                },
-                                error: function (data) {
-                                    alert(data.errors);
-                                }
-                            }).done($('#SubmitSoftwareBtn').prop('disabled', false));
-                    });
+                                    e.preventDefault();
+                                    
+                                    let csrfToken = $('#softwareForm > [name="__RequestVerificationToken"]').val();
+                                    
+                                    let softwareID = @Model.software.SoftwareID;
+                    
+                                    $('#SubmitSoftwareBtn').prop('disabled', true);
+                                    
+                                        const formData = new FormData();
+                                        
+                                        // Append JSON data to FormData
+                                        formData.append('CompanyID', $('#companySelect').val());
+                                        formData.append('SoftwareName', $('#softwareName').val());
+                                        formData.append('Description', $('#softwareDescription').val());
+                                        formData.append('CloudOption', $('input[name="cloudRadios"]:checked').val());
+                                        
+                                        // Append file to FormData
+                                        const fileInput = document.getElementById('fileInput');
+                                        formData.append('File', fileInput.files[0]);
+                                        
+                                        // Append array data
+                                        $('#modulesValueContainer').find('select').each(function () {
+                                            formData.append('Modules[]', $(this).val());
+                                        });
+                                        
+                                        $('#softwareTypesValueContainer').find('select').each(function () {
+                                            formData.append('SoftwareTypes[]', $(this).val());
+                                        });
+                                        
+                                        $('#businessAreaValueContainer').find('select').each(function () {
+                                            formData.append('BusinessArea[]', $(this).val());
+                                        });
+                                        
+                                        $('#fscTypesValueContainer').find('select').each(function () {
+                                            formData.append('FinancialServiceClientType[]', $(this).val());
+                                        });
+                                        
+                                        // Use FormData in the fetch request
+                                        fetch("@Url.Action("UpdateSoftware")" + "?id="+softwareID, {
+                                            method: "POST",
+                                            headers: {
+                                                "RequestVerificationToken": csrfToken
+                                            },
+                                            body: formData,
+                                        }).then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    alert(data.message)
+                                                } else {
+                                                    alert(data.message)
+                                                }
+                                            }).catch(error => {
+                                                alert(error)
+                                            }).finally(() => {
+                                                $('#SubmitSoftwareBtn').prop('disabled', false);
+                                            });
+                                        
+                                        
+                        });
             });
         </script>
 }

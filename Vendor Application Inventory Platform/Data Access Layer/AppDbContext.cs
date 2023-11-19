@@ -15,7 +15,8 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Software> Softwares { get; set; }
-
+        
+        public DbSet<PdfDocument> PdfDocuments { get; set; }
         public DbSet<Company?> Companies { get; set; }
         public DbSet<Address?> Addresses { get; set; }
         public DbSet<BusinessArea> BusinessAreas { get; set; }
@@ -125,6 +126,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 .HasOne(s => s.Company)
                 .WithMany(c => c.Softwares)
                 .HasForeignKey(c => c.CompanyID);
+            
 
 
 

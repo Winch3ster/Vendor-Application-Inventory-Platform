@@ -255,7 +255,30 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
                 _db.SaveChanges();
             }
         }
-        
+
+        public void CreatePdf(PdfDocument pdfDocument)
+        {
+            //check if pdf already exists
+            var existingPdf = _db.PdfDocuments.FirstOrDefault(pdf => pdf.softwareId == pdfDocument.softwareId);
+            
+            if (existingPdf != null)
+            {
+                _db.PdfDocuments.Remove(existingPdf);
+            }
+            _db.PdfDocuments.Add(pdfDocument);
+            _db.SaveChanges();
+        }
+
+        public PdfDocument? GetPdf(int softwareId)
+        {
+            if (softwareId == 0)
+            {
+                return null;
+            }
+
+            return _db.PdfDocuments.FirstOrDefault(pdf => pdf.softwareId == softwareId);
+        }
+
     }
     
 }

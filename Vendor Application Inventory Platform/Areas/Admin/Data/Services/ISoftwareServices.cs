@@ -35,5 +35,9 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
         
         public void UpdateSoftware(int softwareId, Software software);
 
+        public void CreatePdf(PdfDocument pdfDocument);
+        
+        public  PdfDocument? GetPdf(int softwareId);
+
     }
 }

@@ -100,7 +100,7 @@
     <h3>Software Information</h3>
 
 
-    <form id="softwareForm" class="mt-4">
+    <form id="softwareForm" class="mt-4" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <!-- Company -->
         <div class="d-flex align-top">
@@ -135,6 +135,11 @@
             <textarea id="softwareDescription" class="form-control-light" required></textarea>
         </div>
 
+         <!-- Pdf Upload -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Upload PDF</label>
+            <input type="file" id="fileInput" name="pdfFile" accept=".pdf" class="form-control"/>
+        </div>
 
         <!-- Business area -->
         <div class="mb-5 d-flex align-top">
@@ -605,57 +610,58 @@
         
                         $('#SubmitSoftwareBtn').prop('disabled', true);
                         
-                            const formData = {
-                                CompanyID: $('#companySelect').val(),
-                                SoftwareName: $('#softwareName').val(),
-                                Description: $('#softwareDescription').val(),
-                                CloudOption: $('input[name="cloudRadios"]:checked').val(),
-                                Modules:[],
-                                SoftwareTypes:[],
-                                BusinessArea:[],
-                                FinancialServiceClientType:[],
-                            };
+                            const formData = new FormData();
                             
-                            $('#modulesValueContainer').find('select').each(function (){
-                                formData.Modules.push(parseInt($(this).val()))
-                            })
-
-
-                            $('#softwareTypesValueContainer').find('select').each(function (){
-                                formData.SoftwareTypes.push(parseInt($(this).val()))
-                            })
-
-                            $('#businessAreaValueContainer').find('select').each(function (){
-                                formData.BusinessArea.push(parseInt($(this).val()))
-                            })
-
-                            $('#fscTypesValueContainer').find('select').each(function (){
-                                formData.FinancialServiceClientType.push(parseInt($(this).val()))
-                            })
+                            // Append JSON data to FormData
+                            formData.append('CompanyID', $('#companySelect').val());
+                            formData.append('SoftwareName', $('#softwareName').val());
+                            formData.append('Description', $('#softwareDescription').val());
+                            formData.append('CloudOption', $('input[name="cloudRadios"]:checked').val());
                             
-        
-                            $.post({
-                                url: "@Url.Action("CreateSoftware")",
-                                dataType: "json",
-                                contentType: 'application/json',
-                                data: JSON.stringify(formData),
+                            // Append file to FormData
+                            const fileInput = document.getElementById('fileInput');
+                            formData.append('File', fileInput.files[0]);
+                            
+                            // Append array data
+                            $('#modulesValueContainer').find('select').each(function () {
+                                formData.append('Modules[]', $(this).val());
+                            });
+                            
+                            $('#softwareTypesValueContainer').find('select').each(function () {
+                                formData.append('SoftwareTypes[]', $(this).val());
+                            });
+                            
+                            $('#businessAreaValueContainer').find('select').each(function () {
+                                formData.append('BusinessArea[]', $(this).val());
+                            });
+                            
+                            $('#fscTypesValueContainer').find('select').each(function () {
+                                formData.append('FinancialServiceClientType[]', $(this).val());
+                            });
+                            
+                            // Use FormData in the fetch request
+                            fetch("@Url.Action("CreateSoftware")", {
+                                method: "POST",
                                 headers: {
                                     "RequestVerificationToken": csrfToken
                                 },
-                                success: function (data) {
+                                body: formData,
+                            }).then(response => response.json())
+                                .then(data => {
                                     if (data.success) {
                                         alert(data.message)
-                                    }
-                                    else{
+                                    } else {
                                         alert(data.message)
                                     }
-                                },
-                                error: function (data) {
-                                    alert(data.errors);
-                                }
-                            }).done($('#SubmitSoftwareBtn').prop('disabled', false));
-                    });
+                                }).catch(error => {
+                                    alert(error)
+                                }).finally(() => {
+                                    $('#SubmitSoftwareBtn').prop('disabled', false);
+                                });
+                            
+                            
             });
+        })
         </script>
 }
 

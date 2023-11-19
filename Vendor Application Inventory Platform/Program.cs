@@ -2,14 +2,28 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
-//using Vendor_Application_Inventory_Platform.Data.Services;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 using Vendor_Application_Inventory_Platform.Data.Services;
 using EmployeeServices = Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services.EmployeeServices;
+using QuestPDF.Infrastructure;
+using QuestPDF.Previewer;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Document.Create(container =>
+// {
+//     container.Page(page =>
+//     {
+//         page.Size(PageSizes.A4);
+//
+//         page.Header().Text("a");
+//     });
+// }).ShowInPreviewer();
 
 
 builder.Services.AddTransient<DatabaseSeeder>();
