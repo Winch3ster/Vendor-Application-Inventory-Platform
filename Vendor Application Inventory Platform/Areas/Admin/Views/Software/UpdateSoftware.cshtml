@@ -130,13 +130,12 @@
     </div>
     
     <!-- Pdf Upload -->
-            <div class="mb-3 d-flex align-top">
-                <label class="form-label citisoft-text-color col-3">Upload PDF</label>
-                <input type="file" id="fileInput" name="pdfFile" accept=".pdf" class="form-control"/>
-                <span class="d-flex align-items-center ms-2 citisoft-text-color text-nowrap">@Model?.pdfDocument?.FileName</span>
-            </div>
-
-    <a asp-action="ViewPdf" asp-route-id="@Model.software.SoftwareID">View PDF</a>
+    <div class="mb-3 d-flex align-top">
+        <label class="form-label citisoft-text-color col-3">Upload PDF</label>
+        <input type="file" id="fileInput" name="pdfFile" accept=".pdf" class="form-control"/>
+        <span class="d-flex align-items-center ms-2 citisoft-text-color text-nowrap">@Model?.pdfDocument?.FileName</span>
+    </div>
+    
     <!-- Software description -->
         <div class="mb-3 d-flex align-top">
             <label class="form-label citisoft-text-color col-3">Software Description</label>
