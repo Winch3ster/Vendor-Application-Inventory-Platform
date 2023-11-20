@@ -29,9 +29,12 @@ builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
 
 builder.Services.AddScoped<IAccessServices, AccessServices>();
 
-builder.Services.AddScoped<IAdminServices, AdminServices>();
+builder.Services.AddScoped<ICompanyServices, CompanyServices>();
 
 builder.Services.AddScoped<IUserEmployeeServices, UserEmployeeService>();
+
+builder.Services.AddScoped<ISoftwareServices, SoftwareServices>();
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
@@ -44,8 +47,12 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy =>
     {
-        policy.RequireAuthenticatedUser();
         policy.RequireClaim("isAdmin", "true");
+    });
+    
+    options.AddPolicy("Authentication", policy =>
+    {
+        policy.RequireAuthenticatedUser();
     });
 });
 

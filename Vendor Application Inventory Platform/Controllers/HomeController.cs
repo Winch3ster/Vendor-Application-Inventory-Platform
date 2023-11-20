@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Controllers
 {
+    [Authorize(Policy = "Authentication")]
     [Route("[controller]/[action]")]
     public class HomeController : Controller
     {

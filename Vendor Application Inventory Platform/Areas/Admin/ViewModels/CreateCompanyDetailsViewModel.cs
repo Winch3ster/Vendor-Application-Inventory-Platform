@@ -1,7 +1,8 @@
 ﻿namespace Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 
-public class AddEntriesViewModel
+public class CreateCompanyDetailsViewModel
 {
+    public int companyId { get; set; }
     public List<CountryViewModel> Countries { get; set; }
 
     public class CountryViewModel
@@ -23,7 +24,7 @@ public class AddEntriesViewModel
         public string? AddressLine1 { get; set; }
         public string? AddressLine2 { get; set; }
         public string? PostCode { get; set; }
-
+        public string? State { get; set; }
     }
 
     public class ContactViewModel

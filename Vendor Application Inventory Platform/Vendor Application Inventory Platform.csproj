@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Admin\Edit.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BCrypt.Net" Version="0.1.0" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
@@ -33,6 +29,22 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Areas\Admin\Views\Admin\AddEntries.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\Admin\Create.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\Admin\Edit.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\Admin\EmployeeDetails.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\Admin\Employees.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\Admin\error.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\Admin\Index.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\Admin\Update.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Software\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Software\Index.cshtml" />
   </ItemGroup>
 
 </Project>

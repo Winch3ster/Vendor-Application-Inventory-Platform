@@ -1,7 +1,8 @@
-﻿using Vendor_Application_Inventory_Platform.Models;
+﻿using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
+using Vendor_Application_Inventory_Platform.Models;
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 
-public interface IAdminServices
+public interface ICompanyServices
 {
     
     List<string> CountryNamesByCompany(int companyId);
@@ -18,13 +19,13 @@ public interface IAdminServices
 
     List<City> ListCities(int companyId, string countryName);
 
-    City FindCity(int companyId, string countryName, string cityName);
+    City? FindCity(int companyId, string countryName, string cityName);
 
     public void DeleteCity(City city);
 
-    public void CreateNewContact(string contactNum, City city);
+    public void CreateNewContact(string contactNum, City? city);
 
-    public void CreateNewAddress(string? address1, string? address2, string? postcode, City city);
+    public void CreateNewAddress(string? address1, string? address2, string? postcode, string? state, City city);
 
     public void DeleteContact(City city);
 
@@ -32,5 +33,9 @@ public interface IAdminServices
 
     public Address? GetAddress(int cityId);
     public ContactNumber? GetContact(int cityId);
-    
+
+    public Company CreateNewCompany(CreateCompanyField createCompanyField);
+
+    public Company? UpdateCompany(int companyId, CreateCompanyField createCompanyField);
+
 }
