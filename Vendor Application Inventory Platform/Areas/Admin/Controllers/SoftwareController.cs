@@ -10,7 +10,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 {
     [Route("[controller]/[action]/")]
     [Authorize(Policy = "Authentication")]
-    [Authorize(Policy = "AdminPolicy")]
+    [Authorize(Policy = "AdminOrSoftwarePolicy")]
     [Area("Admin")]
     public class SoftwareController : Controller
     {

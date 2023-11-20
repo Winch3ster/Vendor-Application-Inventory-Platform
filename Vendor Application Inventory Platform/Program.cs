@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,21 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminPolicy", policy =>
     {
         policy.RequireClaim("isAdmin", "true");
+    });
+    
+    options.AddPolicy("AdminOrAccountPolicy", policy =>
+    {
+        policy.RequireAssertion(context => context.User.HasClaim("isAdmin", "true") || context.User.HasClaim("accountAccess", "true"));
+    });
+    
+    options.AddPolicy("AdminOrCompanyPolicy", policy =>
+    {
+        policy.RequireAssertion(context => context.User.HasClaim("isAdmin", "true") || context.User.HasClaim("companyAccess", "true"));
+    });
+    
+    options.AddPolicy("AdminOrSoftwarePolicy", policy =>
+    {
+        policy.RequireAssertion(context => context.User.HasClaim("isAdmin", "true") || context.User.HasClaim("softwareAccess", "true"));
     });
     
     options.AddPolicy("Authentication", policy =>

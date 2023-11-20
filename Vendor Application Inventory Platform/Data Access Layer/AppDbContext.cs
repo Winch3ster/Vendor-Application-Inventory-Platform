@@ -13,6 +13,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 
         }
         public DbSet<Employee> Employees { get; set; }
+        
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Software> Softwares { get; set; }
         

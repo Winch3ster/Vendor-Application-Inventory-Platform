@@ -7,7 +7,7 @@ using Vendor_Application_Inventory_Platform.Models;
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 {
     [Authorize(Policy = "Authentication")]
-    [Authorize(Policy = "AdminPolicy")]
+    [Authorize(Policy = "AdminOrAccountPolicy")]
     [Area("Admin")]
     public class EmployeeController : Controller
     {
@@ -23,10 +23,9 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         {
             //get data from actors table only as this is controller for actors data only
 
-
             //If here is,the interface and service class must be async as well
             var allEmployeesData = await _service.GetAllAsync();//Convert the data to list
-
+            
             return View(allEmployeesData); //pass the data list to the view
         }
 

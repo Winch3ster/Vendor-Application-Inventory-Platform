@@ -33,6 +33,9 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                          LastName = "William",
                          Email = "John@example.com",
                          Password = hashedPassword,
+                         companyAccess = true,
+                         accountAccess = true,
+                         softwareAccess = true,
                          IsAdmin = true,
                      },
                      new Employee()
@@ -41,6 +44,9 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                          LastName = "Eddinburg",
                          Email = "Henrich@example.com",
                          Password = hashedPassword,
+                         companyAccess = false,
+                         accountAccess = false,
+                         softwareAccess = true,
                          IsAdmin = false,
                      }
                  });

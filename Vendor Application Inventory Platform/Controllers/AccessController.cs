@@ -54,7 +54,10 @@ public class AccessController : Controller
                 List<Claim> claims = new List<Claim>()
                         {
                             new Claim(ClaimTypes.NameIdentifier, modelLogin.email),
-                            new Claim("isAdmin", user.IsAdmin ? "true" : "false")
+                            new Claim("isAdmin", user.IsAdmin ? "true" : "false"),
+                            new Claim("softwareAccess", user.softwareAccess? "true" : "false"),
+                            new Claim("companyAccess", user.companyAccess? "true" : "false"),
+                            new Claim("accountAccess", user.accountAccess? "true" : "false"),
                         };
                         
                         ClaimsIdentity claimsIdentity =

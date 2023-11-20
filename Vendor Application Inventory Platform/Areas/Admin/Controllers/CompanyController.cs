@@ -8,7 +8,7 @@ using Vendor_Application_Inventory_Platform.Models;
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers;
 
 [Authorize(Policy = "Authentication")]
-[Authorize(Policy = "AdminPolicy")]
+[Authorize(Policy = "AdminOrCompanyPolicy")]
 [Area("Admin")]
 [Route("[controller]/[action]/")]
 public class CompanyController: Controller
