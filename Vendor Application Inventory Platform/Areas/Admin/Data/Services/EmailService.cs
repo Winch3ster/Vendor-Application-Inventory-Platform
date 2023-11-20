@@ -4,6 +4,13 @@ using MailKit.Net.Smtp;
 
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 {
+    /// <summary>
+    /// For testing purposes
+    /// 
+    /// To use this functionality use this URL once signed in your_localhost/Employee/Index
+    /// </summary>
+
+
     //The user will receive email of notification for any changes made to the system's data like create, update and delete
     public class EmailService
     {
