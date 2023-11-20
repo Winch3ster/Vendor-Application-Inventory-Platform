@@ -24,7 +24,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //Check if employee table is empty
 
                 //if the table is empty, add employee data
-                 
+                 /*
                  context.Employees.AddRange(new List<Employee>()
                  {
                      new Employee()
@@ -44,22 +44,16 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                          LastName = "Eddinburg",
                          Email = "Henrich@example.com",
                          Password = hashedPassword,
-                         companyAccess = false,
-                         accountAccess = false,
+                         companyAccess = true,
+                         accountAccess = true,
                          softwareAccess = true,
                          IsAdmin = false,
                      }
                  });
                  context.SaveChanges();
                  
-                 
-
-
-
-
-                 
-
-
+                 */
+                /*
           
                  List<BusinessArea> businessAreaList = new List<BusinessArea>()
                  {
@@ -98,7 +92,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 
                  context.SaveChanges();
                  
-
+                
                 
                  List<FinancialServicesClientType> financialServicesClientTypes = new List<FinancialServicesClientType>()
                  {
@@ -113,14 +107,15 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                      },
                  };
 
+                context.FinancialServicesClientTypes.AddRange(financialServicesClientTypes);
 
-                 context.FinancialServicesClientTypes.AddRange(financialServicesClientTypes);
 
-                 context.SaveChanges();
-                 
 
-                
-                 List<Country> countryList = new List<Country>()
+                context.SaveChanges();
+
+
+
+                List<Country> countryList = new List<Country>()
                  {
                      new Country()
                      {
@@ -409,45 +404,50 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                  }
                  context.SaveChanges();
 
-                 
-            //
-            //
-            //     //Reviews seeding
-            //
-            //     //Step 1: Get the user from database (This is similar to user logging into the system)
-            //     Employee userLoggedIn = context.Employees.FirstOrDefault(e => e.EmployeeID == 1002); //Assuming the first user drop the comment 
-            //
-            //
-            //
-            //     //Step 2: Get the software from database (This is similar to user viewing the product/software)
-            //     Software softwareInView = context.Softwares.FirstOrDefault(s => s.SoftwareID == 1001);
-            //
-            //     //Step 3: Create the review  and link to employee and software
-            //     List<Review> reviews = new List<Review>() {
-            //
-            //         new Review() {
-            //             employee = userLoggedIn,
-            //             EmployeeID = userLoggedIn.EmployeeID,
-            //             software = softwareInView,
-            //             SoftwareID = softwareInView.SoftwareID,
-            //             Description = "A great Software. Helped my client solve their problems",
-            //             ReviewDate = DateTime.Now
-            //         },
-            //         new Review() {
-            //             employee = userLoggedIn,
-            //             EmployeeID = userLoggedIn.EmployeeID,
-            //             software = softwareInView,
-            //             SoftwareID = softwareInView.SoftwareID,
-            //             Description = "This is another review by the same person for simplicity sake",
-            //             ReviewDate = DateTime.Now
-            //         }
-            //
-            //     };
-            //
-            //
-            //     //Step 5: Save it in databse
-            //     context.Reviews.AddRange(reviews);
-            //     context.SaveChanges();
+                */
+
+                
+                //Reviews seeding
+
+                //Step 1: Get the user from database (This is similar to user logging into the system)
+                Employee userLoggedIn = context.Employees.FirstOrDefault(e => e.EmployeeID == 1); //Assuming the first user drop the comment 
+
+
+
+                //Step 2: Get the software from database (This is similar to user viewing the product/software)
+                Software softwareInView = context.Softwares.FirstOrDefault(s => s.SoftwareID == 1);
+
+                //Step 3: Create the review  and link to employee and software
+                List<Review> reviews = new List<Review>() {
+
+                     new Review() {
+                         employee = userLoggedIn,
+                         employeeFirstName = userLoggedIn.FirstName,    
+                         employeeLastName = userLoggedIn.LastName,  
+                         EmployeeID = userLoggedIn.EmployeeID,
+                         software = softwareInView,
+                         SoftwareID = softwareInView.SoftwareID,
+                         Description = "A great Software. Helped my client solve their problems",
+                         ReviewDate = DateTime.Now
+                     },
+                     new Review() {
+                         employee = userLoggedIn,
+                         employeeFirstName = userLoggedIn.FirstName,
+                         employeeLastName = userLoggedIn.LastName,
+                         EmployeeID = userLoggedIn.EmployeeID,
+                         software = softwareInView,
+                         SoftwareID = softwareInView.SoftwareID,
+                         Description = "This is another review by the same person for simplicity sake",
+                         ReviewDate = DateTime.Now
+                     }
+
+                 };
+
+
+                //Step 5: Save it in databse
+                context.Reviews.AddRange(reviews);
+                context.SaveChanges();
+                
             }
 
         }
