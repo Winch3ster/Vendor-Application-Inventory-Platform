@@ -11,17 +11,17 @@ namespace Vendor_Application_Inventory_Platform.Controllers
 {
     [Authorize(Policy = "Authentication")]
     [Route("[controller]/[action]")]
-    public class EmployeeController : Controller
+    public class EmployeeUserController : Controller
     {
         private readonly IUserEmployeeServices _service; //Inject the service of actors in here
 
-        public EmployeeController(IUserEmployeeServices service)
+        public EmployeeUserController(IUserEmployeeServices service)
         {
             _service = service;
         }
         
-        [Route("~/Employee")]
-        [Route("~/Employee/Index")]
+        [Route("~/EmployeeUser")]
+        [Route("~/EmployeeUser/Index")]
         public IActionResult Index()
         {
             var userClaims = ((ClaimsIdentity)User.Identity).Claims;
@@ -104,15 +104,6 @@ namespace Vendor_Application_Inventory_Platform.Controllers
             return RedirectToAction(nameof(Index)); //Redirect back to the Employee's index view
         }
 
-
-
-
-
-        public async Task<IActionResult> LogOut()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Access");
-        }
 
     }
 }

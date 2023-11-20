@@ -37,6 +37,51 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
         {
             return _db.SoftwareTypes.ToList();
         }
+        
+        public List<Software> ListAllSoftware()
+        {
+            return _db.Softwares.ToList();
+        }
+        
+        public List<string> GetBusinessAreaNames(int softwareId)
+        {
+            var businessAreaIds = _db.Software_Areas.Where(area => area.softwareID == softwareId).Select(area=>area.areaID).ToList();
+
+            var matchingBusinessAreas =
+                _db.BusinessAreas.Where(area => businessAreaIds.Contains(area.BusinessAreaID)).Select(area=>area.Description).ToList();
+
+            return matchingBusinessAreas;
+        }
+        
+        public List<string> GetModuleNames(int softwareId)
+        {
+            var softwareModuleIds = _db.Software_Modules.Where(module => module.softwareID == softwareId).Select(module=>module.moduleID).ToList();
+
+            var matchingSoftwareModules =
+                _db.SoftwareModules.Where(modules => softwareModuleIds.Contains(modules.SoftwareModuleID)).Select(module=>module.Module).ToList();
+
+            return matchingSoftwareModules;
+        }
+        
+        public List<string> GetFinancialServicesClientTypeNames(int softwareId)
+        {
+            var financialIds = _db.Software_FinancialServicesClientTypes.Where(financial => financial.softwareID == softwareId).Select(financial=>financial.financialServicesClientTypeID).ToList();
+
+            var matchingFinancial =
+                _db.FinancialServicesClientTypes.Where(financial => financialIds.Contains(financial.FinancialServicesClientTypeID)).Select(financial=>financial.Description).ToList();
+
+            return matchingFinancial;
+        }
+        
+        public List<string> GetSoftwareTypeNames(int softwareId)
+        {
+            var softwareTypeIds = _db.Software_Types.Where(type => type.softwareID == softwareId).Select(type=>type.typeID).ToList();
+
+            var matchingSoftwareTypes =
+                _db.SoftwareTypes.Where(type => softwareTypeIds.Contains(type.SoftwareTypeID)).Select(type=>type.Type).ToList();
+
+            return matchingSoftwareTypes;
+        }
 
         public BusinessArea CreateBusinessArea(BusinessArea businessArea)
         {
@@ -252,6 +297,17 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
                 existingSoftware.Cloud = software.Cloud;
                 existingSoftware.DocumentAttached = software.DocumentAttached;
 
+                _db.SaveChanges();
+            }
+        }
+        
+        public void deleteSoftware(int softwareId)
+        {
+            var existingSoftware = _db.Softwares.FirstOrDefault(s=>s.SoftwareID == softwareId);
+            
+            if (existingSoftware != null)
+            {
+                _db.Softwares.Remove(existingSoftware);
                 _db.SaveChanges();
             }
         }

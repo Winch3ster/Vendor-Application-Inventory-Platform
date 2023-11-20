@@ -235,5 +235,16 @@ public class CompanyServices : ICompanyServices
         
         return company;
     }
+
+    public List<Company?> ListCompanies()
+    {
+        return _db.Companies.ToList();
+    }
+
+    public void DeleteCompany(int id)
+    {
+        _db.Companies.Remove(_db.Companies.FirstOrDefault(c => c.CompanyID == id));
+        _db.SaveChanges();
+    }
     
 }

@@ -9,6 +9,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
     [Authorize(Policy = "Authentication")]
     [Authorize(Policy = "AdminOrAccountPolicy")]
     [Area("Admin")]
+    [Route("[controller]/[action]")]
     public class EmployeeController : Controller
     {
 
@@ -19,6 +20,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             _service = service;
         }
 
+        [Route("~/Employee")]
+        [Route("~/Employee/Index")]
         public async Task<IActionResult> Index() //This method will be called by default
         {
             //get data from actors table only as this is controller for actors data only
@@ -43,12 +46,16 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
 
         [HttpPost] //We will be handling post request. Therefore this annotation is required
-        public async Task<IActionResult> Create([Bind("FirstName, LastName, Email, Password, IsAdmin")] Employee employee)
+        public async Task<IActionResult> Create([Bind("FirstName, LastName, Email, Password, IsAdmin, companyAccess, softwareAccess, accountAccess")] Employee employee)
         {
 
+            ModelState.Remove("reviews");
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("Model is not valid");
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine($"Error: {error.ErrorMessage}");
+                }
                 return View(employee);
                 //What do the IsValid check?  --> If if all required fields are filled by [Required] (implemented in the employee class)
 
@@ -69,9 +76,12 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
 
         [HttpPost] //We will be handling post request. Therefore this annotation is required
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeeID, FirstName, LastName, Email, Password, IsAdmin")] Employee employee)
+        public async Task<IActionResult> Edit([Bind("EmployeeID, FirstName, LastName, Email, Password, IsAdmin, companyAccess, softwareAccess, accountAccess")] Employee employee)
         {
 
+            ModelState.Remove("Password");
+            ModelState.Remove("reviews");
+            
             if (!ModelState.IsValid)
             {
                 Console.WriteLine("Model is not valid");
@@ -79,7 +89,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 //What do the IsValid check?  --> If if all required fields are filled by [Required] (implemented in the employee class)
 
             }
-            await _service.UpdateAsync(id, employee);// If the data is valid, add to database (This Add() is from the service class)
+            await _service.UpdateAsync(employee.EmployeeID, employee);// If the data is valid, add to database (This Add() is from the service class)
             return RedirectToAction("Index", "Employee", new { area = "Admin" }); //Redirect back to the Employee's index view
         }
 

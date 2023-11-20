@@ -78,7 +78,7 @@ public class AccessController : Controller
                         }
                         else
                         {
-                            return RedirectToAction("Index", "Employee");
+                            return RedirectToAction("Index", "EmployeeUser");
                         }
             }
         }
@@ -88,6 +88,12 @@ public class AccessController : Controller
 
         ViewData["ValidateMessage"] = "User not found";
         return View();
+    }
+    
+    public async Task<IActionResult> LogOut()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Login", "Access");
     }
     
     

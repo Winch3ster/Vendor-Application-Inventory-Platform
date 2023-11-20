@@ -20,14 +20,29 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         {
             _services = s;
         }
-
+        
+        [Route("~/Software")]
+        [Route("~/Software/Index")]
         public IActionResult Index()
         {
-            return View();
+            List<Software> software = _services.ListAllSoftware();
+            List<SoftwareViewModel> viewModelList = software.Select(software => new SoftwareViewModel
+            {
+                SoftwareID = software.SoftwareID,
+                SoftwareName = software.SoftwareName,
+                Description = software.Description,
+                Cloud = software.Cloud,
+                DocumentAttached = software.DocumentAttached,
+                FinancialServicesClientTypes = _services.GetFinancialServicesClientTypeNames(software.SoftwareID),
+                SoftwareTypes = _services.GetSoftwareTypeNames(software.SoftwareID),
+                SoftwareModules = _services.GetModuleNames(software.SoftwareID),
+                BusinessAreas = _services.GetBusinessAreaNames(software.SoftwareID)
+                
+            }).ToList();
+            
+            return View(viewModelList);
         }
 
-        [Route("~/Software")]
-        [Route("~/Software/CreateSoftware")]
         public IActionResult CreateSoftware(int? id)
         {
             var companies = _services.ListAllCompanies();
@@ -335,6 +350,13 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             _services.CreateFinancialService(financialServicesClientType);
             var financialList = _services.ListAllFinancialServicesClientTypes();
             return Json(new { success = true, list = financialList });
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void DeleteSoftware(int id)
+        {
+            _services.deleteSoftware(id);
         }
         
         public IActionResult ViewPdf(int id)

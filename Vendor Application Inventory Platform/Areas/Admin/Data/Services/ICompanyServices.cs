@@ -38,4 +38,8 @@ public interface ICompanyServices
 
     public Company? UpdateCompany(int companyId, CreateCompanyField createCompanyField);
 
+    public List<Company?> ListCompanies();
+
+    public void DeleteCompany(int id);
+
 }

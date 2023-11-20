@@ -16,6 +16,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 
         public async Task AddAsync(Employee employee)
         {
+            employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
             await _context.AddAsync(employee);
             await _context.SaveChangesAsync();
         }
@@ -41,8 +42,38 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 
         public async Task<Employee> UpdateAsync(int id, Employee newEmployeerData)
         {
-            _context.Update(newEmployeerData);
-            await _context.SaveChangesAsync();
+            //check if password is null, if it is, then do not update password
+            
+            if (newEmployeerData.Password == null)
+            {
+                // Code to handle password null case
+                var employee = await _context.Employees.FirstOrDefaultAsync(n => n.EmployeeID == newEmployeerData.EmployeeID);
+
+                // Detach the entity if it is already being tracked
+                _context.Entry(employee).State = EntityState.Detached;
+
+                // Make changes to the detached entity
+                newEmployeerData.Password = employee.Password;
+
+                // Attach the modified entity back to the context
+                _context.Update(newEmployeerData);
+
+                // Save changes
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // Code to handle password not null case
+                newEmployeerData.Password = BCrypt.Net.BCrypt.HashPassword(newEmployeerData.Password);
+
+                // Update the entity
+                _context.Update(newEmployeerData);
+
+                // Save changes
+                await _context.SaveChangesAsync();
+            }
+
+            
             return newEmployeerData;
         }
 

@@ -22,8 +22,6 @@ public class CompanyController: Controller
 
 
         [HttpGet]
-        [Route("~/Company")]
-        [Route("~/Company/CreateCompany")]
         public IActionResult CreateCompany(int? id)
         {
             if (id == null || id == 0)
@@ -322,5 +320,24 @@ public class CompanyController: Controller
                 }
 
             return Json(new { success = true });
+        }
+
+        [Route("~/Company")]
+        [Route("~/Company/Index")]
+        public IActionResult Index()
+        {
+            List<Company?> companies = _companyService.ListCompanies();
+            return View(companies);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void DeleteCompany(int id)
+        {
+            if (id != null && id != 0)
+            {
+                _companyService.DeleteCompany(id);
+            }
+            
         }
 }

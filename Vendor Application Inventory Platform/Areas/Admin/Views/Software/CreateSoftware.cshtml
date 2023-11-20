@@ -96,7 +96,7 @@
 
 <div class="col-9 m-md-5">
     <p>Register new software</p>
-    <hr />
+    <hr/>
     <h3>Software Information</h3>
 
 
@@ -135,43 +135,44 @@
             <textarea id="softwareDescription" class="form-control-light" required></textarea>
         </div>
 
-         <!-- Pdf Upload -->
+        <!-- Pdf Upload -->
         <div class="mb-3 d-flex align-top">
             <label class="form-label citisoft-text-color col-3">Upload PDF</label>
             <input type="file" id="fileInput" name="pdfFile" accept=".pdf" class="form-control"/>
         </div>
 
-        <!-- Business area -->
-        <div class="mb-5 d-flex align-top">
-            <label class="form-label citisoft-text-color col-3">Business Area</label>
-
-            <div class="multi-value-container">
-                <div class="row multi-value-input-container d-block" id="businessAreaValueContainer">
-                    <div class="d-flex">
-                        <div class="col-9">
-                            <select class="form-select mb-2" required>
-                                <option selected value="">Select Business Area</option>
-                                @if (Model.BusinessAreas != null && Model.BusinessAreas.Any())
-                                {
-                                    @foreach (var area in Model.BusinessAreas)
-                                    {
-                                        <option value="@area.BusinessAreaID">@area.Description</option>
-                                    }
-                                }
-                                
-                            </select>
+        
+        <!-- Business Area -->
+                <div class="mb-5 d-flex align-top">
+                    <label class="form-label citisoft-text-color col-3">Business Area</label>
+        
+                    <div class="multi-value-container">
+                        <div class="multi-value-input-container d-block" id="businessAreaValueContainer">
+                            <div class="d-flex">
+                                <div class="col-9">
+                                    <select class="form-select mb-2" required>
+                                        <option selected>Select Business Area</option>
+                                        @if (Model.BusinessAreas != null && Model.BusinessAreas.Any())
+                                        {
+                                            @foreach (var type in Model.BusinessAreas)
+                                            {
+                                                <option value="@type.BusinessAreaID">@type.Description</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+        
+                                <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#businessAreaModal">Create</div>
+                            </div>
+        
                         </div>
-
-                        <div onmouseover="this.style.cursor='pointer'" class="col-3 mb-3 mt-1 citisoft-text-color ps-3 text-nowrap float-end" data-bs-toggle="modal" data-bs-target="#businessAreaModal">Create</div>
+                        <div class="d-flex justify-content-center">
+                            <div class="btn btn-primary rounded col-12" onclick="AddField(this, 'area')" style="width:50px">
+                                <i class="bi bi-plus"></i>
+                            </div>
+                        </div>
                     </div>
-                <div class="d-flex justify-content-center" id="test">
-                    <div class="btn btn-primary rounded col-12" onclick="AddField(this)"><i class="bi bi-plus"></i></div>
                 </div>
-                <div class="col-12 d-flex justify-content-center mt-2">
-                    <div class="btn btn-primary rounded col-12" onclick="AddField(this, 'area')" style="width:50px"><i class="bi bi-plus"></i></div>
-                </div>
-            </div>
-        </div>
 
 
         <!-- Modules -->
@@ -184,14 +185,14 @@
                         <div class="col-9">
                             <select class="form-select mb-2" required>
                                 <option selected value="">Select Modules</option>
-                                @if (Model.SoftwareModules!=null && Model.SoftwareModules.Any())
+                                @if (Model.SoftwareModules != null && Model.SoftwareModules.Any())
                                 {
                                     @foreach (var module in Model.SoftwareModules)
                                     {
                                         <option value="@module.SoftwareModuleID">@module.Module</option>
                                     }
                                 }
-                                
+
                             </select>
                         </div>
 
@@ -200,7 +201,9 @@
 
                 </div>
                 <div class="d-flex justify-content-center">
-                    <div class="btn btn-primary rounded col-12" onclick="AddField(this, 'module')" style="width:50px"><i class="bi bi-plus"></i></div>
+                    <div class="btn btn-primary rounded col-12" onclick="AddField(this, 'module')" style="width:50px">
+                        <i class="bi bi-plus"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -215,7 +218,7 @@
                         <div class="col-9">
                             <select class="form-select mb-2" required>
                                 <option selected>Select Software Types</option>
-                                @if (Model.SoftwareTypes!=null && Model.SoftwareTypes.Any())
+                                @if (Model.SoftwareTypes != null && Model.SoftwareTypes.Any())
                                 {
                                     @foreach (var type in Model.SoftwareTypes)
                                     {
@@ -230,7 +233,9 @@
 
                 </div>
                 <div class="d-flex justify-content-center">
-                    <div class="btn btn-primary rounded col-12" onclick="AddField(this, 'type')" style="width:50px"><i class="bi bi-plus"></i></div>
+                    <div class="btn btn-primary rounded col-12" onclick="AddField(this, 'type')" style="width:50px">
+                        <i class="bi bi-plus"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -245,7 +250,7 @@
                         <div class="col-9">
                             <select class="form-select mb-2" required>
                                 <option selected>Select Types</option>
-                                @if (Model.FinancialServicesClientTypes!=null && Model.FinancialServicesClientTypes.Any())
+                                @if (Model.FinancialServicesClientTypes != null && Model.FinancialServicesClientTypes.Any())
                                 {
                                     @foreach (var financialService in Model.FinancialServicesClientTypes)
                                     {
@@ -260,13 +265,12 @@
 
                 </div>
                 <div class="d-flex justify-content-center">
-                    <div class="btn btn-primary rounded col-12" onclick="AddField(this, 'financial')" style="width:50px"><i class="bi bi-plus"></i></div>
+                    <div class="btn btn-primary rounded col-12" onclick="AddField(this, 'financial')" style="width:50px">
+                        <i class="bi bi-plus"></i>
+                    </div>
                 </div>
             </div>
         </div>
-
-
-
 
 
         <!-- Cloud -->
@@ -299,7 +303,6 @@
         </div>
 
 
-
     </form>
 
 
@@ -313,10 +316,6 @@
         let companyContactContainer = document.getElementById('company-contact-container');
 
         let countryDropDown = document.getElementById('country-drop-down');
-        
-        function AddField(button) {
-
-            //elem --> get the element that called this function 
 
         function AddField(button, element, option) {
             

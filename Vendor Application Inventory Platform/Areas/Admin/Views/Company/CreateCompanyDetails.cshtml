@@ -579,6 +579,9 @@
                 if (data.errors){
                   alert(`${data.errors}\n\nCountry: ${data.country}\nCity: ${data.city}`)
                 }
+                else{
+                  alert('Successfully submitted')
+                }
               },
               error:function (){
                 alert('Failed to submit, please try again')

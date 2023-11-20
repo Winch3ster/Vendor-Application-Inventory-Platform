@@ -1,5 +1,4 @@
 ﻿@using Vendor_Application_Inventory_Platform.Models;
-@using Vendor_Application_Inventory_Platform.Areas.Admin.Controllers;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @model Employee
@@ -41,16 +40,35 @@
 
         <div class="mb-3">
             <label class="form-label">Password</label>
-            <input asp-for="Password" class="form-control" placeholder="Password" />
+            <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
             <span asp-validation-for="Password" class="text-danger"></span>
             <small id="emailHelp" class="form-text text-muted">Register a password. This password is needed to login to the system!</small>
         </div>
 
 
         <div class="mb-3 form-check">
-            <input asp-for="IsAdmin" type="checkbox" class="form-check-input" id="exampleCheck1">
+            <input asp-for="IsAdmin" type="checkbox" class="form-check-input" onclick="toggleAccess()" id="adminCheck">
             <label class="form-check-label">Is an Admin</label>
         </div>
+
+        <div id="accessField">
+            <div class="mb-3">
+                <input asp-for="accountAccess" type="checkbox" class="form-check-input">
+                <label class="form-check-label">Account Access</label>
+            </div>
+
+            <div class="mb-3">
+                <input asp-for="companyAccess" type="checkbox" class="form-check-input">
+                <label class="form-check-label">Company Access</label>
+            </div>
+
+            <div class="mb-3">
+                <input asp-for="softwareAccess" type="checkbox" class="form-check-input">
+                <label class="form-check-label">Software Access</label>
+            </div>
+        </div>
+        
+        
 
 
 
@@ -70,5 +88,16 @@
         }
 
         placeholder.classList.remove("indicator-off");
+        
+        toggleAccess();
+        
+        function toggleAccess(){
+            if ($("#adminCheck").is(":checked")) {
+                $("#accessField").hide();
+            }
+            else {
+                $("#accessField").show();
+            }
+        }
     </script>
 }

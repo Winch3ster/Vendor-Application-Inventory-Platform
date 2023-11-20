@@ -26,6 +26,11 @@ body {
     color: #4688F1;
 }
 
+.citisoft-background-color {
+    background-color: #4688F1;
+    color:white;
+}
+
 .control-panel-style {
     position:fixed;
     left:0;

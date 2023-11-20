@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Vendor_Application_Inventory_Platform.Models
 {
@@ -27,14 +28,6 @@ namespace Vendor_Application_Inventory_Platform.Models
         public bool companyAccess { get; set; }
 
         public List<Review> reviews { get; set; }
-
-        /*
-        public ICollection<Review>? Reviews { get; set; }
         
-        public Employee()
-        {
-            Reviews = new List<Review>();
-        }
-        */
     }
 }

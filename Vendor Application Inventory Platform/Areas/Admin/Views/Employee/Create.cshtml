@@ -21,35 +21,52 @@
 
         <div class="mb-3">
             <label class="form-label">Employee First Name</label>
-            <input asp-for="FirstName" class=" form-control" placeholder="John" />
+            <input asp-for="FirstName" class=" form-control" placeholder="John" required/>
             <span asp-validation-for="FirstName" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Employee Last Name</label>
-            <input asp-for="LastName" class="form-control" placeholder="Wick" />
+            <input asp-for="LastName" class="form-control" placeholder="Wick" required/>
             <span asp-validation-for="LastName" class="text-danger"></span>
         </div>
 
 
         <div class="mb-3">
             <label class="form-label">Employee Email</label>
-            <input asp-for="Email" class="form-control" placeholder="Enter email" />
+            <input asp-for="Email" class="form-control" placeholder="Enter email" required/>
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Password</label>
-            <input asp-for="Password" class="form-control" placeholder="Password" />
+            <input type="password" asp-for="Password" class="form-control" placeholder="Password" required/>
             <span asp-validation-for="Password" class="text-danger"></span>
             <small id="emailHelp" class="form-text text-muted">Register a password. This password is needed to login to the system!</small>
         </div>
 
 
         <div class="mb-3 form-check">
-            <input asp-for="IsAdmin" type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label">Is an Admin</label>
-        </div>
+                    <input asp-for="IsAdmin" type="checkbox" class="form-check-input" onclick="toggleAccess()" id="adminCheck">
+                    <label class="form-check-label">Is an Admin</label>
+                </div>
+        
+                <div id="accessField">
+                    <div class="mb-3">
+                        <input asp-for="accountAccess" type="checkbox" class="form-check-input">
+                        <label class="form-check-label">Account Access</label>
+                    </div>
+        
+                    <div class="mb-3">
+                        <input asp-for="companyAccess" type="checkbox" class="form-check-input">
+                        <label class="form-check-label">Company Access</label>
+                    </div>
+        
+                    <div class="mb-3">
+                        <input asp-for="softwareAccess" type="checkbox" class="form-check-input">
+                        <label class="form-check-label">Software Access</label>
+                    </div>
+                </div>
 
 
 
@@ -69,5 +86,16 @@
         }
 
         placeholder.classList.remove("indicator-off");
+        
+        toggleAccess();
+                
+                function toggleAccess(){
+                    if ($("#adminCheck").is(":checked")) {
+                        $("#accessField").hide();
+                    }
+                    else {
+                        $("#accessField").show();
+                    }
+                }
     </script>
 }
