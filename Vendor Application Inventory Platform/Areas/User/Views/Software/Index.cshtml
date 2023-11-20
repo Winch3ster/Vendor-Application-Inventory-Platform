@@ -1,4 +1,9 @@
-﻿@{
+﻿@using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
+@using Vendor_Application_Inventory_Platform.Areas.User.Controllers;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
     Layout = "_EmployeeControlPanel";
     ViewData["title"] = "Home";
 }
@@ -7,11 +12,17 @@
 <div>
     <h3>Hey there! Welcome back to Vendor Application Inventory</h3>
     <div class="input-group mt-4">
-        <a href="#" class="input-group-text bg-info bi-search bg-transparent border-end-0 text-decoration-none"></a>
-        <div class="form-floating">
-            <input type="text" class="form-control border-start-0 shadow-none" id="search" placeholder="Username" size="30">
-            <label for="search">Look for the application name</label>
-        </div>
+       
+
+        <form asp-action="Index" method="get" >
+            <div class="form-floating">
+                <input type="text" class="form-control border-start-0 shadow-none" id="search" placeholder="Username" size="30" name="searchString">
+                <label for="search">Look for the application name</label>
+                <button type="submit" class="input-group-text bg-info bi-search bg-transparent border-end-0 border-0"></button>
+            </div> 
+        </form>
+
+        
     </div>
 </div>
 <div class="mt-5">

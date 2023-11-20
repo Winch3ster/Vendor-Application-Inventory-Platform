@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
+using System.Runtime.Intrinsics.X86;
 using Vendor_Application_Inventory_Platform.Areas.User.Data.Services;
 using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Enum;
@@ -23,9 +24,24 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
         }
 
 
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            return View();
+            
+            System.Diagnostics.Debug.WriteLine(searchString);
+              
+            var softwares = from i in _dbContext.Softwares
+                            select i;
+            //If the search string is empty, then return all from database
+            //If the search string IS NOT EMPTY, return the result
+            if (!string.IsNullOrEmpty(searchString))
+            {
+
+                softwares = softwares.Where(s => s.SoftwareName.Contains(searchString) || s.Description.Contains(searchString));
+            }
+
+            //However, if the search string is not empty but the result is then render no result found in the view
+            return View(softwares.ToList());
+    
         }
 
 
@@ -216,8 +232,37 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             //return RedirectToAction("Details", new { id = softwareId });
         }
 
+        //To be checked
+        /// <summary>
+        /// //////////////////////
+        /// </summary>
+        /// <returns></returns>
+        public List<Software> SimilarSoftware(int currentSoftwareId)
+        {
+            //Get the current software type tag
+            List<string> similarTypeTags = _dbContext.Software_Types.Where(s_t => s_t.softwareID == currentSoftwareId).Select(s_t => s_t.softwareType.Type).ToList();
+            
+            List<Software> similarSoftware = new List<Software>();
+            //Return similar software
+            similarSoftware = _dbContext.Software_Types
+             .Where(s => similarTypeTags.Contains(s.softwareType.Type)).Select(s_t => s_t.software) //Find all software that has tag as in similarTypeTag
+             .Take(3) //Take the top 3
+             .ToList();
+
+            if(similarSoftware.Count < 1)
+            {
+                //If no similar software (not even one)
+                //Search based on business areas
+                List<string> businessAreasOfCurrentSoftware = _dbContext.Software_Areas.Where(s_t => s_t.softwareID == currentSoftwareId).Select(s_t => s_t.businessArea.Description).ToList();
 
 
+                similarSoftware = _dbContext.Software_Areas.Where(s_a => businessAreasOfCurrentSoftware.Contains(s_a.businessArea.Description)).Select(s_a => s_a.software).Take(3).ToList();   
+
+            }
+
+            return similarSoftware;
+
+        }
 
 
         //Create contact data dictionary functions
@@ -346,6 +391,13 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
 
             return contact;
         }
+
+
+
+
+
+
+
 
     }
 

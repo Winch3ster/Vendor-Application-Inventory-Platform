@@ -53,6 +53,9 @@ builder.Services.AddScoped<IUserEmployeeServices, UserEmployeeService>();
 builder.Services.AddScoped<ISoftwareServices, SoftwareServices>();
 builder.Services.AddScoped<IExcelGenerationService, ExcelGenerationService>();
 
+//Add the email and notification services 
+builder.Services.AddSingleton<EmailService>();
+builder.Services.AddSingleton<NotificationService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
