@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 
@@ -11,9 +12,11 @@ using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 namespace Vendor_Application_Inventory_Platform.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231119104651_AddPdf")]
+    partial class AddPdf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,15 +226,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("accountAccess")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("companyAccess")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("softwareAccess")
-                        .HasColumnType("bit");
-
                     b.HasKey("EmployeeID");
 
                     b.ToTable("Employees");
@@ -270,7 +264,7 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("softwareId")
+                    b.Property<int>("companyId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -298,14 +292,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
 
                     b.Property<int>("SoftwareID")
                         .HasColumnType("int");
-
-                    b.Property<string>("employeeFirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("employeeLastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ReviewID");
 

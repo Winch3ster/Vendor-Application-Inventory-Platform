@@ -1,15 +1,30 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
-//using Vendor_Application_Inventory_Platform.Data.Services;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 using Vendor_Application_Inventory_Platform.Data.Services;
 using EmployeeServices = Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services.EmployeeServices;
+using QuestPDF.Infrastructure;
+using QuestPDF.Previewer;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Document.Create(container =>
+// {
+//     container.Page(page =>
+//     {
+//         page.Size(PageSizes.A4);
+//
+//         page.Header().Text("a");
+//     });
+// }).ShowInPreviewer();
 
 
 builder.Services.AddTransient<DatabaseSeeder>();
@@ -50,6 +65,21 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim("isAdmin", "true");
     });
     
+    options.AddPolicy("AdminOrAccountPolicy", policy =>
+    {
+        policy.RequireAssertion(context => context.User.HasClaim("isAdmin", "true") || context.User.HasClaim("accountAccess", "true"));
+    });
+    
+    options.AddPolicy("AdminOrCompanyPolicy", policy =>
+    {
+        policy.RequireAssertion(context => context.User.HasClaim("isAdmin", "true") || context.User.HasClaim("companyAccess", "true"));
+    });
+    
+    options.AddPolicy("AdminOrSoftwarePolicy", policy =>
+    {
+        policy.RequireAssertion(context => context.User.HasClaim("isAdmin", "true") || context.User.HasClaim("softwareAccess", "true"));
+    });
+    
     options.AddPolicy("Authentication", policy =>
     {
         policy.RequireAuthenticatedUser();
@@ -85,7 +115,7 @@ app.UseEndpoints(endpoints =>
 
 
 app.UseMvc();
-//DatabaseSeeder.Seed(app);
+// DatabaseSeeder.Seed(app);
 app.Run();
 
 

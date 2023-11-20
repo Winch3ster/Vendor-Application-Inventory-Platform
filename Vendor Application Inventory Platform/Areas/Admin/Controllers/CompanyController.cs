@@ -8,7 +8,7 @@ using Vendor_Application_Inventory_Platform.Models;
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers;
 
 [Authorize(Policy = "Authentication")]
-[Authorize(Policy = "AdminPolicy")]
+[Authorize(Policy = "AdminOrCompanyPolicy")]
 [Area("Admin")]
 [Route("[controller]/[action]/")]
 public class CompanyController: Controller
@@ -55,6 +55,10 @@ public class CompanyController: Controller
                 {
                     int companyId = id ?? 0;
                     Company? company = _companyService.UpdateCompany(companyId, createCompanyField);
+                    if (company == null)
+                    {
+                        return NotFound();
+                    }
                     return Json(new { success = true, companyID = company!.CompanyID });
                 }
                 else

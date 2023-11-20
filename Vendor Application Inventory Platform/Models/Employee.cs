@@ -13,12 +13,18 @@ namespace Vendor_Application_Inventory_Platform.Models
         [Required(ErrorMessage = "Last name is required")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Emial is required")]
+        [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
         
         public bool IsAdmin { get; set; }
+        
+        public bool accountAccess { get; set; }
+        
+        public bool softwareAccess { get; set; }
+        
+        public bool companyAccess { get; set; }
 
         public List<Review> reviews { get; set; }
 
