@@ -12,6 +12,8 @@ using EmployeeServices = Vendor_Application_Inventory_Platform.Areas.Admin.Data.
 using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
 
+using Vendor_Application_Inventory_Platform.Areas.User.Data.Services;
+
 QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +51,7 @@ builder.Services.AddScoped<ICompanyServices, CompanyServices>();
 builder.Services.AddScoped<IUserEmployeeServices, UserEmployeeService>();
 
 builder.Services.AddScoped<ISoftwareServices, SoftwareServices>();
+builder.Services.AddScoped<IExcelGenerationService, ExcelGenerationService>();
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
@@ -115,7 +118,7 @@ app.UseEndpoints(endpoints =>
 
 
 app.UseMvc();
-// DatabaseSeeder.Seed(app);
+//DatabaseSeeder.Seed(app);
 app.Run();
 
 

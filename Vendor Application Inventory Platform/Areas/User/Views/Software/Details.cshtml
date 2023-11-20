@@ -37,7 +37,20 @@
             
         </div>
         <div class="mb-2">Rating <span class="text-info">4.9</span>/5</div>
-        <button class="btn btn-primary">Official Website</button>
+        <div class="d-flex justify-content-evenly"> 
+            <button class="btn btn-primary">Official Website</button>
+
+
+
+            <form asp-action="DownloadExcel" method="post">
+                <input type="hidden" name="softwareId" asp-for="softwareID" />               
+                <button type="submit" class="btn btn-success">Excel</button>
+            </form>
+
+
+           
+        </div>
+        
     </div>
 </div>
 <div class="mt-5 border-top pt-3">
