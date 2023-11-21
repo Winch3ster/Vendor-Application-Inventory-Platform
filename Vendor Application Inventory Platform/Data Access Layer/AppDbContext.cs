@@ -40,6 +40,11 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
         public DbSet<Software_FinancialServicesClientType> Software_FinancialServicesClientTypes { get; set; }
         public DbSet<Company_Country> Company_Country { get; set; }
 
+        //Audit table (To track which user viewed which software)
+        //This is for "recently viewed" implementation
+        public DbSet<User_ViewHistory> user_ViewHistories { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -154,8 +159,22 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 .HasOne(r => r.employee) //One review has one user
                 .WithMany(e => e.reviews) //One user has many reviews
                 .HasForeignKey(r => r.EmployeeID) //The review has user foreign key
-                .OnDelete(DeleteBehavior.Cascade); //When software is deleted, delete the review also 
+                .OnDelete(DeleteBehavior.Cascade); //When employee is deleted, delete the review also 
 
+
+
+            //Configure one to many relationship between user and User_ViewHistory
+            modelBuilder.Entity<User_ViewHistory>()
+                .HasOne(u_v  => u_v.U_V_Employee)
+                .WithMany(u_v => u_v.user_ViewHistories)
+                .HasForeignKey(u_v => u_v.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade); //When user is deleted, delete its view histories
+
+            modelBuilder.Entity<User_ViewHistory>()
+               .HasOne(u_v => u_v.U_V_Software)
+               .WithMany(u_v => u_v.user_ViewHistories)
+               .HasForeignKey(u_v => u_v.SoftwareId)
+               .OnDelete(DeleteBehavior.Cascade); //When software is deleted, delete its view histories
 
         }
     }

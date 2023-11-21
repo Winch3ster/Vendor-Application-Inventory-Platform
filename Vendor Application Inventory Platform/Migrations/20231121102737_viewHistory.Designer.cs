@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 
@@ -11,9 +12,11 @@ using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 namespace Vendor_Application_Inventory_Platform.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231121102737_viewHistory")]
+    partial class viewHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -480,32 +483,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.ToTable("Software_Types");
                 });
 
-            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.User_ViewHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SoftwareId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("time")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("SoftwareId");
-
-                    b.ToTable("user_ViewHistories");
-                });
-
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Address", b =>
                 {
                     b.HasOne("Vendor_Application_Inventory_Platform.Models.City", "city")
@@ -664,25 +641,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.Navigation("softwareType");
                 });
 
-            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.User_ViewHistory", b =>
-                {
-                    b.HasOne("Vendor_Application_Inventory_Platform.Models.Employee", "U_V_Employee")
-                        .WithMany("user_ViewHistories")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Vendor_Application_Inventory_Platform.Models.Software", "U_V_Software")
-                        .WithMany("user_ViewHistories")
-                        .HasForeignKey("SoftwareId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("U_V_Employee");
-
-                    b.Navigation("U_V_Software");
-                });
-
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.BusinessArea", b =>
                 {
                     b.Navigation("Software_Areas");
@@ -714,8 +672,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Employee", b =>
                 {
                     b.Navigation("reviews");
-
-                    b.Navigation("user_ViewHistories");
                 });
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.FinancialServicesClientType", b =>
@@ -734,8 +690,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.Navigation("Software_Types");
 
                     b.Navigation("reviews");
-
-                    b.Navigation("user_ViewHistories");
                 });
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.SoftwareModule", b =>

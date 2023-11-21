@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Data;
+using System.Security.Cryptography;
 using System.Text;
 using BCrypt.Net;
 using OfficeOpenXml;
@@ -25,35 +26,35 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //Check if employee table is empty
 
                 //if the table is empty, add employee data
-                 /*
-                 context.Employees.AddRange(new List<Employee>()
-                 {
-                     new Employee()
-                     {
-                         FirstName = "John",
-                         LastName = "William",
-                         Email = "John@example.com",
-                         Password = hashedPassword,
-                         companyAccess = true,
-                         accountAccess = true,
-                         softwareAccess = true,
-                         IsAdmin = true,
-                     },
-                     new Employee()
-                     {
-                         FirstName = "Henrich",
-                         LastName = "Eddinburg",
-                         Email = "Henrich@example.com",
-                         Password = hashedPassword,
-                         companyAccess = true,
-                         accountAccess = true,
-                         softwareAccess = true,
-                         IsAdmin = false,
-                     }
-                 });
-                 context.SaveChanges();
-                 
-                 */
+                /*
+                context.Employees.AddRange(new List<Employee>()
+                {
+                    new Employee()
+                    {
+                        FirstName = "John",
+                        LastName = "William",
+                        Email = "John@example.com",
+                        Password = hashedPassword,
+                        companyAccess = true,
+                        accountAccess = true,
+                        softwareAccess = true,
+                        IsAdmin = true,
+                    },
+                    new Employee()
+                    {
+                        FirstName = "Henrich",
+                        LastName = "Eddinburg",
+                        Email = "Henrich@example.com",
+                        Password = hashedPassword,
+                        companyAccess = true,
+                        accountAccess = true,
+                        softwareAccess = true,
+                        IsAdmin = false,
+                    }
+                });
+                context.SaveChanges();
+
+                */
                 /*
           
                  List<BusinessArea> businessAreaList = new List<BusinessArea>()
@@ -407,7 +408,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 
                 */
 
-                
+
                 //Rating seeding
                 //Delete review first
                 //Based on how many review given
@@ -460,7 +461,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 context.Reviews.AddRange(reviews);
                 context.SaveChanges();
 
-                */
+                
                 //update the software rating
                 var software = context.Softwares.FirstOrDefault(s => s.SoftwareID == 1); //rating the first software
 
@@ -487,6 +488,424 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 software.rating = newrating;
                 context.Update(software);
                 context.SaveChanges();
+
+                */
+
+                //Create the link for user history table
+
+
+
+
+                //New software
+          
+                 List<BusinessArea> businessAreaList = new List<BusinessArea>()
+                 {
+                     new BusinessArea() {
+                         Description = "Enterprise Architecture"
+                     },
+               
+                 };
+
+                 //Database seeding
+                 context.BusinessAreas.AddRange(businessAreaList);
+                 context.SaveChanges();
+                 
+                 
+
+              
+                 SoftwareModule softwareModule = new SoftwareModule()
+                 {
+                     Module = "Enterprise Architecture Suite"
+                 };
+
+                 context.SoftwareModules.Add(softwareModule);
+                 context.SaveChanges();
+                 
+
+                 
+             
+                 SoftwareType softwareType = new SoftwareType() { Type = "Enterprise Architecture" };
+
+                 context.SoftwareTypes.Add(softwareType);
+
+                 context.SaveChanges();
+                 
+                
+                
+              
+
+
+
+                List<Country> countryList = new List<Country>()
+                 {
+                     new Country()
+                     {
+                         CountryName = "Austria".ToUpper()
+                     },
+                     new Country()
+                     {
+                         CountryName = "France".ToUpper()
+                     },
+                     new Country()
+                     {
+                         CountryName = "Germany".ToUpper()
+                     },
+                     new Country()
+                     {
+                         CountryName = "Greece".ToUpper()
+                     },
+                      new Country()
+                     {
+                         CountryName = context.Countries.FirstOrDefault(c => c.CountryID == 3).CountryName
+                     },
+                       new Country()
+                     {
+                         CountryName = "Poland".ToUpper()
+                     },
+                        new Country()
+                     {
+                         CountryName = "Spain".ToUpper()
+                     },
+                 };
+                 context.Countries.AddRange(countryList);
+                 context.SaveChanges();
+
+               
+
+
+
+
+                 List<City> cityList = new List<City>()
+                 {
+                     new City()
+                     {
+                         CityName = "Wein".ToUpper(),
+                         country = countryList[0],
+                         CountryID = countryList[0].CountryID,
+
+                     },
+                     new City()
+                     {
+                         CityName = "Paris".ToUpper(),
+                         country = countryList[1],
+                         CountryID = countryList[1].CountryID,
+
+                     },
+                     new City()
+                     {
+                         CityName = "Berlin".ToUpper(),
+                         country = countryList[2],
+                         CountryID = countryList[2].CountryID,
+
+                     },
+                     new City()
+                     {
+                         CityName = "Chalikida".ToUpper(),
+                         country = countryList[3],
+                         CountryID = countryList[3].CountryID,
+
+                     },
+                     new City()
+                     {
+                         CityName = "Dublin".ToUpper(),
+                         country = countryList[4],
+                         CountryID = countryList[4].CountryID,
+
+                     },
+                     new City()
+                     {
+                         CityName = "Warzsawa".ToUpper(),
+                         country = countryList[5],
+                         CountryID = countryList[5].CountryID,
+
+                     },
+                     new City()
+                     {
+                         CityName = "Madrid".ToUpper(),
+                         country = countryList[6],
+                         CountryID = countryList[6].CountryID,
+
+                     },
+                
+                 };
+                 context.Cities.AddRange(cityList);
+                 context.SaveChanges();
+
+
+
+
+                 //Contact number
+                 List<ContactNumber> contactNumberList = new List<ContactNumber>() {
+
+                     new ContactNumber()
+                     {
+                         Number = 43190510810,
+                         city = cityList[0],
+                         CityID = cityList[0].CityID,
+                     },
+                     new ContactNumber()
+                     {
+                         Number = 33153245383,
+                         city = cityList[1],
+                         CityID = cityList[1].CityID,
+                     },
+                     new ContactNumber()
+                     {
+                         Number = 493022692510,
+                         city = cityList[2],
+                         CityID = cityList[2].CityID,
+                     },
+                     new ContactNumber()
+                     {
+                         Number = 302221308676,
+                         city = cityList[3],
+                         CityID = cityList[3].CityID,
+                     },
+                     new ContactNumber()
+                     {
+                         Number = 35312870129,
+                         city = cityList[4],
+                         CityID = cityList[4].CityID,
+                     },
+                     new ContactNumber()
+                     {
+                         Number = 48226280015,
+                         city = cityList[5],
+                         CityID = cityList[5].CityID,
+                     },
+                     new ContactNumber()
+                     {
+                         Number =  34917811880,
+                         city = cityList[6],
+                         CityID = cityList[6].CityID,
+                     }
+
+                    
+
+
+                 };
+
+                 context.ContactNumbers.AddRange(contactNumberList);
+                 context.SaveChanges();
+
+                 
+                 //Address 
+                 List<Address> addresses = new List<Address>()
+                 {
+                     new Address()
+                     {
+                        
+                         city = cityList[0],
+                         CityID = cityList[0].CityID,
+                         AddressLine1 = "Operngasse",
+                         AddressLine2 = "20b",
+                         State = " ",
+                         PostCode = "1040"
+                     },
+                     new Address()
+                     {
+                        
+                         city = cityList[1],
+                         CityID = cityList[1].CityID,
+                         AddressLine1 = "5",
+                         AddressLine2 = "Rue du Helder",
+                         State = "Paris",
+                         PostCode = "75009"
+                     },
+                     new Address()
+                     {
+                         //Berlin Naglerstrabe 5 10245 Berlin
+                         city = cityList[2],
+                         CityID = cityList[2].CityID,
+                         AddressLine1 = "Naglerstrabe",
+                         AddressLine2 = "5",
+                         State = "Berlin",
+                         PostCode = "10245"
+                     },
+                     new Address()
+                     {
+                         //Greece
+                        
+                         city = cityList[3],
+                         CityID = cityList[3].CityID,
+                         AddressLine1 = "4,",
+                         AddressLine2 = "Dimarxou Sarafianou Street",
+                         State = "Evia",
+                         PostCode = "34100"
+                     },
+                     new Address()
+                     {
+                         
+                         //ireland
+                         city = cityList[4],
+                         CityID = cityList[4].CityID,
+                         AddressLine1 = "21",
+                         AddressLine2 = "Priory Office Park",
+                         State = "Stillorgan",
+                         PostCode = "Bunlin A94 F660"
+                     },
+                     new Address()
+                     {
+                         
+                         //Poland
+                         city = cityList[5],
+                         CityID = cityList[5].CityID,
+                         AddressLine1 = "1. Panska 96 lok",
+                         AddressLine2 = " ",
+                         State = "Warszawa",
+                         PostCode = "59 00-837"
+                     },
+                     new Address()
+                     {
+                         //spain
+                         city = cityList[6],
+                         CityID = cityList[6].CityID,
+                         AddressLine1 = "C. de Velázquez",
+                         AddressLine2 = "S.L.U. Velazquez",
+                         State = "28006",
+                         PostCode = "WC1B 3HH"
+                     },
+                   
+                 };
+
+                 context.Addresses.AddRange(addresses);
+                 context.SaveChanges();
+
+
+
+
+
+                 Company company = new Company()
+                 {
+                     CompanyName = "BOC Group",
+                     WebsiteURL = "https://www.boc-group.com/en/adoit/",
+                     Description = "ADOIT is an enterprise architecture management tool that provides functionalities and methods for enterprise analysis, design, planning, and implementation. The platform supports alignment and improvement of dependencies between business and IT as well as manages and analyses the dependencies between different organizational assets.",
+                     EstablishedDate = new DateTime(1995),
+                     NumberOfEmployee = 1000,
+                     InternalProfessionalServices = true,
+                     LastDemoDate = new DateTime(2023, 8, 3),
+                     LastReviewDate = new DateTime(2023, 8, 3)
+
+                 };
+                 context.Companies.Add(company);
+                 context.SaveChanges();
+
+
+                 Software software = new Software()
+                 {
+                     CompanyID = 1,
+                     Company = company,
+                     SoftwareName = "ADOIT",
+                     Description = "ADOIT is an enterprise architecture management tool that provides functionalities and methods for enterprise analysis, design, planning, and implementation. The platform supports alignment and improvement of dependencies between business and IT as well as manages and analyses the dependencies between different organizational assets.",
+                     Cloud = CloudType.Based,
+                     DocumentAttached = false
+                 };
+
+                 context.Softwares.Add(software);
+                 context.SaveChanges();
+
+
+
+                 //Seeding the join table (establish relationship)
+
+                 //For each area inside the list create an instance in the join table
+                 foreach (var area in businessAreaList)
+                 {
+                     Software_Area s_a = new Software_Area()
+                     {
+                         areaID = area.BusinessAreaID,
+                         businessArea = area,
+                         software = software,
+                         softwareID = software.SoftwareID
+                     };
+
+                     //Add to table
+                     context.Software_Areas.Add(s_a);
+                 }
+                 context.SaveChanges();
+
+                 //Software Modules join table
+                 context.Software_Modules.Add(
+                     new Software_Module()
+                     {
+                         moduleID = softwareModule.SoftwareModuleID,
+                         softwareModule = softwareModule,
+                         software = software,
+                         softwareID = software.SoftwareID
+                     });
+                 context.SaveChanges();
+
+
+                 //Software Type join table
+                 context.Software_Types.Add(
+                     new Software_Type()
+                     {
+                         softwareType = softwareType,
+                         typeID = softwareType.SoftwareTypeID,
+                         software = software,
+                         softwareID = software.SoftwareID
+                     });
+                 context.SaveChanges();
+
+
+
+              
+
+                 //company and cities
+                 foreach(var country in countryList)
+                 {
+                     Company_Country c_c = new Company_Country()
+                     {
+                         country = country,
+                         countryID = country.CountryID,
+                         company = company,
+                         companyID = company.CompanyID,
+                     };
+                     context.Add(c_c);
+                 }
+                 context.SaveChanges();
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
 
         }

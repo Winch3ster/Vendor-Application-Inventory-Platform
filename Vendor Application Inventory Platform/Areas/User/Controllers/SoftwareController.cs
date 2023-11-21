@@ -26,7 +26,15 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
 
         public IActionResult Index(string searchString)
         {
-            
+            //Get all software and recently viewed
+            var data = new SoftwareIndexVM()
+            {
+                returnedSoftwares = _dbContext.Softwares.ToList(),
+              
+                recentlyViewed = _dbContext.user_ViewHistories.Where(u_v => u_v.EmployeeId == 1).OrderByDescending(u_v => u_v.time).Select(u_v => u_v.U_V_Software).ToList()    
+            };
+
+
             System.Diagnostics.Debug.WriteLine(searchString);
               
             var softwares = from i in _dbContext.Softwares
@@ -37,10 +45,21 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             {
 
                 softwares = softwares.Where(s => s.SoftwareName.Contains(searchString) || s.Description.Contains(searchString));
+                
+                data = new SoftwareIndexVM()
+                {
+                    returnedSoftwares = softwares.ToList(),
+
+                    recentlyViewed = _dbContext.user_ViewHistories.Where(u_v => u_v.EmployeeId == 1).OrderByDescending(u_v => u_v.time).Select(u_v => u_v.U_V_Software).ToList()
+                };
             }
 
+            
+
+
+
             //However, if the search string is not empty but the result is then render no result found in the view
-            return View(softwares.ToList());
+            return View(data);
     
         }
 
@@ -48,8 +67,13 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
 
 
 
-        public IActionResult Details(int softwareId) { 
-            var software = _dbContext.Softwares.FirstOrDefault(s =>s.SoftwareID == 1); //get the first software in database
+        public IActionResult Details(int softwareId) {
+
+            System.Diagnostics.Debug.WriteLine($"requested software id: {softwareId}");
+            var loggedInUser = _dbContext.Employees.FirstOrDefault(e => e.EmployeeID == 1);
+
+
+            var software = _dbContext.Softwares.FirstOrDefault(s =>s.SoftwareID == softwareId); //get the first software in database
 
             System.Diagnostics.Debug.WriteLine($"{software.SoftwareName}");
 
@@ -97,7 +121,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             }
 
 
-            var data = _dbContext.Softwares.Where(s => s.SoftwareID == 1).Include(e => e.Company)
+            var data = _dbContext.Softwares.Where(s => s.SoftwareID == softwareId).Include(e => e.Company)
            .Include(e => e.reviews)
            .Select(e =>
            new SoftwareVM
@@ -116,11 +140,26 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
            }
            ).FirstOrDefault();
 
-            Console.WriteLine(data);
+
+            //Log user's view in user_viewHistory
+            LogUserHistory(software, loggedInUser);
+
+           
 
             return View(data);
         }
 
+        private void LogUserHistory(Software software, Employee loggedInUser)
+        {
+            _dbContext.user_ViewHistories.Add(new User_ViewHistory
+            {
+                U_V_Employee = loggedInUser,
+                EmployeeId = loggedInUser.EmployeeID,
+                SoftwareId = software.SoftwareID,   
+                time = DateTime.Now,
+            });
+            _dbContext.SaveChanges();
+        }
 
         [HttpPost]
         public IActionResult AddComment(string userReview, int ratingStar, int softwareId)

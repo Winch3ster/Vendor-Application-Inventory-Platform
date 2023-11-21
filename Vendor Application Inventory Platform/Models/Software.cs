@@ -35,6 +35,7 @@ namespace Vendor_Application_Inventory_Platform.Models
 
 
         public List<Review> reviews { get; set; }
+        public List<User_ViewHistory> user_ViewHistories { get; set; }
 
         /*
         //Entity Relationships
