@@ -11,6 +11,12 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.ViewModels
         public List<string> TypeOfSoftware { get; set; }
         public string SoftwareDescription { get; set; }
         public DateTime CompanyEstablished { get; set; }
+        
+        public string CompanyDescription { get; set; }
+        
+        public string WebsiteURL { get; set; }
+        
+        public float rating { get; set; }
 
         public Dictionary<string, Dictionary<string, Dictionary<string, string>>> CompanyContactData { get; set; }
 
@@ -23,7 +29,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.ViewModels
         public List<string> FinancialServicesClientTypes { get; set; }
         public CloudType Cloud { get; set; }
 
-        //The DocumentAttached attribute is not needed as it only indicate whether a specifc software has generate pdf funtionalities or not
+        //The DocumentAttached attribute is not needed as it only indicate whether a specific software has generate pdf functionalities or not
 
     }
 }

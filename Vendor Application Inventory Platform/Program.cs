@@ -18,17 +18,6 @@ QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Document.Create(container =>
-// {
-//     container.Page(page =>
-//     {
-//         page.Size(PageSizes.A4);
-//
-//         page.Header().Text("a");
-//     });
-// }).ShowInPreviewer();
-
-
 builder.Services.AddTransient<DatabaseSeeder>();
 
 //Add local database connection
@@ -51,7 +40,10 @@ builder.Services.AddScoped<ICompanyServices, CompanyServices>();
 builder.Services.AddScoped<IUserEmployeeServices, UserEmployeeService>();
 
 builder.Services.AddScoped<ISoftwareServices, SoftwareServices>();
+
 builder.Services.AddScoped<IExcelGenerationService, ExcelGenerationService>();
+
+builder.Services.AddScoped<IPdfGenerationService, PdfGenerationService>();
 
 //Add the email and notification services 
 builder.Services.AddSingleton<EmailService>();

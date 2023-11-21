@@ -17,10 +17,12 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
     {
         private readonly AppDbContext _dbContext;
         private readonly IExcelGenerationService _excelGenerationService;
-        public SoftwareController(AppDbContext dbContext, IExcelGenerationService excelGenerationService)
+        private readonly IPdfGenerationService _pdfGenerationService;
+        public SoftwareController(AppDbContext dbContext, IExcelGenerationService excelGenerationService, IPdfGenerationService pdfGenerationService)
         {
             _dbContext = dbContext;
             _excelGenerationService = excelGenerationService;
+            _pdfGenerationService = pdfGenerationService;
         }
 
 
@@ -64,6 +66,71 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
         }
 
 
+        public async Task<IActionResult> GeneratePdf(int softwareId)
+        {
+            var retrivedSoftware = await _dbContext.Softwares.FindAsync(softwareId);
+
+            System.Diagnostics.Debug.WriteLine($"The Retrieved software name: {retrivedSoftware.SoftwareName}");
+            System.Diagnostics.Debug.WriteLine($"The Retrieved software Company ID: {retrivedSoftware.CompanyID}");
+            //Retrive the company  information
+
+            var retrivedCompany = await _dbContext.Companies.FindAsync(retrivedSoftware.CompanyID);
+            System.Diagnostics.Debug.WriteLine($"The Retrieved Company ID: {retrivedCompany.CompanyID}");
+            System.Diagnostics.Debug.WriteLine($"The Retrieved Company name: {retrivedCompany.CompanyName}");
+
+            var retrivedLocationCountries = _dbContext.Company_Country.Where(cc => cc.companyID == retrivedCompany.CompanyID).Select(e => e.country).ToList();
+
+           
+            Dictionary<string, Dictionary<string, Dictionary<string, string>>> contactData = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+            contactData = CreateContactDataDictionary(retrivedLocationCountries);
+
+
+            List<string> TypeOfSoftware = _dbContext.Software_Types.Where(st => st.softwareID == retrivedSoftware.SoftwareID).Select(e => e.softwareType.Type).ToList();
+
+            string combinedString = string.Join(",", TypeOfSoftware.ToArray());
+
+            System.Diagnostics.Debug.WriteLine($"The types of software: {string.Join(", ", TypeOfSoftware)}");
+            
+            // Create a view model to pass data to the service
+            var viewModel = new SoftwareCompanyVM
+            {
+                SoftwareName = retrivedSoftware.SoftwareName,
+                CompanyName = retrivedCompany.CompanyName,
+                CompanyWebsite = retrivedCompany.WebsiteURL,   
+                SoftwareDescription = retrivedSoftware.Description,
+                CompanyEstablished = retrivedCompany.EstablishedDate,
+                NumberOfEmployees = retrivedCompany.NumberOfEmployee,
+                InternalProfessionalServices = retrivedCompany.InternalProfessionalServices,
+                LastDemoDate = retrivedCompany.LastDemoDate,
+                LastReviewDate = retrivedCompany.LastReviewDate,
+                Cloud = retrivedSoftware.Cloud,
+                rating = retrivedSoftware.rating,
+                WebsiteURL = retrivedCompany.WebsiteURL,
+                CompanyDescription = retrivedCompany.Description,
+                
+
+                //List
+                //Inorder for the data to be displayed in a single cell, It can be converted into an array of values
+
+                TypeOfSoftware = _dbContext.Software_Types.Where(st => st.softwareID == retrivedSoftware.SoftwareID).Select(e => e.softwareType.Type).ToList(),
+                
+                BusinessAreas = _dbContext.Software_Areas.Where(s_a => s_a.softwareID == retrivedSoftware.SoftwareID).Select(s_a => s_a.businessArea.Description).ToList(),   
+                Modules = _dbContext.Software_Modules.Where(s_m => s_m.softwareID == retrivedSoftware.SoftwareID).Select(s_m => s_m.softwareModule.Module).ToList(),
+                FinancialServicesClientTypes = _dbContext.Software_FinancialServicesClientTypes.Where(s_f => s_f.softwareID == retrivedSoftware.SoftwareID).Select(s_f => s_f.financialServicesClientType.Description).ToList(),
+                
+                //Data will be processed in the ExcelGenerationService
+                CompanyContactData = contactData,
+
+            };
+            
+
+
+            
+            var pdfBytes = _pdfGenerationService.GeneratePdf(viewModel);
+            
+            // You can return the PDF as a FileResult
+            return File(pdfBytes, "application/pdf", "CompanyReport.pdf");
+        }
 
 
 
@@ -85,7 +152,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             //The company can be a multinational company (have branch in many country)
             var countries = _dbContext.Company_Country.Where(c_c => c_c.companyID  == companyId).Select(c_c => c_c.country).ToList();
 
-            //In a country, the company can have alot of branches throyghout the cities (within the country)
+            //In a country, the company can have a lot of branches throughout the cities (within the country)
             //In each branch (in the city), they can have a contact number
             
             //MIGHT NEED TO CHANGE THE NAME FOR THE DICTIONARY
@@ -134,6 +201,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                websiteURL = e.Company.WebsiteURL,
                CompanyName = e.Company.CompanyName,
                companyEstablishedDate = e.Company.EstablishedDate,
+               DocumentAttached = e.DocumentAttached,
                companyContactData = contactData,
                reviews = e.reviews,
                newReview = new Review()

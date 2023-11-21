@@ -1,5 +1,4 @@
 ﻿@using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
-@using Vendor_Application_Inventory_Platform.Areas.User.Controllers;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 
@@ -49,12 +48,43 @@
         <div class="d-flex justify-content-evenly"> 
             <button type="button" id="visitWebsite" data-link="@Model.websiteURL" class="btn btn-primary">Official Website</button>
 
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Generate Report
+                </button>
+                <ul class="dropdown-menu p-0">
+                    <li>
+                        <form asp-action="DownloadExcel" method="post" class="dropdown-item">
+                            <input type="hidden" name="softwareId" asp-for="softwareID"/>
+                            <button type="submit" class="btn w-100">Download Excel</button>
+                        </form>
+                    </li>
+                    <li class="dropdown-item">
+                        <a class="btn" asp-action="GeneratePdf" asp-route-softwareId="@Model.softwareID" class="d-block py-2 px-3">Download PDF</a>
+                    </li>
+                </ul>
+            </div>
+
+            @if (Model.DocumentAttached)
+            {
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Uploaded Pdf
+                    </button>
+                    <ul class="dropdown-menu p-0">
+                        <li class="dropdown-item">
+                            <a class="btn" asp-area="Admin" asp-action="ViewPdf" asp-route-id="@Model.softwareID" class="d-block py-2 px-3">View PDF</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a class="btn" asp-area="Admin" asp-action="DownloadPdf" asp-route-id="@Model.softwareID" class="d-block py-2 px-3">Download PDF</a>
+                        </li>
+                    </ul>
+                </div>
+            }
+            
 
 
-            <form asp-action="DownloadExcel" method="post">
-                <input type="hidden" name="softwareId" asp-for="softwareID" />               
-                <button type="submit" class="btn btn-success">Excel</button>
-            </form>
+
 
 
            

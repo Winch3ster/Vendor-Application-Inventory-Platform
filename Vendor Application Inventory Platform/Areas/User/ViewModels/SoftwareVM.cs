@@ -14,6 +14,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.ViewModels
 
         //Company Information
         public string CompanyName { get; set; }
+        
+        public bool DocumentAttached { get; set; }
         public DateTime companyEstablishedDate { get; set; }
 
         public Review newReview { get; set; }
