@@ -18,6 +18,10 @@ namespace Vendor_Application_Inventory_Platform.Models
 
         public bool DocumentAttached { get; set; }
 
+        //Set the software rating by taking the average rating 
+        public float rating { get; set; }
+
+
 
 
         //Entity Relationships

@@ -7,6 +7,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.ViewModels
         //Software Information
         public int softwareID { get; set; }
         public string SoftwareName { get; set; }
+        public float softwareRating { get; set; } 
         public string SoftwareDescription { get; set; }
 
         public string websiteURL { get; set; }

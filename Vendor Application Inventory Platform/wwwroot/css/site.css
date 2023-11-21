@@ -143,3 +143,43 @@ textarea:focus{
     font-size: 16px;
     resize: none;
 }
+
+
+
+
+.starContainer {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.starContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+
+    /* On mouse-over, add a grey background color */
+.starContainer:hover input ~ .star {
+    opacity: 0.5;
+    color: gold;
+}
+
+
+
+.star {
+    color: gray;
+}
+
+.active {
+    color: gold;
+}

@@ -36,9 +36,18 @@
             </div>
             
         </div>
-        <div class="mb-2">Rating <span class="text-info">4.9</span>/5</div>
+        <div class="mb-2">Rating 
+            @if (@Model.softwareRating < 3)
+            {
+                <span class="text-danger">@Model.softwareRating</span>
+            }
+            else
+            {
+                <span class="text-info">@Model.softwareRating</span>
+            }   
+            /5</div>
         <div class="d-flex justify-content-evenly"> 
-            <button class="btn btn-primary">Official Website</button>
+            <button type="button" id="visitWebsite" data-link="@Model.websiteURL" class="btn btn-primary">Official Website</button>
 
 
 
@@ -120,6 +129,13 @@
             <div class="d-flex align-items-center">
                 
                 <span class="text-primary" style="margin-right:15px">@review.employeeFirstName @review.employeeLastName</span>
+                <div class="d-flex col-3" style="margin: 0 10px">
+                    @for (int i = 0; i < review.givenStar; i++)
+                    {
+                        <div style="margin-right:8px"><i class="bi bi-star-fill" style="color: gold;"></i></div>
+                    }
+
+                </div>
                 <span> @review.ReviewDate </span>
             </div>
             
@@ -134,9 +150,39 @@
 <div id="review" class="mt-5 standard-margin-left">
    
     <form asp-action="AddComment" method="post">
+       <div class="d-flex"> 
+            <label class="form-label citisoft-text-color p-2" for="userReview">Drop your review here</label>
+
+
+            <div class="d-flex">
+                <label class="starContainer">
+                    <input value="1" type="radio" name="ratingStar" onclick="updateStar()">
+                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                </label>
+                <label class="starContainer">
+                    <input value="2" type="radio" name="ratingStar" onclick="updateStar()">
+                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                </label>
+                <label class="starContainer">
+                    <input value="3" type="radio" name="ratingStar" onclick="updateStar()">
+                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                </label>
+                <label class="starContainer">
+                    <input value="4" type="radio" name="ratingStar" onclick="updateStar()">
+                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                </label>
+                <label class="starContainer">
+                    <input value="5" type="radio" name="ratingStar" checked="checked" onclick="updateStar()">
+                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                </label>
+
+            </div>
+
+
+       </div>
         <div class="mb-3 d-flex align-top">
             <input type="hidden" name="softwareId" asp-for = "softwareID" />
-            <label  class="form-label citisoft-text-color p-2" for="userReview">Drop your review here</label>
+            
             <textarea class="form-control-light" placeholder="Your review..." id="userReview" for="userReview" name="userReview"></textarea>
             <span asp-validation-for="newReview.Description" class="text-danger"></span>
         </div>
@@ -167,3 +213,59 @@
 </div>
 
 <div class="mt-5"></div>
+
+
+
+
+@section Scripts{
+
+    <script>
+
+        // Attach a click event listener to the visit website button
+        document.getElementById("visitWebsite").addEventListener("click", function () {
+            var weblink = document.getElementById('visitWebsite').dataset.link
+
+            var cleanedWeblink = weblink.substring(6); //Due to error in database, the '/' in the link is omitted and hence cause error
+
+            // Change the current location to the desired website
+            window.open(`https://${cleanedWeblink}`, "_blank");
+
+            //window.location.href = document.getElementById('visitWebsite').dataset.webURL;
+
+            
+        });
+
+
+        function updateStar() {
+            var starRadioLists = document.getElementsByName('ratingStar')
+            var starIconList = document.getElementsByClassName('star')
+
+            //Reset the star color for all star
+            for (var i = 0; i < starIconList.length; i++) {
+                starIconList[i].classList.remove('active')
+            }
+
+
+
+            var checkedIndex = starRadioLists.length - 1;
+            //For each starList check which is checked and set all the previous star color to activate
+            for (var i = 0; i < starRadioLists.length; i++) {
+                if (starRadioLists[i].checked) {
+                    checkedIndex = i
+                    console.log(checkedIndex)
+                }
+            }
+            starIconList[checkedIndex].classList.add('active')
+
+            //Set yellow to the all the star up to the selected star
+            for (var i = 0; i < checkedIndex + 1; i++) {
+                starIconList[i].classList.add('active')
+            }
+
+        }
+
+        updateStar()
+        
+    </script>
+
+}

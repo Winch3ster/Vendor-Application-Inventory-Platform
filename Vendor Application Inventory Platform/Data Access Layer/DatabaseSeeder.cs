@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using BCrypt.Net;
+using OfficeOpenXml;
 using Vendor_Application_Inventory_Platform.Data.Enum;
 using Vendor_Application_Inventory_Platform.Models;
 
@@ -407,8 +408,17 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 */
 
                 
-                //Reviews seeding
+                //Rating seeding
+                //Delete review first
+                //Based on how many review given
+                //update the review
 
+
+
+
+
+                //Reviews seeding
+                /*
                 //Step 1: Get the user from database (This is similar to user logging into the system)
                 Employee userLoggedIn = context.Employees.FirstOrDefault(e => e.EmployeeID == 1); //Assuming the first user drop the comment 
 
@@ -427,6 +437,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                          EmployeeID = userLoggedIn.EmployeeID,
                          software = softwareInView,
                          SoftwareID = softwareInView.SoftwareID,
+                         givenStar = 5,
                          Description = "A great Software. Helped my client solve their problems",
                          ReviewDate = DateTime.Now
                      },
@@ -437,7 +448,8 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                          EmployeeID = userLoggedIn.EmployeeID,
                          software = softwareInView,
                          SoftwareID = softwareInView.SoftwareID,
-                         Description = "This is another review by the same person for simplicity sake",
+                         givenStar =3,
+                         Description = "A new comment",
                          ReviewDate = DateTime.Now
                      }
 
@@ -447,7 +459,34 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //Step 5: Save it in databse
                 context.Reviews.AddRange(reviews);
                 context.SaveChanges();
-                
+
+                */
+                //update the software rating
+                var software = context.Softwares.FirstOrDefault(s => s.SoftwareID == 1); //rating the first software
+
+                //Extract all review that has softwareId==1 from the reviews table
+
+                var softwareRating = context.Reviews.Where(r => r.SoftwareID == 1).ToList();
+                //Calculate new rating sum of givenStar / number of returned entries
+                float newrating = 0;
+
+                foreach(var givenrating in softwareRating)
+                {
+                    newrating += givenrating.givenStar;
+
+                    System.Diagnostics.Debug.WriteLine($"The given rating: {givenrating.givenStar}");
+                    System.Diagnostics.Debug.WriteLine($"The rating: {newrating}");
+                }
+
+                newrating = (newrating / softwareRating.Count);
+
+                System.Diagnostics.Debug.WriteLine($"The new rating: {newrating}");
+                System.Diagnostics.Debug.WriteLine($"The Number of rating: {softwareRating.Count}");
+
+                //update rating in database
+                software.rating = newrating;
+                context.Update(software);
+                context.SaveChanges();
             }
 
         }

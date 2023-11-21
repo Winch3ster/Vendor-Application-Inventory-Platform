@@ -104,6 +104,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
            {
                softwareID = e.SoftwareID,
                SoftwareName = e.SoftwareName,
+               softwareRating = e.rating,
                SoftwareDescription = e.Description,
                businessAreas = businessAreasList,
                websiteURL = e.Company.WebsiteURL,
@@ -122,11 +123,14 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
 
 
         [HttpPost]
-        public IActionResult AddComment(string userReview, int softwareId)
+        public IActionResult AddComment(string userReview, int ratingStar, int softwareId)
         {
             
-            System.Diagnostics.Debug.WriteLine("Drop Comment function is running");
-            System.Diagnostics.Debug.WriteLine("The received string is: " + userReview);
+            //System.Diagnostics.Debug.WriteLine("Drop Comment function is running");
+            //System.Diagnostics.Debug.WriteLine("The received string is: " + userReview);
+
+            System.Diagnostics.Debug.WriteLine("The received rating star is: " + ratingStar);
+            
             //Assuming the second user drop the comment
             // Retrieve the current user's ID
             var currentUser = _dbContext.Employees.FirstOrDefault(e => e.EmployeeID == 1);
@@ -144,20 +148,49 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                 employeeLastName = currentUser.LastName,
                 software = softwareInview,
                 SoftwareID = softwareInview.SoftwareID,
+                givenStar = ratingStar,
                 Description = userReview,
                 ReviewDate = DateTime.Now,
             };
 
+            
             _dbContext.Reviews.Add(review);
             _dbContext.SaveChanges();
 
 
-
+            updateSoftwareRating(softwareInview);
             // If the model state is not valid, redisplay the form with errors
             return RedirectToAction("Details", new { id = softwareId });
         
         }
 
+        private void updateSoftwareRating(Software software)
+        {
+            //Extract all review that has softwareId==1 from the reviews table
+
+            var softwareRating = _dbContext.Reviews.Where(r => r.SoftwareID == software.SoftwareID).ToList();
+            //Calculate new rating sum of givenStar / number of returned entries
+            float newrating = 0;
+
+            foreach (var givenrating in softwareRating)
+            {
+                newrating += givenrating.givenStar;
+
+                System.Diagnostics.Debug.WriteLine($"The given rating: {givenrating.givenStar}");
+                System.Diagnostics.Debug.WriteLine($"The rating: {newrating}");
+            }
+
+            newrating = (newrating / softwareRating.Count);
+
+            System.Diagnostics.Debug.WriteLine($"The new rating: {newrating}");
+            System.Diagnostics.Debug.WriteLine($"The Number of rating: {softwareRating.Count}");
+
+            //update rating in database
+            software.rating = newrating;
+            _dbContext.Update(software);
+            _dbContext.SaveChanges();
+
+        }
 
         public async Task<IActionResult> DownloadExcel(int softwareId)
         {

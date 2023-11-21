@@ -13,6 +13,13 @@ namespace Vendor_Application_Inventory_Platform.Models
 
         public string employeeLastName { get; set; }
         public int SoftwareID { get; set; }
+
+
+        //New 
+        public int givenStar {  get; set; }
+
+
+
         public string Description { get; set; }
 
         [DataType(DataType.Date)]
