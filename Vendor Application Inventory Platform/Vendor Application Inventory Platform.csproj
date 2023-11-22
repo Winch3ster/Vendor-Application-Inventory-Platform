@@ -66,4 +66,12 @@
     <_ContentIncludedByDefault Remove="Views\Software\Index.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Uploads\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\SystemImage\companybgImage.jpg" />
+  </ItemGroup>
+
 </Project>

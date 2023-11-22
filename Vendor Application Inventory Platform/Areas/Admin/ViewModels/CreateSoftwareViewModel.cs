@@ -9,5 +9,7 @@ public class CreateSoftwareViewModel
     public List<SoftwareModule> SoftwareModules { get; set; }
     public List<FinancialServicesClientType> FinancialServicesClientTypes { get; set; }
     public List<SoftwareType> SoftwareTypes { get; set; }
-    
+    public string ImagePath { get; set; }
+
+
 }

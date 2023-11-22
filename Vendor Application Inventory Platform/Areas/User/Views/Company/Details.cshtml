@@ -1,0 +1,136 @@
+﻿@using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+
+@model CompanyVM
+@{
+    Layout = "_EmployeeControlPanel";
+    ViewData["title"] = "Details";
+}
+
+
+<section>
+    <div class="col-12 d-flex align-items-center justify-content-center" style="height:50vh; background-image: url('@Url.Content("~/SystemImage/companybgImage.jpg")'); background-size: cover; background-position: center;">
+        <h1 class="text-center text-white">@Model.CVM_Company.CompanyName</h1>
+    </div>
+</section>
+
+<section style="margin-left: 10vw;">
+    <h1 class="m-4 citisoft-text-color">@Model.CVM_Company.CompanyName</h1>
+    <p>Established date: <span>@Model.CVM_Company.EstablishedDate</span> </p>
+    <p style="margin-right: 10vw;">
+       @Model.CVM_Company.Description
+    </p>
+    <button id="visitWebsite" type="button" class="btn btn-outline-primary " style="margin: 20px 0;" data-link="@Model.CVM_Company.WebsiteURL">Visit Website</button>
+    <div>
+        <p>Internal professional service: 
+            @if (@Model.CVM_Company.InternalProfessionalServices == false)
+            {
+                <span>No</span>
+            }
+            else
+            {
+                <span>Yes</span>
+            }
+            
+            
+        </p>
+
+
+        <p>Number of employee: <span>@Model.CVM_Company.NumberOfEmployee</span> </p>
+        <p>LastDemoDate <span>@Model.CVM_Company.LastDemoDate</span> </p>
+        <p>LastReviewDate <span>@Model.CVM_Company.LastReviewDate</span> </p>
+    </div>
+</section>
+
+<section style="margin-left: 10vw;">
+    <div class="m-5">
+        <div class="d-flex">
+            <div class="col-5" style="margin-right: 10vw;">
+                <p class="citisoft-text-color">Location</p>
+
+                @foreach (var country in Model.contactData)
+                {
+                    foreach (var city in country.Value)
+                    {
+                        <div>[@country.Key.ToString()], @city.Key.ToString()</div>
+                    }
+                }
+            </div>
+
+            <div class="col-5">
+                <p class="citisoft-text-color">Contact Numbers</p>
+                @foreach (var country in Model.contactData)
+                {
+                    foreach (var city in country.Value)
+                    {
+                        foreach (var contact in city.Value)
+                        {
+                            if (contact.Key == "Contact Number")
+                            {
+                                <div>[@city.Key.ToString()] + @contact.Value </div>
+                            }
+
+                        }
+
+                    }
+                }
+                
+            </div>
+
+        </div>
+        <div style="margin:20px 0">
+            <p class="citisoft-text-color">Address</p>
+
+            @foreach (var country in Model.contactData)
+            {
+                foreach (var city in country.Value)
+                {
+                    foreach (var contact in city.Value)
+                    {
+                        if (contact.Key == "Address")
+                        {
+                            <div>[@city.Key.ToString()] + @contact.Value </div>
+                        }
+
+                    }
+
+                }
+            }
+        </div>
+    </div>
+
+
+</section>
+
+<section style="margin-left: 10vw; margin-bottom:10vh">
+    <h2 class="citisoft-text-color ">Software by company name</h2>
+    @foreach(var software in Model.CVM_Software)
+    {
+        <div class="col-lg-4">
+            <p>@software.SoftwareName</p>
+            <!-- <img src="#" class="w-100" height="200" /> -->
+        </div>
+    }
+</section>
+
+
+
+@section Scripts{
+    <script>
+    // Attach a click event listener to the visit website button
+    document.getElementById("visitWebsite").addEventListener("click", function () {
+        var weblink = document.getElementById('visitWebsite').dataset.link
+
+        var cleanedWeblink = weblink.substring(6) //Due to error in database, the '/' in the link is omitted and hence cause error
+
+        // Change the current location to the desired website
+        window.open(`https://${cleanedWeblink}`, "_blank");
+
+        //window.location.href = document.getElementById('visitWebsite').dataset.webURL;
+
+
+    });
+    </script>
+}

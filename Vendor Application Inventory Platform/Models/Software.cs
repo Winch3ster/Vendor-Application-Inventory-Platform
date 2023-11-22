@@ -1,4 +1,5 @@
-﻿using Vendor_Application_Inventory_Platform.Data.Enum;
+﻿using System.ComponentModel.DataAnnotations;
+using Vendor_Application_Inventory_Platform.Data.Enum;
 
 namespace Vendor_Application_Inventory_Platform.Models
 {
@@ -20,6 +21,10 @@ namespace Vendor_Application_Inventory_Platform.Models
 
         //Set the software rating by taking the average rating 
         public float rating { get; set; }
+
+        //The software image will be stored in the server. Only the path to the image is stored in the database
+        [Required]
+        public string ImagePath { get; set; }
 
 
 

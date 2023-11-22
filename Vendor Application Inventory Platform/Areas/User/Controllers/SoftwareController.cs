@@ -532,13 +532,6 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             return contact;
         }
 
-
-
-
-
-
-
-
     }
 
 }

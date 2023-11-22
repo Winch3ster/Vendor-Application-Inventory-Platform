@@ -15,10 +15,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
     public class SoftwareController : Controller
     {
         private readonly ISoftwareServices _services;
-
-        public SoftwareController(ISoftwareServices s)
+        private readonly IConfiguration _configuration; //To get the upload file path
+        public SoftwareController(ISoftwareServices s, IConfiguration configuration)
         {
             _services = s;
+            _configuration = configuration;
         }
         
         [Route("~/Software")]
@@ -104,8 +105,28 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateSoftware()
         {
+          
+
             if (ModelState.IsValid)
             {
+                var uploadFolder = _configuration.GetValue<string>("FileUploadSettings:UploadFolder");
+                var uploadsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", uploadFolder);
+
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + HttpContext.Request.Form["ImagePath"];
+                var filePath = Path.Combine(uploadsFolderPath, uniqueFileName); //Create an absolute path to the image (including C:/.... )
+
+                var imageFile = HttpContext.Request.Form.Files["ImagePath"];
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    imageFile.CopyTo(stream);
+                }
+
+                // Construct the relative file path
+                var relativeImagePath = Path.Combine(uploadFolder, uniqueFileName);
+
+
+
                 var companyId = int.Parse(HttpContext.Request.Form["CompanyID"]);
                 var softwareName = HttpContext.Request.Form["SoftwareName"];
                 var description = HttpContext.Request.Form["Description"];
@@ -169,7 +190,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 Description = description,
                 Cloud = Enum.Parse<CloudType>(cloudOption, true),
                 DocumentAttached = file != null,
-                CompanyID = companyId
+                CompanyID = companyId,
+                ImagePath = relativeImagePath
             };
             
             var createdSoftware = _services.CreateNewSoftware(software);
