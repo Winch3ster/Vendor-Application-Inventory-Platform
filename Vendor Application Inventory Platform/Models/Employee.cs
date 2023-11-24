@@ -27,6 +27,7 @@ namespace Vendor_Application_Inventory_Platform.Models
         
         public bool companyAccess { get; set; }
 
+        public DateTime LastRetrieveChangeLog { get; set; } 
         public List<Review> reviews { get; set; }
         public List<User_ViewHistory> user_ViewHistories { get; set; }
     }

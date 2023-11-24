@@ -5,10 +5,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
     public interface IEmployeeServices
     {
 
+        Task<Employee> GetCurrentUser(string useremail);
         //Add employee in database
         Task AddAsync(Employee employee);
 
-        Task<IEnumerable<Employee>> GetAllAsync();
+        Task<List<Employee>> GetAllAsync();
 
         //Update the actor data and return the updated result to user
         Task<Employee> UpdateAsync(int id, Employee newEmployeeData);

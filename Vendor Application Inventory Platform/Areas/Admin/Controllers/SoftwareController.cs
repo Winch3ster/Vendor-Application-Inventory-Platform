@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using System;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Enum;
@@ -16,10 +17,15 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
     {
         private readonly ISoftwareServices _services;
         private readonly IConfiguration _configuration; //To get the upload file path
-        public SoftwareController(ISoftwareServices s, IConfiguration configuration)
+        private readonly IChangeLogService _changeLogService;
+        private readonly EmailService _emailService;
+
+        public SoftwareController(ISoftwareServices s, IConfiguration configuration, IChangeLogService changeLogService, EmailService emailService)
         {
             _services = s;
             _configuration = configuration;
+            _changeLogService = changeLogService;
+            _emailService = emailService;   
         }
         
         [Route("~/Software")]
@@ -195,9 +201,29 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             };
             
             var createdSoftware = _services.CreateNewSoftware(software);
-            
-            //store file to db
-            if (file != null)
+                ////////////////////////////////////////////////////
+                ///
+
+
+
+
+                _changeLogService.AddChange(software.SoftwareName, Actions.added);
+
+
+                _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", software.SoftwareName, "added");
+
+                // Disconnect from the SMTP server after sending the email
+                _emailService.Disconnect();
+
+                ////////////////////////////////////////////////////
+
+
+
+
+
+
+                //store file to db
+                if (file != null)
             {
                 if (createdSoftware != null)
                 {
@@ -302,11 +328,32 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                     DocumentAttached = file !=null,
                     CompanyID = companyId
                 };
-                        
-                _services.UpdateSoftware(software.SoftwareID, updatedSoftware);
-                
-                //store file to db
-                if (file != null)
+
+                    ///////////////////////////////////////////////////////////
+
+
+
+
+                    _changeLogService.AddChange(software.SoftwareName, Actions.edited);
+
+
+                    _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", software.SoftwareName, "edited");
+
+                    // Disconnect from the SMTP server after sending the email
+                    _emailService.Disconnect();
+
+                    ////////////////////////////////////////////////////
+                    ///
+
+                    _services.UpdateSoftware(software.SoftwareID, updatedSoftware);
+
+                  
+
+
+
+
+                    //store file to db
+                    if (file != null)
                 {
                     using var memoryStream = new MemoryStream();
                     file.CopyTo(memoryStream);
@@ -379,8 +426,27 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         public void DeleteSoftware(int id)
         {
             _services.deleteSoftware(id);
+
+            ////////////////////////////////////////////////////
+            ///
+
+
+
+
+            _changeLogService.AddChangeDeleteSoftwareById(id, Actions.deleted);
+
+
+
+            _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", "A software", "removed");
+
+            // Disconnect from the SMTP server after sending the email
+            _emailService.Disconnect();
+
+
+            ////////////////////////////////////////////////////
+
         }
-        
+
         public IActionResult ViewPdf(int id)
         {
             

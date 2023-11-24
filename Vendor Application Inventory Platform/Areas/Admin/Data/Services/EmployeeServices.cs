@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Models;
 
@@ -23,8 +24,17 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 
 
 
+        public async Task<Employee> GetCurrentUser(string useremail)
+        {
+            
 
-        public async Task<IEnumerable<Employee>> GetAllAsync()
+            var result = await _context.Employees.FirstOrDefaultAsync(e => e.Email == useremail); //Set it to a generic method
+            return result;
+        }
+       
+
+
+        public async Task<List<Employee>> GetAllAsync()
         {
             var results = await _context.Employees.ToListAsync(); //Set it to a generic method
             return results;
@@ -86,5 +96,6 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 
         }
 
+        
     }
 }

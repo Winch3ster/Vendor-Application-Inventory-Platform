@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
+using Vendor_Application_Inventory_Platform.Data.Enum;
 using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers;
@@ -15,9 +16,13 @@ public class CompanyController: Controller
 {
     
         private readonly ICompanyServices _companyService;
-        public CompanyController(ICompanyServices companyService)
+    private readonly IChangeLogService _changeLogService;
+    private readonly EmailService _emailService;
+    public CompanyController(ICompanyServices companyService, IChangeLogService changeLogService, EmailService emailService)
         {
             _companyService = companyService;
+        _changeLogService = changeLogService;   
+        _emailService = emailService;
         }
 
 
@@ -72,7 +77,23 @@ public class CompanyController: Controller
             if (ModelState.IsValid)
             {
                 Company company = _companyService.CreateNewCompany(createCompanyField);
-                return Json(new { success = true, companyID = company.CompanyID });
+
+            ///////////////////////////////////////////////////////////
+
+
+
+
+            _changeLogService.AddChange(company.CompanyName, Actions.added);
+
+
+            _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", company.CompanyName, "added");
+
+            // Disconnect from the SMTP server after sending the email
+            _emailService.Disconnect();
+
+
+            ////////////////////////////////////////////////////
+            return Json(new { success = true, companyID = company.CompanyID });
             }
             else
             {
@@ -338,6 +359,22 @@ public class CompanyController: Controller
             {
                 _companyService.DeleteCompany(id);
             }
-            
-        }
+
+
+
+        ///////////////////////////////////////////////////////////
+
+
+
+
+        _changeLogService.AddChangeDeleteCompanyById(id, Actions.deleted);
+
+        _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", "A company", "removed");
+
+        // Disconnect from the SMTP server after sending the email
+        _emailService.Disconnect();
+
+        ////////////////////////////////////////////////////
+
+    }
 }

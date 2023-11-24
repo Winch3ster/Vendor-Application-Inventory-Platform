@@ -53,6 +53,8 @@ public class AccessController : Controller
             {
                 List<Claim> claims = new List<Claim>()
                         {
+                             new Claim(ClaimTypes.NameIdentifier, modelLogin.email),
+        
                             new Claim(ClaimTypes.NameIdentifier, modelLogin.email),
                             new Claim("isAdmin", user.IsAdmin ? "true" : "false"),
                             new Claim("softwareAccess", user.softwareAccess? "true" : "false"),
@@ -74,7 +76,7 @@ public class AccessController : Controller
 
                         if (user.IsAdmin)
                         {
-                            return RedirectToAction("Index", "Admin", new { area = "Admin" });
+                            return RedirectToAction("Index", "Employee", new { area = "Admin" });
                         }
                         else
                         {

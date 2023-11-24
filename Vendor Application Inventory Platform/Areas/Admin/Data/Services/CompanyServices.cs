@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
+using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
+using Vendor_Application_Inventory_Platform.Data.Enum;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Models;
 
@@ -11,7 +13,7 @@ public class CompanyServices : ICompanyServices
 {
     
     private readonly AppDbContext _db;
-
+    
     public CompanyServices(AppDbContext db)
     {
         _db = db;
@@ -45,6 +47,10 @@ public class CompanyServices : ICompanyServices
 
         _db.Countries.Add(country);
         _db.SaveChanges();
+
+
+
+
     }
 
     public Country RetrieveCountry(string countryName)
@@ -212,6 +218,9 @@ public class CompanyServices : ICompanyServices
 
         _db.Companies.Add(newCompany);
         _db.SaveChanges();
+
+
+
         return newCompany;
     }
 
@@ -231,8 +240,12 @@ public class CompanyServices : ICompanyServices
             company.LastReviewDate = DateTime.Parse(createCompanyField.LastReviewDate);
 
             _db.SaveChanges();
+
+
+
+
         }
-        
+
         return company;
     }
 
@@ -245,6 +258,7 @@ public class CompanyServices : ICompanyServices
     {
         _db.Companies.Remove(_db.Companies.FirstOrDefault(c => c.CompanyID == id));
         _db.SaveChanges();
+
     }
-    
+
 }

@@ -8,36 +8,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
 
-
-    <style>
-        .component {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #period {
-            color: #4688F1;
-            margin-left: 5px;
-        }
-
-        #date, #month, #hour, #minute {
-            margin: 5px;
-        }
-
-        #control-panel > ul > li {
-            width: 120%;
-            padding: 10px;
-        }
-
-            #control-panel > ul > li > div {
-                align-items: center;
-                display: flex;
-                height: 40px;
-            }
-
-    </style>
 
 </head>
 
@@ -62,16 +34,39 @@
 
 
 
-                <div class="component">
-                    <div id="hour"></div>
-                    <div>. </div>
-                    <div id="minute"></div>
-                    <div id="period"></div>
+                 <div class="component">
+
+                    <!--Notification -->
+                    <div id="notification-btn" style="margin-right: 30px;" onclick="ShowNotification()">
+                        <i class="bi bi-bell-fill  " style="color: #4688F1;"></i>
+                        <span class="notification-badge notification-active" id="notification-icon">1</span>
+                    </div>
+
+                    <div class="component">
+                        <div id="hour"></div>
+                        <div>. </div>
+                        <div id="minute"></div>
+                        <div id="period"></div>
+                    </div>
+                    
                     <a class="text-decoration-none ms-3" asp-area="" asp-controller="Access" asp-action="LogOut">Log Out</a>
                 </div>
 
             </div>
         </nav>
+
+
+        <div id="notification-message-box">
+            <div class="d-flex justify-content-between col-11 m-2" style="font-size: 16px;">
+                <p>Notifications</p>
+                <i class="bi bi-x " id="notification-close-btn" onclick="CloseNotification()"></i>
+            </div>
+            <div id="notification-message-panel">
+            </div>
+
+        </div>
+
+
     </header>
     <div>
         <main role="main" class="container-fluid">
@@ -147,7 +142,7 @@
 </body>
 </html>
 
-
+<script src="~/js/notification.js"> </script>
 <script>
     //Get the time on local device
     const now = new Date();

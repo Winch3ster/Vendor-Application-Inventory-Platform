@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Diagnostics;
+using System.Security.Claims;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
+using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
@@ -16,6 +18,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         private readonly IEmployeeServices _service; //Inject the service of employee in here
         private readonly NotificationService _notificationService;
         private readonly EmailService _emailService;
+
         public EmployeeController(IEmployeeServices service, NotificationService notificationService, EmailService emailService)
         {
             _notificationService = notificationService;
@@ -27,22 +30,22 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         [Route("~/Employee/Index")]
         public async Task<IActionResult> Index() //This method will be called by default
         {
-            //get data from actors table only as this is controller for actors data only
+
+            var userEmail = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentlySignedInUser = await _service.GetCurrentUser(userEmail);
 
             //If here is,the interface and service class must be async as well
             var allEmployeesData = await _service.GetAllAsync();//Convert the data to list
 
+            var data = new EmployeeIndexVM()
+            {
+                signedInUser = currentlySignedInUser,
+                Employees = allEmployeesData
+            };
 
-            //For testing purposes The email will be send to one of the developer's email
-            //_notificationService.NotifyUser(, "View all employee");
-            // Send email
-            _emailService.SendEmail("kingstonlee96@gmail.com", "Subject", "Body of the email");
 
-            // Disconnect from the SMTP server after sending the email
-            _emailService.Disconnect();
-
-            System.Diagnostics.Debug.WriteLine("The mail should be sent");
-            return View(allEmployeesData); //pass the data list to the view
+            return View(data); //pass the data list to the view
+            //allEmployeesData
         }
 
 
@@ -77,7 +80,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
 
             //For testing purposes The email will be send to one of the developer's email
-            _notificationService.NotifyUser("kingstonlee96@gmail.com", "Create");
+            //_notificationService.NotifyUser("kingstonlee96@gmail.com", "Create");
 
             return RedirectToAction("Index", "Employee", new { area = "Admin" });  //Redirect back to the Employee's index view
 
@@ -101,14 +104,28 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
             ModelState.Remove("Password");
             ModelState.Remove("reviews");
-            
+            ModelState.Remove("user_ViewHistories");
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("Model is not valid");
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    System.Diagnostics.Debug.WriteLine(error.ErrorMessage);
+                }
+                System.Diagnostics.Debug.WriteLine("Model is not valid");
                 return View(employee);
                 //What do the IsValid check?  --> If if all required fields are filled by [Required] (implemented in the employee class)
 
             }
+
+
+            //For testing purposes The email will be send to one of the developer's email
+            //_notificationService.NotifyUser(, "View all employee");
+            // Send email
+            _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Employee", employee.Email , "Edited" );
+
+            // Disconnect from the SMTP server after sending the email
+            _emailService.Disconnect();
+
             await _service.UpdateAsync(employee.EmployeeID, employee);// If the data is valid, add to database (This Add() is from the service class)
             return RedirectToAction("Index", "Employee", new { area = "Admin" }); //Redirect back to the Employee's index view
         }
@@ -119,15 +136,21 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
 
-            var actorDetails = await _service.GetByIdAsync(id);
+            var employee = await _service.GetByIdAsync(id);
 
             //If doesnt exist return message
-            if (actorDetails == null)
+            if (employee == null)
             {
                 // return View("NotFound");
             }
 
             await _service.DeleteAsync(id);
+
+
+            _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Employee", employee.Email, "removed");
+
+            // Disconnect from the SMTP server after sending the email
+            _emailService.Disconnect();
 
             return RedirectToAction("Index", "Employee", new { area = "Admin" }); //Redirect back to the actor's index view
         }

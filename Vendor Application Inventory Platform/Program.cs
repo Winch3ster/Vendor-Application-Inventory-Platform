@@ -13,6 +13,7 @@ using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
 
 using Vendor_Application_Inventory_Platform.Areas.User.Data.Services;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -30,7 +31,15 @@ builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+//Add the email and notification services 
+builder.Services.AddSingleton<EmailService>();
+builder.Services.AddSingleton<NotificationService>();
+
+
+
 //Add services
+builder.Services.AddScoped<IChangeLogService, ChangeLogService>();
+
 builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
 
 builder.Services.AddScoped<IAccessServices, AccessServices>();
@@ -45,9 +54,8 @@ builder.Services.AddScoped<IExcelGenerationService, ExcelGenerationService>();
 
 builder.Services.AddScoped<IPdfGenerationService, PdfGenerationService>();
 
-//Add the email and notification services 
-builder.Services.AddSingleton<EmailService>();
-builder.Services.AddSingleton<NotificationService>();
+
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
@@ -95,20 +103,25 @@ if (!app.Environment.IsDevelopment())
 
 
 
-
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("AllowAny");
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
       name: "areas",
       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
     );
+
+
+
+    endpoints.MapControllers();
+
 });
 
 

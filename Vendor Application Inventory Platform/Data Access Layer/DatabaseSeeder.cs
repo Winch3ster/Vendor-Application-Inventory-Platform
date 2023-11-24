@@ -21,7 +21,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //context is like an instance of the database
                 context.Database.EnsureCreated();
 
-                var hashedPassword = BCrypt.Net.BCrypt.HashPassword("abc123");
+                //var hashedPassword = BCrypt.Net.BCrypt.HashPassword("abc123");
 
                 //Check if employee table is empty
 
@@ -494,7 +494,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //Create the link for user history table
 
 
-
+                /*
 
                 //New software
           
@@ -868,13 +868,40 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 
 
 
+                */
+
+                
+                
+                //Seed changeLog
+                List<ChangeLog> changes = new List<ChangeLog>() {
+                    new ChangeLog() {
+                        EntityName = "Bitsey Studio",
+                        ActionPerformed = Actions.deleted,
+                        time = DateTime.Now
+                    },
+                    
+                };
+
+                context.AddRange(changes);
+
+                context.SaveChanges();  
+                
+                
+               
+                /*
+                var employee1 = context.Employees.FirstOrDefault(e => e.EmployeeID == 1);
+                employee1.LastRetrieveChangeLog = DateTime.Now;
+
+                context.Update(employee1);
+                context.SaveChanges();*/
+                
+                /*
+                var employee2 = context.Employees.FirstOrDefault(e => e.EmployeeID == 2);
+                employee2.LastRetrieveChangeLog = DateTime.Now;
 
 
-
-
-
-
-
+                context.Update(employee2);
+                context.SaveChanges();*/
 
 
 

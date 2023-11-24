@@ -19,6 +19,35 @@ body {
 }
 
 
+
+.component {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#period {
+    color: #4688F1;
+    margin-left: 5px;
+}
+
+#date, #month, #hour, #minute {
+    margin: 5px;
+}
+
+#control-panel > ul > li {
+    width: 120%;
+    padding: 10px;
+}
+
+    #control-panel > ul > li > div {
+        align-items: center;
+        display: flex;
+        height: 40px;
+    }
+
+
+
 .medium-font-size{
     font-size: 30px;
 }
@@ -182,4 +211,64 @@ textarea:focus{
 
 .active {
     color: gold;
+}
+
+
+
+
+/*Notifications*/
+#notification-btn {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+#notification-btn .notification-badge{
+    display: none;
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    padding: 2px 5px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 10px;
+}
+
+#notification-message-box {
+    display: none;
+    position: absolute;
+    background-color: rgb(225, 225, 225);
+    right: 10px;
+    top: 50px;
+    width: 25%;
+    border-radius: 10px;
+    font-size: 14px;
+    box-shadow: -8px 9px 29px -3px rgba(120,120,120,0.62);
+    -webkit-box-shadow: -8px 9px 29px -3px rgba(120,120,120,0.62);
+    -moz-box-shadow: -8px 9px 29px -3px rgba(120,120,120,0.62);
+}
+
+.notification-messageBlock {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+
+
+#notification-close-btn {
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+#notification-close-btn:hover {
+    transform: scale(1.2);
+}
+
+.notification-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #4688F1;
+    margin-right: 10px;
 }

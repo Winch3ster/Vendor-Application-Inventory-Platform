@@ -44,6 +44,9 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
         //This is for "recently viewed" implementation
         public DbSet<User_ViewHistory> user_ViewHistories { get; set; }
 
+        //Change log
+        //USed to track changes made to software and company data
+        public DbSet<ChangeLog> changeLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

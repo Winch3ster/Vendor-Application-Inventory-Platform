@@ -33,8 +33,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
         
 
         //Send mail to user
-        public void SendEmail(string toEmail, string subject, string messageToSend)
+        public void SendEmail(string toEmail,  string subject, string entity, string entityName, string actionPerformed)
         {
+            //[entity] (entity name) was (action performed)
+            string messageToSend = $"[{entity}] {entityName} was {actionPerformed}";
+
             var mail = new MimeMessage(); //create a new empty mail 
 
             //Add addresses for the mail

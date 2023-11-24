@@ -9,12 +9,12 @@
             _emailService = emailService;
         }
 
-        public void NotifyUser(string userEmail, string action)
+        public void NotifyUser(string userEmail, string action, string entity, string entityName)
         {
             string subject = $"Notification: {action} Action";
-            string body = $"Dear User,<br/><br/>An {action} action has been performed in the system.<br/><br/>Regards,<br/>Citisoft Vendor Application Inventory Platform";
-
-            _emailService.SendEmail(userEmail, subject, body);
+            string body = $"Dear User,<br/><br/> An {action} action has been performed in the system.<br/><br/>Regards,<br/>Citisoft Vendor Application Inventory Platform";
+          
+            _emailService.SendEmail(userEmail, subject, entity, entityName, action);
         }
     }
 }

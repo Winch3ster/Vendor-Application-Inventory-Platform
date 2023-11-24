@@ -1,4 +1,6 @@
-﻿using Vendor_Application_Inventory_Platform.Data_Access_Layer;
+﻿using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
+using Vendor_Application_Inventory_Platform.Data.Enum;
+using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
@@ -7,12 +9,13 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
     {
         
         private readonly AppDbContext _db;
-
+       
         public SoftwareServices(AppDbContext db)
         {
             _db = db;
+           
         }
-        
+
         public List<Company?> ListAllCompanies()
         {
             return _db.Companies.ToList();
@@ -143,6 +146,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
         {
             _db.Softwares.Add(software);
             _db.SaveChanges();
+
+         
             return software;
         }
 
@@ -298,6 +303,10 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
                 existingSoftware.DocumentAttached = software.DocumentAttached;
 
                 _db.SaveChanges();
+
+
+           
+
             }
         }
         
@@ -309,6 +318,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
             {
                 _db.Softwares.Remove(existingSoftware);
                 _db.SaveChanges();
+
+
             }
         }
 
