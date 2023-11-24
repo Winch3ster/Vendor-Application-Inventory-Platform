@@ -560,7 +560,7 @@
                      
                    })
         
-        
+        window.location.reload();
         }
        
   })
@@ -578,9 +578,6 @@
               success:function (data){
                 if (data.errors){
                   alert(`${data.errors}\n\nCountry: ${data.country}\nCity: ${data.city}`)
-                }
-                else{
-                  alert('Successfully submitted')
                 }
               },
               error:function (){

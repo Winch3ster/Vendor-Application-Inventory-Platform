@@ -22,7 +22,7 @@
             <div class="container-fluid justify-content-between">
 
                 <div class="d-flex">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="color: #4688F1;">CitiSoft</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Admin" asp-action="Index" style="color: #4688F1;">CitiSoft</a>
 
                     <div class="component">
                         <div id="day"></div>
@@ -49,14 +49,14 @@
                         <div id="period"></div>
                     </div>
                     
-                    <a class="text-decoration-none ms-3" asp-area="" asp-controller="Access" asp-action="LogOut">Log Out</a>
+                    <a class="text-decoration-none ms-3" asp-controller="Access" asp-action="LogOut">Log Out</a>
                 </div>
 
             </div>
         </nav>
 
 
-        <div id="notification-message-box">
+        <div id="notification-message-box" class="mt-4" style="z-index: 999">
             <div class="d-flex justify-content-between col-11 m-2" style="font-size: 16px;">
                 <p>Notifications</p>
                 <i class="bi bi-x " id="notification-close-btn" onclick="CloseNotification()"></i>
@@ -77,47 +77,46 @@
 
                         <li>
                             <div class="admin-navigation-block">
-                                <div class="indicator"></div>
-                                <a>View Logs</a>
+                                <div id="dashboard" class="indicator indicator-off"></div>
+                                <a class="text-decoration-none text-black" asp-area="Admin" asp-controller="Admin" asp-action="Index">Dashboard</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="admin-navigation-block">
+                                <div id="view-software" class="indicator indicator-off"></div>
+                                <a class="text-decoration-none text-black" asp-area="Admin" asp-controller="Software" asp-action="Index">View Software</a>
                             </div>
 
                         </li>
 
                         <li>
                             <div class="admin-navigation-block">
-                                <div class="indicator indicator-off"></div>
-                                <a>Edit Entries</a>
+                                <div id="view-company" class="indicator indicator-off"></div>
+                                <a class="text-decoration-none text-black" asp-area="Admin" asp-controller="Company" asp-action="Index">View Companies</a>
                             </div>
 
                         </li>
 
                         <li>
                             <div class="admin-navigation-block">
-                                <div id="add-entries" class="indicator indicator-off"></div>
-                                <a>Add Entries</a>
+                                <div id="add-software" class="indicator indicator-off"></div>
+                                <a class="text-decoration-none text-black" asp-area="Admin" asp-controller="Software" asp-action="CreateSoftware">Add Software</a>
                             </div>
 
                         </li>
 
                         <li>
                             <div class="admin-navigation-block">
-                                <div class="indicator indicator-off"></div>
-                                <a>Edit Users</a>
-                            </div>
-
-                        </li>
-
-                        <li>
-                            <div class="admin-navigation-block">
-                                <div id="add-user-indicator" class="indicator indicator-off"></div>
-                                <a>Add Users</a>
+                                <div id="add-company" class="indicator indicator-off"></div>
+                                <a class="text-decoration-none text-black" asp-area="Admin" asp-controller="Company" asp-action="CreateCompany">Add Company</a>
                             </div>
 
                         </li>
 
                     </ul>
                     <div class="admin-navigation-actions-block">
-                        <a class="btn btn-primary rounded-pill">Sign Out</a>
+                        <a asp-controller="Access" asp-action="LogOut" class="btn btn-primary rounded-pill">Sign Out</a>
                     </div>
                 </div>
                 <div class="col-1 d-flex align-items-center" onclick="$('.control-panel-style').css('width')==='40px'?sideBarExpand():sideBarCollapse();">

@@ -21,40 +21,40 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //context is like an instance of the database
                 context.Database.EnsureCreated();
 
-                //var hashedPassword = BCrypt.Net.BCrypt.HashPassword("abc123");
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword("abc123");
 
                 //Check if employee table is empty
 
                 //if the table is empty, add employee data
-                /*
-                context.Employees.AddRange(new List<Employee>()
-                {
-                    new Employee()
-                    {
-                        FirstName = "John",
-                        LastName = "William",
-                        Email = "John@example.com",
-                        Password = hashedPassword,
-                        companyAccess = true,
-                        accountAccess = true,
-                        softwareAccess = true,
-                        IsAdmin = true,
-                    },
-                    new Employee()
-                    {
-                        FirstName = "Henrich",
-                        LastName = "Eddinburg",
-                        Email = "Henrich@example.com",
-                        Password = hashedPassword,
-                        companyAccess = true,
-                        accountAccess = true,
-                        softwareAccess = true,
-                        IsAdmin = false,
-                    }
-                });
-                context.SaveChanges();
+                 
+                 context.Employees.AddRange(new List<Employee>()
+                 {
+                     new Employee()
+                     {
+                         FirstName = "John",
+                         LastName = "William",
+                         Email = "John@example.com",
+                         Password = hashedPassword,
+                         companyAccess = true,
+                         accountAccess = true,
+                         softwareAccess = true,
+                         IsAdmin = true,
+                     },
+                     new Employee()
+                     {
+                         FirstName = "Henrich",
+                         LastName = "Eddinburg",
+                         Email = "Henrich@example.com",
+                         Password = hashedPassword,
+                         companyAccess = true,
+                         accountAccess = true,
+                         softwareAccess = true,
+                         IsAdmin = false,
+                     }
+                 });
+                 context.SaveChanges();
 
-                */
+                 
                 /*
           
                  List<BusinessArea> businessAreaList = new List<BusinessArea>()

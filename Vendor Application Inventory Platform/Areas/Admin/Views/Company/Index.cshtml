@@ -9,76 +9,82 @@
 <div class="table-responsive mt-5">
     <table class="table table-hover">
         <thead class="citisoft-background-color">
-            <tr>
-                <th>
-                    Company Name
-                </th>
-                <th>
-                    Website URL
-                </th>
-                <th>
-                    Established Date
-                </th>
-                <th>
-                    Number Of Employees
-                </th>
-                <th>
-                    Internal Professional Services
-                </th>
-                <th>
-                    Last Demo Date
-                </th>
-                <th>
-                    Last Review Date
-                </th>
-                <th>
-                    Actions
-                </th>
-            </tr>
+        <tr>
+            <th>
+                Company Name
+            </th>
+            <th>
+                Website URL
+            </th>
+            <th>
+                Established Date
+            </th>
+            <th>
+                Number Of Employees
+            </th>
+            <th>
+                Internal Professional Services
+            </th>
+            <th>
+                Last Demo Date
+            </th>
+            <th>
+                Last Review Date
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var company in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => company.CompanyName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => company.WebsiteURL)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => company.EstablishedDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => company.NumberOfEmployee)
-                    </td>
-                    <td>
-                        @if (company.InternalProfessionalServices)
-                        {
-                            <text>Yes</text>
-                        }
-                        else
-                        {
-                            <text>No</text>
-                        }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => company.LastDemoDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => company.LastReviewDate)
-                    </td>
-                    <td>
-                        <a class="btn btn-primary rounded-pill px-4" asp-area="Admin" asp-action="CreateCompany" asp-route-id="@company.CompanyID"><i class="bi bi-pencil-square"></i> Edit</a>
-                        <form asp-area="Admin" asp-action="DeleteCompany" asp-route-id="@company.CompanyID" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                            <button type="submit" class="btn btn-danger mt-1 rounded-pill px-4" data-toggle="tooltip" data-placement="top" title="Delete">
-                                <i class="bi bi-trash"></i> Remove
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            }
+        @foreach (var company in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => company.CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => company.WebsiteURL)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => company.EstablishedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => company.NumberOfEmployee)
+                </td>
+                <td>
+                    @if (company.InternalProfessionalServices)
+                    {
+                        <text>Yes</text>
+                    }
+                    else
+                    {
+                        <text>No</text>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => company.LastDemoDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => company.LastReviewDate)
+                </td>
+                <td>
+                    <a class="btn btn-primary rounded-pill px-4" asp-area="Admin" asp-action="CreateCompany" asp-route-id="@company.CompanyID"><i class="bi bi-pencil-square"></i> Edit</a>
+                    <form asp-area="Admin" asp-action="DeleteCompany" asp-route-id="@company.CompanyID" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <button type="submit" class="d-flex btn btn-danger mt-1 rounded-pill px-4" data-toggle="tooltip" data-placement="top" title="Delete">
+                            <i class="bi bi-trash"></i> Remove
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 </div>
+@section Scripts{
+    <script >
+        $('#view-company').removeClass('indicator-off');
+    </script>
+    
+}
 

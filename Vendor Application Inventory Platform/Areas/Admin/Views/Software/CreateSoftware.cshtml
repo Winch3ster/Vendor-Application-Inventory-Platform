@@ -142,8 +142,8 @@
         </div>
 
         <div class="mb-3 d-flex align-top">
-            <label asp-for="ImagePath">Upload Software Image:</label>
-            <input asp-for="ImagePath" type="file" accept="image/*" class="form-control" />
+            <label class="form-label citisoft-text-color col-3">Upload Software Image:</label>
+            <input id="imageInput" type="file" accept="image/*" class="form-control h-50" />
         </div>
 
 
@@ -318,6 +318,8 @@
 
 @section Scripts{
     <script>
+    
+        $('#add-software').removeClass('indicator-off');
         
         let companyContactContainer = document.getElementById('company-contact-container');
 
@@ -631,7 +633,9 @@
                             
                             // Append file to FormData
                             const fileInput = document.getElementById('fileInput');
+                            const imageInput = document.getElementById('imageInput');
                             formData.append('File', fileInput.files[0]);
+                            formData.append('Image', imageInput.files[0]);
                             
                             // Append array data
                             $('#modulesValueContainer').find('select').each(function () {

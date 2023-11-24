@@ -14,5 +14,7 @@ namespace Vendor_Application_Inventory_Platform.Data.Services
         Task<Employee> UpdateAsync(int id, Employee newEmployeeData);
 
         Task<Employee> GetByIdAsync(int id);
+
+        public Task<Employee> GetCurrentUser(string useremail);
     }
 }

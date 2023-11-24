@@ -1,49 +1,80 @@
-﻿@model Vendor_Application_Inventory_Platform.Models.Employee
+﻿@using Vendor_Application_Inventory_Platform.Models;
+@using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model EmployeeIndexVM
 
 @{
     Layout = "_AdminControlPanel";
-    ViewData["title"] = "Softwares";
+    ViewData["title"] = "Accounts";
 }
 
 
 <!---->
 <div class="m-5">
     <h3>
-        Hello <span style="color: #4688F1">John</span>! Welcome back to Citisoft Vendor Application <br /> Inventory Platform.
+        Hello <span style="color: #4688F1">@Model.signedInUser.FirstName</span>! Welcome back to Citisoft Vendor Application <br /> Inventory Platform.
     </h3>
 
 
-    <p>Returned <span >3</span> entries from database</p>
+    <p>Returned <span>@Model.Employees.Count()</span> entries from database</p>
 
     <div class="mt-3">
         <ul class="list-unstyled">
-            <li>
-                <div class="display-employee-block">
-                    <div class="d-flex justify-content-center align-items-md-center">
-                        <p class="m-0 medium-font-size">CS1203913</p>
-                    </div>
-                    
-                    <div class="d-flex justify-content-evenly employee-block-operation">
+
+
+            @foreach (var item in Model.Employees)
+            {
+
+
+
+                <li>
+                    <div class="display-employee-block">
                         <div class="d-flex justify-content-center align-items-md-center">
-                            <p style="color: #4688F1" class="m-0 text-center">Admin</p>
-                        </div>                
-                        <!--The ASP.Net will auto detect the actions "Create, Edit, Delete, Details" and we have to follow the set rules -->
-                        <a class="btn btn-primary rounded-pill px-4"><i class="bi bi-pencil-square"></i> Edit</a>
-                        <a class="btn btn-danger rounded-pill px-4">Remove</a>
+                            <p class="m-0 medium-font-size">@Html.DisplayFor(modelItem => item.Email)</p>
+                        </div>
+
+                        <div class="d-flex justify-content-evenly employee-block-operation">
+                            <div class="d-flex justify-content-center align-items-md-center">
+
+                                @if (item.IsAdmin)
+                                {
+                                    <p style="color: #4688F1" class="m-0 text-center">Admin</p>
+                                }
+                                else
+                                {
+                                    <p style="color: #000000" class="m-0 text-center">User</p>
+                                }
+                            </div>
+                            <!--The ASP.Net will auto detect the actions "Create, Edit, Delete, Details" and we have to follow the set rules -->
+                            <a class="btn btn-primary rounded-pill px-4" asp-area="Admin" asp-controller="Employee" asp-action="Edit" asp-route-id="@item.EmployeeID"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <a class="btn btn-danger rounded-pill px-4" asp-area="Admin" asp-controller="Employee" asp-action="Delete" asp-route-id="@item.EmployeeID">Remove</a>
+                        </div>
                     </div>
-                </div>
-            </li>
+                </li>
+
+
+
+            }
 
         </ul>
     </div>
 
     <div class="d-flex justify-content-center">
-        <a class="btn btn-primary rounded col-3" asp-action="Create"><i class="bi bi-plus"></i></a>
+        <a class="btn btn-primary rounded col-3" asp-area="Admin" asp-controller="Employee" asp-action="Create"><i class="bi bi-plus"></i></a>
     </div>
 
 
 
 </div>
+
+@section Scripts{
+    <script >
+        $('#dashboard').removeClass('indicator-off');
+    </script>
+    
+}
+
 
 
 

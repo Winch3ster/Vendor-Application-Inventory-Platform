@@ -137,12 +137,12 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
         public IActionResult Details(int softwareId) {
 
             System.Diagnostics.Debug.WriteLine($"requested software id: {softwareId}");
-            var loggedInUser = _dbContext.Employees.FirstOrDefault(e => e.EmployeeID == 1);
+            var loggedInUser = _dbContext.Employees.FirstOrDefault(e => e.EmployeeID == softwareId);
 
 
             var software = _dbContext.Softwares.FirstOrDefault(s =>s.SoftwareID == softwareId); //get the first software in database
 
-            System.Diagnostics.Debug.WriteLine($"{software.SoftwareName}");
+            System.Diagnostics.Debug.WriteLine($"{software?.SoftwareName}");
 
             int companyId = software.CompanyID;
             var businessAreasList = _dbContext.Software_Areas.Where(s_a => s_a.softwareID == 1).Select(s_a => s_a.businessArea).ToList();

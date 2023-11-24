@@ -32,7 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="Areas\Admin\Views\Admin\AddEntries.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\Create.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\Edit.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\EmployeeDetails.cshtml" />
@@ -48,10 +47,12 @@
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\UpdateSoftware\CreateSoftware.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\UpdateSoftware\Edit.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\UpdateSoftware\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Home\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="Areas\Admin\Views\Admin\AddEntries.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\Create.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\Edit.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\EmployeeDetails.cshtml" />

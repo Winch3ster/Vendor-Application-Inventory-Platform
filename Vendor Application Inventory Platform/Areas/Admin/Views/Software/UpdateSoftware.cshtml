@@ -131,9 +131,14 @@
     
     <!-- Pdf Upload -->
     <div class="mb-3 d-flex align-top">
-        <label class="form-label citisoft-text-color col-3">Upload PDF</label>
+        <label class="form-label citisoft-text-color col-3">Update PDF</label>
         <input type="file" id="fileInput" name="pdfFile" accept=".pdf" class="form-control"/>
         <span class="d-flex align-items-center ms-2 citisoft-text-color text-nowrap">@Model?.pdfDocument?.FileName</span>
+    </div>
+    
+    <div class="mb-3 d-flex align-top">
+        <label class="form-label citisoft-text-color col-3">Update Software Image:</label>
+        <input id="imageInput" type="file" accept="image/*" class="form-control h-50" />
     </div>
     
     <!-- Software description -->
@@ -421,6 +426,9 @@
 
 @section Scripts{
     <script>
+    
+        $('#add-software').removeClass('indicator-off');
+        
         let companyContactContainer = document.getElementById('company-contact-container');
 
         let countryDropDown = document.getElementById('country-drop-down');
@@ -734,7 +742,9 @@
                                         
                                         // Append file to FormData
                                         const fileInput = document.getElementById('fileInput');
+                                        const imageInput = document.getElementById('imageInput');
                                         formData.append('File', fileInput.files[0]);
+                                        formData.append('Image', imageInput.files[0]);
                                         
                                         // Append array data
                                         $('#modulesValueContainer').find('select').each(function () {

@@ -1,6 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Services;
 using Vendor_Application_Inventory_Platform.Models;
 
@@ -23,9 +25,22 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
         [Route("~/Admin")]
         [Route("~/Admin/Index")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var userEmail = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentlySignedInUser = await _service.GetCurrentUser(userEmail);
+
+            //If here is,the interface and service class must be async as well
+            var allEmployeesData = await _service.GetAllAsync();//Convert the data to list
+
+            var data = new EmployeeIndexVM()
+            {
+                signedInUser = currentlySignedInUser,
+                Employees = allEmployeesData
+            };
+
+
+            return View(data); //pass the data list to the view
         }
 
 

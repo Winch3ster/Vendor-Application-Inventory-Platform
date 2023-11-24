@@ -115,13 +115,14 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                var imageFile = HttpContext.Request.Form.Files["Image"];
+                
                 var uploadFolder = _configuration.GetValue<string>("FileUploadSettings:UploadFolder");
                 var uploadsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", uploadFolder);
 
                 var uniqueFileName = Guid.NewGuid().ToString() + "_" + HttpContext.Request.Form["ImagePath"];
                 var filePath = Path.Combine(uploadsFolderPath, uniqueFileName); //Create an absolute path to the image (including C:/.... )
 
-                var imageFile = HttpContext.Request.Form.Files["ImagePath"];
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -263,6 +264,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 var description = HttpContext.Request.Form["Description"];
                 var cloudOption = HttpContext.Request.Form["CloudOption"];
                 var file = HttpContext.Request.Form.Files["File"];
+                var image = HttpContext.Request.Form.Files["Image"];
                 
                 
                 var businessArea = HttpContext.Request.Form["BusinessArea[]"].Select(int.Parse).ToList();

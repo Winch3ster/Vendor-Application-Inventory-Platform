@@ -19,7 +19,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin
         [HttpGet]
         public ActionResult<IEnumerable<ChangeLog>> GetNotifications()
         {
-            var user = _context.Employees.FirstOrDefault(e => e.EmployeeID == 1);
+            var user = _context.Employees.FirstOrDefault(e => e.EmployeeID == 3);
             var data = _context.changeLogs.Where(cl => cl.time > user.LastRetrieveChangeLog).ToList();
             System.Diagnostics.Debug.Write(data.Count.ToString());
             return Ok(data);

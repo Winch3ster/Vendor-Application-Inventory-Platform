@@ -45,6 +45,13 @@ namespace Vendor_Application_Inventory_Platform.Data.Services
             await _context.SaveChangesAsync();
             return newEmployeerData;
         }
+        
+        public async Task<Employee> GetCurrentUser(string useremail)
+        {
+            
+            var result = await _context.Employees.FirstOrDefaultAsync(e => e.Email == useremail); //Set it to a generic method
+            return result;
+        }
 
 
 
