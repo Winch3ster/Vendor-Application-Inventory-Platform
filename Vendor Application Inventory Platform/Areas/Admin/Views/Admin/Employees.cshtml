@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<Vendor_Application_Inventory_Platform.Models.Employee>
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_AdminControlPanel";
     ViewData["title"] = "Softwares";
@@ -43,8 +43,8 @@
                                     }
                             </div>
                             <!--The ASP.Net will auto detect the actions "Create, Edit, Delete, Details" and we have to follow the set rules -->
-                            <a class="btn btn-primary rounded-pill px-4" asp-action="" asp-route-id="@item.EmployeeID"><i class="bi bi-pencil-square"></i> Edit</a>
-                            <a class="btn btn-danger rounded-pill px-4">Remove</a>
+                            <a class="btn btn-primary rounded-pill px-4" asp-controller="Employee" asp-action="Edit" asp-route-id="@item.EmployeeID"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <a class="btn btn-danger rounded-pill px-4" asp-controller="Employee" asp-action="Delete" asp-route-id="@item.EmployeeID">Remove</a>
                         </div>
                     </div>
                 </li>
@@ -57,7 +57,7 @@
     </div>
 
     <div class="d-flex justify-content-center">
-        <a class="btn btn-primary rounded col-3" asp-action="Create"><i class="bi bi-plus"></i></a>
+        <a class="btn btn-primary rounded col-3" asp-controller="Employee" asp-action="Create"><i class="bi bi-plus"></i></a>
     </div>
 
 

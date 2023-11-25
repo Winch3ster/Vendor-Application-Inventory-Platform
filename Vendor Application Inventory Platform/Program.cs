@@ -1,19 +1,12 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
-using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
-using QuestPDF.Fluent;
-using QuestPDF.Helpers;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 using Vendor_Application_Inventory_Platform.Data.Services;
 using EmployeeServices = Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services.EmployeeServices;
 using QuestPDF.Infrastructure;
-using QuestPDF.Previewer;
 
 using Vendor_Application_Inventory_Platform.Areas.User.Data.Services;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 QuestPDF.Settings.License = LicenseType.Community;
 

@@ -35,7 +35,7 @@ public class AccessController : Controller
             }
             else
             {
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index", "EmployeeUser");
             }
         }
 

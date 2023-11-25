@@ -27,20 +27,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         [Route("~/Admin/Index")]
         public async Task<IActionResult> Index()
         {
-            var userEmail = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentlySignedInUser = await _service.GetCurrentUser(userEmail);
+            return RedirectToAction("Employees");
 
-            //If here is,the interface and service class must be async as well
-            var allEmployeesData = await _service.GetAllAsync();//Convert the data to list
-
-            var data = new EmployeeIndexVM()
-            {
-                signedInUser = currentlySignedInUser,
-                Employees = allEmployeesData
-            };
-
-
-            return View(data); //pass the data list to the view
         }
 
 
