@@ -76,8 +76,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Data.Services
                 worksheet.Cells["A2"].Value = softwareCompanyVM.SoftwareName;
                 worksheet.Cells["B2"].Value = softwareCompanyVM.SoftwareDescription;
                 worksheet.Cells["C2"].Value = ListToString(softwareCompanyVM.TypeOfSoftware);//"Type Of Software";
-                worksheet.Cells["D2"].Value = softwareCompanyVM.LastDemoDate;
-                worksheet.Cells["E2"].Value = softwareCompanyVM.LastReviewDate;
+                worksheet.Cells["D2"].Value = softwareCompanyVM.LastDemoDate.ToShortDateString();
+                worksheet.Cells["E2"].Value = softwareCompanyVM.LastReviewDate.ToShortDateString();
                 worksheet.Cells["F2"].Value = ListToString(softwareCompanyVM.BusinessAreas); //"Business Areas";
                 worksheet.Cells["G2"].Value = ListToString(softwareCompanyVM.Modules);//"Modules";
                 worksheet.Cells["H2"].Value = ListToString(softwareCompanyVM.FinancialServicesClientTypes);//"Financial Services Client Types";
@@ -87,11 +87,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Data.Services
                 //Company
                 worksheet.Cells["J2"].Value = softwareCompanyVM.CompanyName;
                 worksheet.Cells["K2"].Value = softwareCompanyVM.CompanyWebsite;
-                worksheet.Cells["L2"].Value = softwareCompanyVM.CompanyEstablished;
+                worksheet.Cells["L2"].Value = softwareCompanyVM.CompanyEstablished.ToShortDateString();
                 worksheet.Cells["M2"].Value = GetCountryStringFromData(softwareCompanyVM.CompanyContactData); //"Location Countries";
                 worksheet.Cells["N2"].Value = GetCityStringFromData(softwareCompanyVM.CompanyContactData); //"Location Cities";
                 worksheet.Cells["O2"].Value = GetContactNumberFromData(softwareCompanyVM.CompanyContactData); //"Contact Telephone No.";
-                worksheet.Cells["P2"].Value = GetContactNumberFromData(softwareCompanyVM.CompanyContactData); //"Address";
+                worksheet.Cells["P2"].Value = GetAddressFromData(softwareCompanyVM.CompanyContactData);//"Address";
                 worksheet.Cells["Q2"].Value = softwareCompanyVM.NumberOfEmployees;
                 worksheet.Cells["R2"].Value = softwareCompanyVM.InternalProfessionalServices;
 
@@ -124,14 +124,14 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Data.Services
                     {
                         if (detail.Key == "Address")
                         {
-                            string phoneNumber = $"[{city.Key}] +{detail.Value}" + ", " + Environment.NewLine;
-                            result += phoneNumber;
-                            System.Diagnostics.Debug.WriteLine(phoneNumber);
+                            string address = $"[{city.Key}] {detail.Value}" + ", " + Environment.NewLine;
+                            result += address;
+                            System.Diagnostics.Debug.WriteLine(address);
                         }
                     }
                 }
             }
-
+            System.Diagnostics.Debug.WriteLine(result);
             return result;
 
         }

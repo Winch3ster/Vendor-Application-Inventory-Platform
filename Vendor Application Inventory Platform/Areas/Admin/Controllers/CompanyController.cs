@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Enum;
@@ -18,11 +19,13 @@ public class CompanyController: Controller
         private readonly ICompanyServices _companyService;
         private readonly IChangeLogService _changeLogService;
         private readonly EmailService _emailService;
-        public CompanyController(ICompanyServices companyService, IChangeLogService changeLogService, EmailService emailService)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public CompanyController(ICompanyServices companyService, IChangeLogService changeLogService, EmailService emailService, IHubContext<NotificationHub> hubContext)
         {
             _companyService = companyService;
-        _changeLogService = changeLogService;   
-        _emailService = emailService;
+            _changeLogService = changeLogService;   
+            _emailService = emailService;
+            _hubContext = hubContext;
         }
 
 
@@ -84,7 +87,7 @@ public class CompanyController: Controller
 
 
             _changeLogService.AddChange(company.CompanyName, Actions.added);
-
+            _hubContext.Clients.All.SendAsync("notification", "update");
 
             _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", company.CompanyName, "added");
 
@@ -364,9 +367,9 @@ public class CompanyController: Controller
         ///////////////////////////////////////////////////////////
 
 
+        _hubContext.Clients.All.SendAsync("notification", "update");
 
 
-       
 
         _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", "A company", "removed");
 

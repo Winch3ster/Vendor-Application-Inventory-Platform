@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Net.Http.Headers;
 using System;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
@@ -19,13 +20,14 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         private readonly IConfiguration _configuration; //To get the upload file path
         private readonly IChangeLogService _changeLogService;
         private readonly EmailService _emailService;
-
-        public SoftwareController(ISoftwareServices s, IConfiguration configuration, IChangeLogService changeLogService, EmailService emailService)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public SoftwareController(ISoftwareServices s, IConfiguration configuration, IChangeLogService changeLogService, EmailService emailService, IHubContext<NotificationHub> hubContext)
         {
             _services = s;
             _configuration = configuration;
             _changeLogService = changeLogService;
             _emailService = emailService;   
+            _hubContext = hubContext;
         }
         
         [Route("~/Software")]
@@ -218,7 +220,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
 
                 _changeLogService.AddChange(software.SoftwareName, Actions.added);
-
+                _hubContext.Clients.All.SendAsync("notification", "update");
 
                 _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", software.SoftwareName, "added");
 
@@ -345,7 +347,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
 
                     _changeLogService.AddChange(software.SoftwareName, Actions.edited);
-
+                    _hubContext.Clients.All.SendAsync("notification", "update");
 
                     _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", software.SoftwareName, "edited");
 
@@ -441,9 +443,9 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             ///
 
 
+            _hubContext.Clients.All.SendAsync("notification", "update");
 
 
-            
 
 
 

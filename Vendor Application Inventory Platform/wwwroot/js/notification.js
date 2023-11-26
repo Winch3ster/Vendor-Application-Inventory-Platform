@@ -2,6 +2,29 @@
 var readNotification = [];
 var currentUser = null;
 
+//Web socket
+
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/notificationHub") // Make sure this matches the endpoint in your Startup.cs
+    .configureLogging(signalR.LogLevel.Information)
+    .build();
+
+connection.start().then(() => {
+    console.log("Connected to the server");
+}).catch(err => console.error(err));
+
+connection.on("notification", (notification)=> {
+    console.log(`A new update`);
+    GetNotification()
+    // Handle the received message as needed
+});
+
+
+
+
+
+
+
 function GetCurrentUser() {
 
     fetch('https://localhost:7050/api/CurrentUser/')

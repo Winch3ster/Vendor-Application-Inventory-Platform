@@ -262,4 +262,8 @@ public class CompanyServices : ICompanyServices
 
     }
 
+    public Country RetrieveCountry(string countryName)
+    {
+        throw new NotImplementedException();
+    }
 }

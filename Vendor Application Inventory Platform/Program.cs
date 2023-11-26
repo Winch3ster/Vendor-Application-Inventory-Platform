@@ -29,6 +29,7 @@ builder.Services.AddSingleton<EmailService>();
 builder.Services.AddSingleton<NotificationService>();
 
 
+builder.Services.AddSignalR(); //Websocket
 
 //Add services
 builder.Services.AddScoped<IChangeLogService, ChangeLogService>();
@@ -112,6 +113,7 @@ app.UseEndpoints(endpoints =>
     );
 
 
+    endpoints.MapHub<NotificationHub>("/notificationHub");
 
     endpoints.MapControllers();
 
