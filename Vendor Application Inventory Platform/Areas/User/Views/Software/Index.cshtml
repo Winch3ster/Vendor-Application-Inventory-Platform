@@ -16,15 +16,28 @@
        
 
         <form asp-action="Index" method="get" >
-            <div class="form-floating">
-                <input type="text" class="form-control border-start-0 shadow-none" id="search" placeholder="Username" size="30" name="searchString">
-                <label for="search">Look for the application name</label>
-                <button type="submit" class="input-group-text bg-info bi-search bg-transparent border-end-0 border-0"></button>
-            </div> 
-        </form>
 
-        
+
+            <div class="p-0 border-1 rounded p-2 d-flex align-items-center justify-content-between">
+                <div class="form-floating">
+
+                    <input type="text" class="form-control" id="search" placeholder="Username" size="30" name="searchString">
+                    <label for="search">Look for the application name <i class="bi-search"></i></label>
+                </div>
+                <button type="submit" hidden></button>
+
+            </div>
+          
+
+     
+        </form>
     </div>
+
+
+
+
+
+
 </div>
 <div class="mt-5">
     <h3>Result(s)</h3>
@@ -33,9 +46,9 @@
 
         @foreach (var returnedSoftware in Model.returnedSoftwares)
         {
-            <div class="col-lg-4">
-                <p>@returnedSoftware.SoftwareName</p>
-                <!-- <img src="#" class="w-100" height="200" /> -->
+            <div class="col-lg-4" style="margin: 20px 0">
+                <!-- <p@returnedSoftware.SoftwareName</p> -->
+                <img src="../../@Url.Content(returnedSoftware.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@returnedSoftware.SoftwareID)" />
             </div>
         }
 
@@ -46,9 +59,9 @@
     <div class="row g-4">
         @foreach (var recentlyViewedSoftware in Model.recentlyViewed)
         {
-            <div class="col-lg-4">
-                <p>@recentlyViewedSoftware.SoftwareName</p>
-                <!-- <img src="#" class="w-100" height="200" /> -->
+            <div class="col-lg-4" style="margin: 20px 0">
+                <!-- <p@returnedSoftware.SoftwareName</p> -->
+                <img src="../../@Url.Content(recentlyViewedSoftware.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@recentlyViewedSoftware.SoftwareID)" />
             </div>
         }
         
@@ -75,5 +88,15 @@
             });
 
         })
+
+
+        function NavigateToViewDetailsPage(softwareid) {
+            console.log(`Going to page with id: ${softwareid}`)
+            // Replace 'YourController' and 'YourAction' with the appropriate controller and action names
+            var url = '@Url.Action("Details", "Software", new { softwareid = "__softwareid__" })';
+            url = url.replace('__softwareid__', softwareid);
+            window.location.href = url;
+        }
+
     </script>
 }

@@ -16,9 +16,9 @@ public class CompanyController: Controller
 {
     
         private readonly ICompanyServices _companyService;
-    private readonly IChangeLogService _changeLogService;
-    private readonly EmailService _emailService;
-    public CompanyController(ICompanyServices companyService, IChangeLogService changeLogService, EmailService emailService)
+        private readonly IChangeLogService _changeLogService;
+        private readonly EmailService _emailService;
+        public CompanyController(ICompanyServices companyService, IChangeLogService changeLogService, EmailService emailService)
         {
             _companyService = companyService;
         _changeLogService = changeLogService;   
@@ -88,8 +88,6 @@ public class CompanyController: Controller
 
             _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", company.CompanyName, "added");
 
-            // Disconnect from the SMTP server after sending the email
-            _emailService.Disconnect();
 
 
             ////////////////////////////////////////////////////
@@ -357,6 +355,7 @@ public class CompanyController: Controller
         {
             if (id != null && id != 0)
             {
+                _changeLogService.AddChangeDeleteCompanyById(id, Actions.deleted);
                 _companyService.DeleteCompany(id);
             }
 
@@ -367,12 +366,11 @@ public class CompanyController: Controller
 
 
 
-        _changeLogService.AddChangeDeleteCompanyById(id, Actions.deleted);
+       
 
         _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", "A company", "removed");
 
-        // Disconnect from the SMTP server after sending the email
-        _emailService.Disconnect();
+    
 
         ////////////////////////////////////////////////////
 

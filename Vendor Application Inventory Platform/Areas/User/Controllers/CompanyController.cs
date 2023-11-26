@@ -24,8 +24,13 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             //Return the requested company
             var returnedCompany = _dbContext.Companies.FirstOrDefault(c => c.CompanyID == companyId);
 
+            System.Diagnostics.Debug.WriteLine(returnedCompany);
+
+
             //Get all the software that is developed by this company
             var softwareByCompany = _dbContext.Softwares.Where(s => s.CompanyID == companyId).ToList();
+
+            System.Diagnostics.Debug.WriteLine(softwareByCompany);
 
             var retrivedLocationCountries = _dbContext.Company_Country.Where(cc => cc.companyID == returnedCompany.CompanyID).Select(e => e.country).ToList();
 

@@ -3,8 +3,10 @@ var readNotification = [];
 var currentUser = null;
 
 function GetCurrentUser() {
+
     fetch('https://localhost:7050/api/CurrentUser/')
         .then(response => {
+            console.log(response)
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -16,7 +18,8 @@ function GetCurrentUser() {
             console.log(data);
 
             console.log(currentUser)
-            GetNotification();
+            console.log(currentUser.employeeID)
+            GetNotification()
             })
         .catch(error => console.error('Error:', error));
 }
@@ -30,9 +33,8 @@ function SetLastRetriveChangeLogForUser() {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            // Add any other headers as needed (e.g., authorization headers)
         },
-    })
+        })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -69,8 +71,9 @@ function CloseNotification() {
 function GetNotification() {
         
     // Fetch data from the API
-    fetch('https://localhost:7050/api/ChangeLog/')
-            .then(response => {
+    fetch(`https://localhost:7050/api/ChangeLog?userid=${currentUser.employeeID}`)
+        .then(response => {
+            console.log(response)
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -186,7 +189,3 @@ function RemoveAllMessageMark() {
     });
 }
 GetCurrentUser();
-
-
-console.log("User data")
-console.log(currentUser)

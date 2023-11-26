@@ -12,8 +12,12 @@
 
 
 <div class="row">
-    <div class="col-md-6 border">
-        <img src="#" class="w-100" height="200" alt="company logo" />
+    <div class="col-md-4 d-flex justify-content-center align-items-center">
+
+
+        <img src="../../@Url.Content(Model.ImagePath)" alt="company logo" style="width: 250px; height200px; object-fit:contain;" />
+        
+      
     </div>
     <div class="col-md-6">
 
@@ -231,15 +235,20 @@
 
 <div class="mt-5 border-top pt-3 row">
     <div class="col-12 text-center mb-2"><h5>See also</h5></div>
-    <div class="col-sm-4 border">
-        <img src="#" height="200" class="w-100">
+
+
+
+    <div class="row g-4">
+        @foreach (var software in Model.similarSoftwares)
+        {
+            <div class="col-lg-4" style="margin: 20px 0">
+                <!-- <p@returnedSoftware.SoftwareName</p> -->
+                <img src="../../@Url.Content(software.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@software.SoftwareID)" />
+            </div>
+        }
+
     </div>
-    <div class="col-sm-4 border">
-        <img src="#" height="200" class="w-100">
-    </div>
-    <div class="col-sm-4 border">
-        <img src="#" height="200" class="w-100">
-    </div>
+    
 </div>
 
 <div class="mt-5"></div>
@@ -296,7 +305,16 @@
         }
 
         updateStar()
-        
+
+
+
+        function NavigateToViewDetailsPage(softwareid) {
+            console.log(`Going to page with id: ${softwareid}`)
+            // Replace 'YourController' and 'YourAction' with the appropriate controller and action names
+            var url = '@Url.Action("Details", "Software", new { softwareid = "__softwareid__" })';
+            url = url.replace('__softwareid__', softwareid);
+            window.location.href = url;
+        }
     </script>
 
 }

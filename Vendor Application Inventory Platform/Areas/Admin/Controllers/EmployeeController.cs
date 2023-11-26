@@ -18,21 +18,30 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         private readonly IEmployeeServices _service; //Inject the service of employee in here
         private readonly NotificationService _notificationService;
         private readonly EmailService _emailService;
+        private Employee currentlySignedInUser;
 
         public EmployeeController(IEmployeeServices service, NotificationService notificationService, EmailService emailService)
         {
             _notificationService = notificationService;
             _service = service;
             _emailService = emailService;
+            // Access the current user's claims
+            //var userClaims = HttpContext.User.Claims;
+            //System.Diagnostics.Debug.WriteLine(userClaims);
+            // Access a specific claim, such as NameIdentifier
+            //var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //System.Diagnostics.Debug.WriteLine(userId);
+
+            
+
         }
 
         [Route("~/Employee")]
         [Route("~/Employee/Index")]
         public async Task<IActionResult> Index() //This method will be called by default
         {
-
             var userEmail = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentlySignedInUser = await _service.GetCurrentUser(userEmail);
+            currentlySignedInUser = _service.GetCurrentUser(userEmail);
 
             //If here is,the interface and service class must be async as well
             var allEmployeesData = await _service.GetAllAsync();//Convert the data to list
@@ -64,13 +73,15 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         [HttpPost] //We will be handling post request. Therefore this annotation is required
         public async Task<IActionResult> Create([Bind("FirstName, LastName, Email, Password, IsAdmin, companyAccess, softwareAccess, accountAccess")] Employee employee)
         {
+            
 
             ModelState.Remove("reviews");
+            ModelState.Remove("user_ViewHistories");
             if (!ModelState.IsValid)
             {
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    Console.WriteLine($"Error: {error.ErrorMessage}");
+                    System.Diagnostics.Debug.WriteLine($"Error: {error.ErrorMessage}");
                 }
                 return View(employee);
                 //What do the IsValid check?  --> If if all required fields are filled by [Required] (implemented in the employee class)
@@ -78,7 +89,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             }
             await _service.AddAsync(employee);// If the data is valid, add to database (This Add() is from the service class)
 
-
+            _emailService.SendEmail("kingstonlee96@gmail.com","Created Employee", "Employee", employee.Email, "added");
             //For testing purposes The email will be send to one of the developer's email
             //_notificationService.NotifyUser("kingstonlee96@gmail.com", "Create");
 

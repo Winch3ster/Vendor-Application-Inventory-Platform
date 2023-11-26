@@ -53,7 +53,7 @@ public class AccessController : Controller
             {
                 List<Claim> claims = new List<Claim>()
                         {
-                             new Claim(ClaimTypes.NameIdentifier, modelLogin.email),
+                           
         
                             new Claim(ClaimTypes.NameIdentifier, modelLogin.email),
                             new Claim("isAdmin", user.IsAdmin ? "true" : "false"),
@@ -80,7 +80,7 @@ public class AccessController : Controller
                         }
                         else
                         {
-                            return RedirectToAction("Index", "EmployeeUser");
+                            return RedirectToAction("Index", "Software", new { area = "User" });
                         }
             }
         }

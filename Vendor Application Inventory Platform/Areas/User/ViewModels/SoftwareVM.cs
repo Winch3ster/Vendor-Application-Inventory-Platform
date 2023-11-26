@@ -20,11 +20,15 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.ViewModels
 
         public Review newReview { get; set; }
 
+        public string ImagePath { get; set; }
+
         //Lists
-       
+
         public Dictionary<string, Dictionary<string, Dictionary<string, string>>> companyContactData { get; set; }
         public List<BusinessArea> businessAreas { get; set; }
         public List<Review> reviews { get; set; }
-        //public List<Software> similarSoftwares { get; set; }
+
+       
+        public List<Software> similarSoftwares { get; set; }
     }
 }

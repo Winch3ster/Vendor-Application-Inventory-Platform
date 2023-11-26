@@ -18,17 +18,18 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
         public async Task AddAsync(Employee employee)
         {
             employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
+            employee.LastRetrieveChangeLog = DateTime.Now;
             await _context.AddAsync(employee);
             await _context.SaveChangesAsync();
         }
 
 
 
-        public async Task<Employee> GetCurrentUser(string useremail)
+        public Employee GetCurrentUser(string useremail)
         {
             
 
-            var result = await _context.Employees.FirstOrDefaultAsync(e => e.Email == useremail); //Set it to a generic method
+            var result =  _context.Employees.FirstOrDefault(e => e.Email == useremail); 
             return result;
         }
        

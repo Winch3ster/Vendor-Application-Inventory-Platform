@@ -134,7 +134,7 @@ public class CompanyServices : ICompanyServices
             var contact = new ContactNumber()
             {
                 CityID = city.CityID,
-                Number = int.Parse(contactNum)
+                Number = long.Parse(contactNum)
             };
 
             _db.ContactNumbers.Add(contact);

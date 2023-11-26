@@ -5,7 +5,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
     public interface IEmployeeServices
     {
 
-        Task<Employee> GetCurrentUser(string useremail);
+        Employee GetCurrentUser(string useremail);
         //Add employee in database
         Task AddAsync(Employee employee);
 

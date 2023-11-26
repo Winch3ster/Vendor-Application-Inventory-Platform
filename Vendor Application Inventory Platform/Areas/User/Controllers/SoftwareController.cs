@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 using System.Runtime.Intrinsics.X86;
+using System.Security.Claims;
 using Vendor_Application_Inventory_Platform.Areas.User.Data.Services;
 using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Enum;
@@ -33,7 +34,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             {
                 returnedSoftwares = _dbContext.Softwares.ToList(),
               
-                recentlyViewed = _dbContext.user_ViewHistories.Where(u_v => u_v.EmployeeId == 1).OrderByDescending(u_v => u_v.time).Select(u_v => u_v.U_V_Software).ToList()    
+                recentlyViewed = _dbContext.user_ViewHistories.Where(u_v => u_v.EmployeeId == 1).OrderByDescending(u_v => u_v.time).Select(u_v => u_v.U_V_Software).Distinct().ToList()    
             };
 
 
@@ -52,7 +53,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                 {
                     returnedSoftwares = softwares.ToList(),
 
-                    recentlyViewed = _dbContext.user_ViewHistories.Where(u_v => u_v.EmployeeId == 1).OrderByDescending(u_v => u_v.time).Select(u_v => u_v.U_V_Software).ToList()
+                    recentlyViewed = _dbContext.user_ViewHistories.Where(u_v => u_v.EmployeeId == 1).OrderByDescending(u_v => u_v.time).Select(u_v => u_v.U_V_Software).Distinct().ToList()
                 };
             }
 
@@ -134,13 +135,17 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
 
 
 
-        public IActionResult Details(int softwareId) {
+        public IActionResult Details(int softwareid) {
 
-            System.Diagnostics.Debug.WriteLine($"requested software id: {softwareId}");
-            var loggedInUser = _dbContext.Employees.FirstOrDefault(e => e.EmployeeID == softwareId);
+            System.Diagnostics.Debug.WriteLine($"requested software id: {softwareid}");
 
 
-            var software = _dbContext.Softwares.FirstOrDefault(s =>s.SoftwareID == softwareId); //get the first software in database
+            var userEmail = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentlySignedInUser = _dbContext.Employees.FirstOrDefault(e => e.Email == userEmail);
+
+           
+
+            var software = _dbContext.Softwares.FirstOrDefault(s =>s.SoftwareID == softwareid); //get the first software in database
 
             System.Diagnostics.Debug.WriteLine($"{software?.SoftwareName}");
 
@@ -187,8 +192,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                 System.Diagnostics.Debug.WriteLine(" ");
             }
 
-
-            var data = _dbContext.Softwares.Where(s => s.SoftwareID == softwareId).Include(e => e.Company)
+            var similarSoftwares = SimilarSoftware(software.SoftwareID);
+            var data = _dbContext.Softwares.Where(s => s.SoftwareID == softwareid).Include(e => e.Company)
            .Include(e => e.reviews)
            .Select(e =>
            new SoftwareVM
@@ -204,15 +209,17 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                DocumentAttached = e.DocumentAttached,
                companyContactData = contactData,
                reviews = e.reviews,
-               newReview = new Review()
+               newReview = new Review(),
+               ImagePath = e.ImagePath,
+               similarSoftwares = similarSoftwares
            }
            ).FirstOrDefault();
 
 
             //Log user's view in user_viewHistory
-            LogUserHistory(software, loggedInUser);
+            LogUserHistory(software, currentlySignedInUser);
 
-           
+
 
             return View(data);
         }
@@ -233,14 +240,16 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
         public IActionResult AddComment(string userReview, int ratingStar, int softwareId)
         {
             
-            //System.Diagnostics.Debug.WriteLine("Drop Comment function is running");
-            //System.Diagnostics.Debug.WriteLine("The received string is: " + userReview);
+            System.Diagnostics.Debug.WriteLine("Drop Comment function is running");
+            System.Diagnostics.Debug.WriteLine("The received string is: " + userReview);
 
             System.Diagnostics.Debug.WriteLine("The received rating star is: " + ratingStar);
-            
+            System.Diagnostics.Debug.WriteLine("The received software id is: " + softwareId);
+
             //Assuming the second user drop the comment
-            // Retrieve the current user's ID
-            var currentUser = _dbContext.Employees.FirstOrDefault(e => e.EmployeeID == 1);
+            var userEmail = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = _dbContext.Employees.FirstOrDefault(e => e.Email == userEmail);
+
             var softwareInview = _dbContext.Softwares.FirstOrDefault(e => e.SoftwareID == softwareId);
 
             System.Diagnostics.Debug.WriteLine("Current Software in view from passed model: " + softwareId);
@@ -266,8 +275,10 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
 
 
             updateSoftwareRating(softwareInview);
+
+            System.Diagnostics.Debug.WriteLine("The received software id is: " + softwareId);
             // If the model state is not valid, redisplay the form with errors
-            return RedirectToAction("Details", new { id = softwareId });
+            return RedirectToAction("Details", new { softwareId = softwareId });
         
         }
 
@@ -386,6 +397,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             //Return similar software
             similarSoftware = _dbContext.Software_Types
              .Where(s => similarTypeTags.Contains(s.softwareType.Type)).Select(s_t => s_t.software) //Find all software that has tag as in similarTypeTag
+             .Where(s => s.SoftwareID != currentSoftwareId).Distinct()
              .Take(3) //Take the top 3
              .ToList();
 
@@ -396,7 +408,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                 List<string> businessAreasOfCurrentSoftware = _dbContext.Software_Areas.Where(s_t => s_t.softwareID == currentSoftwareId).Select(s_t => s_t.businessArea.Description).ToList();
 
 
-                similarSoftware = _dbContext.Software_Areas.Where(s_a => businessAreasOfCurrentSoftware.Contains(s_a.businessArea.Description)).Select(s_a => s_a.software).Take(3).ToList();   
+                similarSoftware = _dbContext.Software_Areas.Where(s_a => businessAreasOfCurrentSoftware.Contains(s_a.businessArea.Description)).Select(s_a => s_a.software).Where(s => s.SoftwareID != currentSoftwareId).Distinct().Take(3).ToList();   
 
             }
 

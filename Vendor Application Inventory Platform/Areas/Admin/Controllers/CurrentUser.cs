@@ -24,6 +24,10 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             var userEmail = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var currentlySignedInUser = _appDbContext.Employees.FirstOrDefault(e => e.Email == userEmail);
 
+            System.Diagnostics.Debug.WriteLine(userEmail);
+
+            System.Diagnostics.Debug.WriteLine(currentlySignedInUser);
+            System.Diagnostics.Debug.WriteLine(currentlySignedInUser.EmployeeID);
             return Ok(currentlySignedInUser);
         }
 

@@ -272,3 +272,16 @@ textarea:focus{
     background-color: #4688F1;
     margin-right: 10px;
 }
+
+
+.software-image-link{
+    cursor:pointer;
+    transition: 0.5s;
+}
+
+.software-image-link:hover {
+    transform: scale(1.2);
+    box-shadow: 1px 17px 21px -3px rgba(114,114,114,0.75);
+    -webkit-box-shadow: 1px 17px 21px -3px rgba(114,114,114,0.75);
+    -moz-box-shadow: 1px 17px 21px -3px rgba(114,114,114,0.75);
+}

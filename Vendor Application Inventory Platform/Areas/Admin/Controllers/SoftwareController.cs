@@ -116,13 +116,17 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var imageFile = HttpContext.Request.Form.Files["Image"];
-                
-                var uploadFolder = _configuration.GetValue<string>("FileUploadSettings:UploadFolder");
+                System.Diagnostics.Debug.WriteLine(imageFile);
+
+                var uploadFolder = _configuration.GetValue<string>("ImagesUploadSettings:UploadFolder");
+                System.Diagnostics.Debug.WriteLine(imageFile);
+
                 var uploadsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", uploadFolder);
+                System.Diagnostics.Debug.WriteLine(imageFile);
 
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + HttpContext.Request.Form["ImagePath"];
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
                 var filePath = Path.Combine(uploadsFolderPath, uniqueFileName); //Create an absolute path to the image (including C:/.... )
-
+                filePath = filePath.Replace("\\", "/");
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -213,8 +217,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
                 _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", software.SoftwareName, "added");
 
-                // Disconnect from the SMTP server after sending the email
-                _emailService.Disconnect();
+
 
                 ////////////////////////////////////////////////////
 
@@ -341,8 +344,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
                     _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", software.SoftwareName, "edited");
 
-                    // Disconnect from the SMTP server after sending the email
-                    _emailService.Disconnect();
+          
 
                     ////////////////////////////////////////////////////
                     ///
@@ -427,6 +429,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public void DeleteSoftware(int id)
         {
+            _changeLogService.AddChangeDeleteSoftwareById(id, Actions.deleted);
             _services.deleteSoftware(id);
 
             ////////////////////////////////////////////////////
@@ -435,14 +438,13 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
 
 
-            _changeLogService.AddChangeDeleteSoftwareById(id, Actions.deleted);
+            
 
 
 
             _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", "A software", "removed");
 
-            // Disconnect from the SMTP server after sending the email
-            _emailService.Disconnect();
+
 
 
             ////////////////////////////////////////////////////

@@ -1,7 +1,6 @@
 ﻿using MimeKit;
 using MailKit.Net.Smtp;
 
-
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 {
     /// <summary>
@@ -14,29 +13,34 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
     //The user will receive email of notification for any changes made to the system's data like create, update and delete
     public class EmailService
     {
-        private readonly SmtpClient _smtpClient; //Get the client services
+        private SmtpClient _smtpClient; //Get the client services
 
-
+        private IConfigurationSection emailSettings;
         public EmailService(IConfiguration configuration)
         {
             //Get the email services from the appsetting.json
-            var emailSettings = configuration.GetSection("EmailSettings");
+            emailSettings = configuration.GetSection("EmailSettings");
 
-            _smtpClient = new SmtpClient(); //Intantiate a new client object
-
-            // Connect to the SMTP server, gmail smtp server is used (as specified in appsetting.json)
-            _smtpClient.Connect(emailSettings["SmtpServer"], int.Parse(emailSettings["Port"]), useSsl: true);
-
-            // Authenticate the user with the specified server
-            _smtpClient.Authenticate(emailSettings["UserName"], emailSettings["Password"]);
+            
         }
         
 
         //Send mail to user
         public void SendEmail(string toEmail,  string subject, string entity, string entityName, string actionPerformed)
         {
-            //[entity] (entity name) was (action performed)
-            string messageToSend = $"[{entity}] {entityName} was {actionPerformed}";
+            try
+            {
+
+                _smtpClient = new SmtpClient(); //Intantiate a new client object
+
+                // Connect to the SMTP server, gmail smtp server is used (as specified in appsetting.json)
+                _smtpClient.Connect(emailSettings["SmtpServer"], int.Parse(emailSettings["Port"]), useSsl: true);
+
+                // Authenticate the user with the specified server
+                _smtpClient.Authenticate(emailSettings["UserName"], emailSettings["Password"]);
+
+                //[entity] (entity name) was (action performed)
+                string messageToSend = $"[{entity}] {entityName} was {actionPerformed}";
 
             var mail = new MimeMessage(); //create a new empty mail 
 
@@ -64,6 +68,12 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 
             // Send the email
             _smtpClient.Send(mail);
+            }
+            finally
+            {
+                // Ensure that the SmtpClient is disposed even if an exception occurs
+                Disconnect();
+            }
         }
 
          
