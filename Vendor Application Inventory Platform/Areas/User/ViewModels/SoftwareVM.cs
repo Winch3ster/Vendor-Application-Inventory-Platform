@@ -13,6 +13,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.ViewModels
         public string websiteURL { get; set; }
 
         //Company Information
+        public int CompanyId { get; set; }  
         public string CompanyName { get; set; }
         
         public bool DocumentAttached { get; set; }

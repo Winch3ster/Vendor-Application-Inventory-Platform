@@ -206,6 +206,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                SoftwareDescription = e.Description,
                businessAreas = businessAreasList,
                websiteURL = e.Company.WebsiteURL,
+               CompanyId = e.Company.CompanyID,
                CompanyName = e.Company.CompanyName,
                companyEstablishedDate = e.Company.EstablishedDate,
                DocumentAttached = e.DocumentAttached,
