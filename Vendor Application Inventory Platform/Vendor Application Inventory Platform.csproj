@@ -37,7 +37,6 @@
     <AdditionalFiles Include="Areas\Admin\Views\Admin\EmployeeDetails.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\Employees.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\error.cshtml" />
-    <AdditionalFiles Include="Areas\Admin\Views\Admin\Index.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\Update.cshtml" />
   </ItemGroup>
 
@@ -49,7 +48,6 @@
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\UpdateSoftware\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Home\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,7 +56,6 @@
     <AdditionalFiles Include="Areas\Admin\Views\Admin\EmployeeDetails.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\Employees.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\error.cshtml" />
-    <AdditionalFiles Include="Areas\Admin\Views\Admin\Index.cshtml" />
     <AdditionalFiles Include="Areas\Admin\Views\Admin\Update.cshtml" />
   </ItemGroup>
 

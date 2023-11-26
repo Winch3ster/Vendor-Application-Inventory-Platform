@@ -11,7 +11,7 @@ public interface ICompanyServices
 
     public void CreateNewCountry(string countryName, Company company);
 
-    public Country RetrieveCountry(string countryName);
+    public Country RetrieveCountry(string countryName, int companyId);
 
     public void DeleteCountry(string countryName, int companyId);
 

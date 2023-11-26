@@ -53,9 +53,10 @@ public class CompanyServices : ICompanyServices
 
     }
 
-    public Country RetrieveCountry(string countryName)
+    public Country RetrieveCountry(string countryName, int companyId)
     {
-        return _db.Countries.FirstOrDefault(c => c.CountryName == countryName) ?? throw new InvalidOperationException();
+        return _db.Companies.Include(company => company.Company_Countries)
+            .ThenInclude(companyCountry => companyCountry.country).FirstOrDefault(c=>c.CompanyID==companyId)?.Company_Countries.FirstOrDefault(cc=>cc.country.CountryName==countryName)?.country ?? throw new InvalidOperationException();
     }
 
     public void DeleteCountry(string countryName, int companyId)

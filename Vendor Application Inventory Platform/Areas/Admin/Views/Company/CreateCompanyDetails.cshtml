@@ -1,4 +1,5 @@
-﻿@using Newtonsoft.Json
+﻿﻿@using Newtonsoft.Json
+@using Newtonsoft.Json
 @model Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels.CreateCompanyDetailsViewModel
 @{
     Layout = "_AdminControlPanel";
@@ -85,6 +86,7 @@
 {
   <script>
   let id = @Model.companyId;
+  $('#add-company').removeClass('indicator-off');
       
   $(document).ready(function(){
     
@@ -559,8 +561,7 @@
                      }
                      
                    })
-        
-        window.location.reload();
+
         }
        
   })
@@ -591,15 +592,5 @@
           })
             
   }
-          
-    let placeholder = document.getElementById("add-entries");
-    
-        let indicatorList = document.getElementsByClassName("indicator");
-    
-        for (let i = 0; i < indicatorList.length; i++){
-            indicatorList[i].classList.add("indicator-off");
-        }
-    
-        placeholder.classList.remove("indicator-off");
     </script>
 }

@@ -128,6 +128,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 var filePath = Path.Combine(uploadsFolderPath, uniqueFileName); //Create an absolute path to the image (including C:/.... )
                 filePath = filePath.Replace("\\", "/");
 
+                if (!Directory.Exists(uploadsFolderPath))
+                {
+                    Directory.CreateDirectory(uploadsFolderPath);
+                }
+                
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     imageFile.CopyTo(stream);

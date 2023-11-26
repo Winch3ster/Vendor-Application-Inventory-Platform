@@ -15,7 +15,7 @@
     <div class="col-md-4 d-flex justify-content-center align-items-center">
 
 
-        <img src="../../@Url.Content(Model.ImagePath)" alt="company logo" style="width: 250px; height200px; object-fit:contain;" />
+        <img src="../../@Url.Content(Model.ImagePath)" alt="company logo" style="width: 250px; height:200px; object-fit:contain;" />
         
       
     </div>
@@ -242,7 +242,7 @@
         @foreach (var software in Model.similarSoftwares)
         {
             <div class="col-lg-4" style="margin: 20px 0">
-                <!-- <p@returnedSoftware.SoftwareName</p> -->
+                @* <!-- <p>@returnedSoftware.SoftwareName</p> --> *@
                 <img src="../../@Url.Content(software.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@software.SoftwareID)" />
             </div>
         }

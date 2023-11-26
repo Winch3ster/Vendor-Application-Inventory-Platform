@@ -1,5 +1,6 @@
 ﻿@using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
-@using Vendor_Application_Inventory_Platform.Areas.User.Controllers;
+@using System.Linq
+
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @model SoftwareIndexVM
@@ -13,9 +14,9 @@
 <div>
     <h3>Hey there! Welcome back to Vendor Application Inventory</h3>
     <div class="input-group mt-4">
-       
 
-        <form asp-action="Index" method="get" >
+
+        <form asp-action="Index" method="get">
 
 
             <div class="p-0 border-1 rounded p-2 d-flex align-items-center justify-content-between">
@@ -27,15 +28,60 @@
                 <button type="submit" hidden></button>
 
             </div>
-          
 
-     
         </form>
+
+        <div class="row mt-4">
+            @if (Model.userClaims.Any(c => c.Type == "companyAccess" && c.Value == "true"))
+            {
+                <div class="dropdown" style="width:200px">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Company Actions
+                    </button>
+                    <ul class="dropdown-menu p-0">
+                        <li class="dropdown-item">
+                            <a class="btn" asp-area="Admin" asp-controller="Company" asp-action="Index" class="d-block py-2 px-3">View Companies</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a class="btn" asp-area="Admin" asp-controller="Company" asp-action="CreateCompany" class="d-block py-2 px-3">Create Company</a>
+                        </li>
+                    </ul>
+                </div>
+            }
+            @if (Model.userClaims.Any(c => c.Type == "accountAccess" && c.Value == "true"))
+            {
+                <div class="dropdown" style="width:200px">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Employee Actions
+                    </button>
+                    <ul class="dropdown-menu p-0">
+                        <li class="dropdown-item">
+                            <a class="btn" asp-area="Admin" asp-controller="Employee" asp-action="Index" class="d-block py-2 px-3">View Employees</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a class="btn" asp-area="Admin" asp-controller="Employee" asp-action="Create" class="d-block py-2 px-3">Create Employee</a>
+                        </li>
+                    </ul>
+                </div>
+            }
+            @if (Model.userClaims.Any(c => c.Type == "softwareAccess" && c.Value == "true"))
+            {
+                <div class="dropdown" style="width:200px">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Software Actions
+                    </button>
+                    <ul class="dropdown-menu p-0">
+                        <li class="dropdown-item">
+                            <a class="btn" asp-area="Admin" asp-controller="Software" asp-action="Index" class="d-block py-2 px-3">View Software</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a class="btn" asp-area="Admin" asp-controller="Software" asp-action="CreateSoftware" class="d-block py-2 px-3">Create Software</a>
+                        </li>
+                    </ul>
+                </div>
+            }
+        </div>
     </div>
-
-
-
-
 
 
 </div>
@@ -48,7 +94,7 @@
         {
             <div class="col-lg-4" style="margin: 20px 0">
                 <!-- <p@returnedSoftware.SoftwareName</p> -->
-                <img src="../../@Url.Content(returnedSoftware.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@returnedSoftware.SoftwareID)" />
+                <img src="../../@Url.Content(returnedSoftware.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@returnedSoftware.SoftwareID)"/>
             </div>
         }
 
@@ -60,13 +106,14 @@
         @foreach (var recentlyViewedSoftware in Model.recentlyViewed)
         {
             <div class="col-lg-4" style="margin: 20px 0">
-                <!-- <p@returnedSoftware.SoftwareName</p> -->
-                <img src="../../@Url.Content(recentlyViewedSoftware.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@recentlyViewedSoftware.SoftwareID)" />
+                @* <!-- <p@returnedSoftware.SoftwareName</p> --> *@
+                <img src="../../@Url.Content(recentlyViewedSoftware.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@recentlyViewedSoftware.SoftwareID)"/>
             </div>
         }
-        
+
     </div>
 </div>
+
 @section Scripts{
     <script>
         $(document).ready(function () {

@@ -260,7 +260,7 @@ public class CompanyController: Controller
                 
                 List<string> citiesNames = _companyService.ListCities(companyId, cityField.Country).Select(c=>c.CityName).ToList();
                 
-                Country countryObj = _companyService.RetrieveCountry(country);
+                Country countryObj = _companyService.RetrieveCountry(country, companyId);
                 
                 if (!citiesNames.Contains(cityName))
                 {

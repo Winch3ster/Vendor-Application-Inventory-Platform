@@ -33,6 +33,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             var data = new SoftwareIndexVM()
             {
                 returnedSoftwares = _dbContext.Softwares.ToList(),
+                
+                userClaims = ((ClaimsIdentity)User.Identity).Claims,
               
                 recentlyViewed = _dbContext.user_ViewHistories.Where(u_v => u_v.EmployeeId == 1).OrderByDescending(u_v => u_v.time).Select(u_v => u_v.U_V_Software).Distinct().ToList()    
             };
