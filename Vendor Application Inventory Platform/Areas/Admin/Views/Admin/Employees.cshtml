@@ -2,7 +2,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_AdminControlPanel";
-    ViewData["title"] = "Softwares";
+    ViewData["title"] = "Dashboard";
 }
 
 
@@ -33,14 +33,14 @@
                         <div class="d-flex justify-content-evenly employee-block-operation">
                             <div class="d-flex justify-content-center align-items-md-center">
                                 
-                                    @if (item.IsAdmin)
-                                    {
-                                        <p style="color: #4688F1" class="m-0 text-center">Admin</p>
-                                    }
-                                    else
-                                    {
-                                        <p style="color: #000000" class="m-0 text-center">User</p>
-                                    }
+                                @if (item.IsAdmin)
+                                {
+                                    <p style="color: #4688F1" class="m-0 text-center">Admin</p>
+                                }
+                                else
+                                {
+                                    <p style="color: #000000" class="m-0 text-center">User</p>
+                                }
                             </div>
                             <!--The ASP.Net will auto detect the actions "Create, Edit, Delete, Details" and we have to follow the set rules -->
                             <a class="btn btn-primary rounded-pill px-4" asp-controller="Employee" asp-action="Edit" asp-route-id="@item.EmployeeID"><i class="bi bi-pencil-square"></i> Edit</a>
@@ -63,6 +63,12 @@
 
 
 </div>
+
+@section Scripts{
+    <script >
+        $('#dashboard').removeClass('indicator-off');
+    </script>
+}
 
 
 

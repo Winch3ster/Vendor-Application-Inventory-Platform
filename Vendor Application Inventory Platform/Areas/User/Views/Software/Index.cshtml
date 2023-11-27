@@ -87,7 +87,6 @@
 </div>
 <div class="mt-5">
     <h3>Result(s)</h3>
-    <div id="filter" class="d-flex mb-2"></div>
     <div class="row gy-4">
 
         @foreach (var returnedSoftware in Model.returnedSoftwares)
@@ -117,24 +116,55 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            // Show filter selection on html page
-            $("input[type='checkbox']").on('change', function (e) {
-                if ($(e.target).is(':checked')) {
-                    $('#filter').append("<div class='mx-1 bg-secondary rounded px-2 text-white'>" + e.target.id + `<span class='bi bi-x'></span></div>`)
-                }
-                else {
-                    $('#filter').find("div:contains(" + e.target.id + ")").remove();
-                }
-            })
-
-            //Delete filter selection when X is clicked
-            $("#filter").on('click', '.bi-x', function () {
-                let label = $(this).closest('div').text().trim();
-                $('input#' + label).prop('checked', false);
-                $(this).closest('div').remove();
+            //append the selected filter to the url
+            $('#filterApplyBtn').on('click', function () {
+                let checkedList = $('#softwareTypeList input:checked').map(function () {
+                    return $(this).attr('id');
+                }).get();
+                let url = window.location.href;
+                    let newUrl = url.split('?')[0];
+                    let originalSearchString = getUrlParameter('searchString');
+                
+                    if (checkedList.length > 0 || originalSearchString) {
+                        newUrl += '?';
+                
+                        // Keep the original searchString if present
+                        if (originalSearchString) {
+                            newUrl += 'searchString=' + originalSearchString + '&';
+                        }
+                
+                        // Add new parameters based on selected checkboxes
+                        for (let i = 0; i < checkedList.length; i++) {
+                            newUrl += 'filter=' + checkedList[i] + '&';
+                        }
+                
+                        newUrl = newUrl.slice(0, -1);
+                    }
+                
+                    window.location.href = newUrl;
             });
+            
+            let filterList = getUrlParameter('filter');
+            if (filterList.length > 0) {
+                let filterArray = filterList.flat(); // flatten the array
+                for (let i = 0; i < filterArray.length; i++) {
+                    $('#' + filterArray[i]).prop('checked', true);
+                }
+            }
+
 
         })
+        
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            let regex = new RegExp('[\\?&]' + name + '=([^&#]*)', 'g');
+            let results = [];
+            let match;
+            while ((match = regex.exec(location.search)) !== null) {
+                results.push(decodeURIComponent(match[1].replace(/\+/g, ' ')));
+            }
+            return results;
+        }
 
 
         function NavigateToViewDetailsPage(softwareid) {

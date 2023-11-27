@@ -8,5 +8,6 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.ViewModels
         public List<Software> returnedSoftwares { get; set; }
         public List<Software> recentlyViewed { get; set; }
         public IEnumerable<Claim> userClaims { get; set; }
+        public List<SoftwareType> softwareTypes { get; set; }
     }
 }

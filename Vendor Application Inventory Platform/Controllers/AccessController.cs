@@ -35,7 +35,7 @@ public class AccessController : Controller
             }
             else
             {
-                return RedirectToAction("Index", "EmployeeUser");
+                return RedirectToAction("Index", "Software", new {area = "User"});
             }
         }
 

@@ -27,43 +27,60 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
         }
 
 
-        public IActionResult Index(string searchString)
+        public IActionResult Index(string searchString, List<string> filter)
         {
-            //Get all software and recently viewed
+            
+            // Get software type list
+            var softwareTypeList = _dbContext.SoftwareTypes.ToList();
+
+            // Get all software and recently viewed
             var data = new SoftwareIndexVM()
             {
                 returnedSoftwares = _dbContext.Softwares.ToList(),
-                
                 userClaims = ((ClaimsIdentity)User.Identity).Claims,
-              
-                recentlyViewed = _dbContext.user_ViewHistories.Where(u_v => u_v.EmployeeId == 1).OrderByDescending(u_v => u_v.time).Select(u_v => u_v.U_V_Software).Distinct().ToList()    
+                softwareTypes = softwareTypeList,
+                recentlyViewed = _dbContext.user_ViewHistories
+                    .Where(u_v => u_v.EmployeeId == 1)
+                    .OrderByDescending(u_v => u_v.time)
+                    .Select(u_v => u_v.U_V_Software)
+                    .Distinct()
+                    .ToList()
             };
 
-
             System.Diagnostics.Debug.WriteLine(searchString);
-              
+
             var softwares = from i in _dbContext.Softwares
-                            select i;
-            //If the search string is empty, then return all from database
-            //If the search string IS NOT EMPTY, return the result
+                select i;
+
+            // If the search string is not empty, apply the search filter
             if (!string.IsNullOrEmpty(searchString))
             {
-
                 softwares = softwares.Where(s => s.SoftwareName.Contains(searchString) || s.Description.Contains(searchString));
-                
-                data = new SoftwareIndexVM()
-                {
-                    returnedSoftwares = softwares.ToList(),
-
-                    recentlyViewed = _dbContext.user_ViewHistories.Where(u_v => u_v.EmployeeId == 1).OrderByDescending(u_v => u_v.time).Select(u_v => u_v.U_V_Software).Distinct().ToList()
-                };
             }
 
-            
+            // If there are filters selected, apply the filter
+            if (filter != null && filter.Any())
+            {
+                softwares = softwares
+                    .Where(s => s.Software_Types.Any(st => filter.Contains(st.softwareType.Type)));
 
+            }
 
+            // Update the data with the filtered result
+            data = new SoftwareIndexVM()
+            {
+                returnedSoftwares = softwares.ToList(),
+                userClaims = ((ClaimsIdentity)User.Identity).Claims,
+                softwareTypes = softwareTypeList,
+                recentlyViewed = _dbContext.user_ViewHistories
+                    .Where(u_v => u_v.EmployeeId == 1)
+                    .OrderByDescending(u_v => u_v.time)
+                    .Select(u_v => u_v.U_V_Software)
+                    .Distinct()
+                    .ToList()
+            };
 
-            //However, if the search string is not empty but the result is then render no result found in the view
+            // However, if the search string is not empty but the result is then render no result found in the view
             return View(data);
     
         }
