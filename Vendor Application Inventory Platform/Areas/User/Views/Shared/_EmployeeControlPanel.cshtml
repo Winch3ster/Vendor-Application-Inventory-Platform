@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -86,13 +88,27 @@
         <main role="main" class="container-fluid">
                 <!--Control Panel-->
                 <div class="control-panel-style pt-3 ps-2 row" style="z-index:999">
-                    <div id="control-panel" class="col-10 d-flex flex-column align-items-end">
+                    <div id="control-panel" class="col-10 d-flex flex-column align-items-center">
                         <div class="fs-4 mb-3 ms-4 mt-2">Criteria Selection</div>
-                        <ul class="list-unstyled">
-                            <li><input class="me-2" type="checkbox" id="finance"/>Finance</li>
-                            <li><input class="me-2" type="checkbox" id="management"/>Management</li>
-                            <li><input class="me-2" type="checkbox" id="investment"/>Investment</li>
-                            <li><input class="me-2" type="checkbox" id="technology"/>Technology</li>
+                        <ul id="softwareTypeList" class="list-unstyled">
+                            @if (Model is SoftwareIndexVM && Model?.softwareTypes != null)
+                            {
+                                int i = 0;
+                                @foreach(var type in Model.softwareTypes)
+                                {
+                                    @if (i > 10)
+                                    {
+                                        break;
+                                    }
+                                    <li><input class="me-2" type="checkbox" id="@type.Type"/>@type.Type</li>
+                                    i++;
+                                }
+                                <button id="filterApplyBtn" class="btn btn-secondary ms-2 mt-2">Apply</button>
+                                
+                            }
+                            else{
+                            <p class="ms-2">No Data Available</p>
+                            }
                         </ul>
                     </div>
                     

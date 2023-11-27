@@ -49,10 +49,10 @@
                 <span class="text-info">@Model.softwareRating</span>
             }   
             /5</div>
-        <div class="d-flex justify-content-evenly"> 
-            <button type="button" id="visitWebsite" data-link="@Model.websiteURL" class="btn btn-primary">Official Website</button>
+        <div class="d-flex"> 
+            <button type="button" id="visitWebsite" data-link="@Model.websiteURL" class="btn btn-primary text-nowrap me-1">Official Website</button>
 
-            <div class="dropdown">
+            <div class="dropdown me-1">
                 <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Generate Report
                 </button>
@@ -220,7 +220,7 @@
             <textarea class="form-control-light" placeholder="Your review..." id="userReview" for="userReview" name="userReview"></textarea>
             <span asp-validation-for="newReview.Description" class="text-danger"></span>
         </div>
-        <div class="col-12 d-flex justify-content-center"><button type="submit" class="btn btn-primary">Submit</button></div>
+        <div class="col-9 col-md-8 d-flex justify-content-center"><button type="submit" class="btn btn-primary">Submit</button></div>
     </form>
 
 
