@@ -89,7 +89,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             }
             await _service.AddAsync(employee);// If the data is valid, add to database (This Add() is from the service class)
 
-            _emailService.SendEmail("kingstonlee96@gmail.com","Created Employee", "Employee", employee.Email, "added");
+            _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Created Employee", "Employee", employee.Email, "added");
             //For testing purposes The email will be send to one of the developer's email
             //_notificationService.NotifyUser("kingstonlee96@gmail.com", "Create");
 
@@ -132,7 +132,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             //For testing purposes The email will be send to one of the developer's email
             //_notificationService.NotifyUser(, "View all employee");
             // Send email
-            _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Employee", employee.Email , "Edited" );
+            _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Employee Data Edit", "Employee", employee.Email , "Edited" );
 
             // Disconnect from the SMTP server after sending the email
             _emailService.Disconnect();
@@ -158,7 +158,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             await _service.DeleteAsync(id);
 
 
-            _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Employee", employee.Email, "removed");
+            _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Employee Data Edit", "Employee", employee.Email, "removed");
 
             // Disconnect from the SMTP server after sending the email
             _emailService.Disconnect();

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Security.Claims;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Enum;
@@ -222,7 +223,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 _changeLogService.AddChange(software.SoftwareName, Actions.added);
                 _hubContext.Clients.All.SendAsync("notification", "update");
 
-                _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", software.SoftwareName, "added");
+                _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Employee Data Edit", "Software", software.SoftwareName, "added");
 
 
 
@@ -349,7 +350,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                     _changeLogService.AddChange(software.SoftwareName, Actions.edited);
                     _hubContext.Clients.All.SendAsync("notification", "update");
 
-                    _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", software.SoftwareName, "edited");
+                    _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Software Added", "Software", software.SoftwareName, "edited");
 
           
 
@@ -357,10 +358,6 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                     ///
 
                     _services.UpdateSoftware(software.SoftwareID, updatedSoftware);
-
-                  
-
-
 
 
                     //store file to db
@@ -434,7 +431,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void DeleteSoftware(int id)
+        public IActionResult DeleteSoftware(int id)
         {
             _changeLogService.AddChangeDeleteSoftwareById(id, Actions.deleted);
             _services.deleteSoftware(id);
@@ -449,13 +446,13 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
 
 
-            _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", "A software", "removed");
+            _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Software Removed", "Software", "A software", "removed");
 
 
 
 
             ////////////////////////////////////////////////////
-
+            return RedirectToAction("Index");
         }
 
         public IActionResult ViewPdf(int id)

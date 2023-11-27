@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -89,7 +90,7 @@ public class CompanyController: Controller
             _changeLogService.AddChange(company.CompanyName, Actions.added);
             _hubContext.Clients.All.SendAsync("notification", "update");
 
-            _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", company.CompanyName, "added");
+            _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Company Added", "Company", company.CompanyName, "added");
 
 
 
@@ -371,7 +372,7 @@ public class CompanyController: Controller
 
 
 
-        _emailService.SendEmail("kingstonlee96@gmail.com", "Employee Data Edit", "Software", "A company", "removed");
+        _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Company Removed", "Company", "A company", "removed");
 
     
 
