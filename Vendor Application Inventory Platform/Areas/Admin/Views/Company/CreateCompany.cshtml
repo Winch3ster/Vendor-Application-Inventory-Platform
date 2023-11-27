@@ -88,6 +88,7 @@
                 e.preventDefault();
                 
                 $('#SubmitCompanyBtn').prop('disabled',true)
+                $('#SubmitCompanyBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>')
                 
                 let url;
                 let companyId = @((Model?.CompanyID) ?? -1);
@@ -135,10 +136,14 @@
                         error: function (data) {
                             alert(data.errors);
                         }
-                    }).done($('#SubmitCompanyBtn').prop('disabled',false));
+                    }).done(function (){
+                        $('#SubmitCompanyBtn').prop('disabled',false)
+                        $('#SubmitCompanyBtn').html('Next')
+                    });
                 }
                 else{
                     $('#SubmitCompanyBtn').prop('disabled',false);
+                    $('#SubmitCompanyBtn').html('Next')
                 }
             });
         });

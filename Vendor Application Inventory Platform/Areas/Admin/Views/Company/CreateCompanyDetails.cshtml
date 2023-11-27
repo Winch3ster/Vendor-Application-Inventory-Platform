@@ -108,7 +108,7 @@
   })
      
 
-  let deleteCities=[];
+  let deleteCities=[], ModelCitiesName=[], InputCitiesName=[], InputCities=[];
   function disableCountryInputs(){
     let countryInputs = $("[placeholder='Country']");
           countryInputs.each(function () {
@@ -235,6 +235,7 @@
                          if (Countries[i].Cities.length!==0){
                            for(let j=0; j< Countries[i].Cities.length;j++){
                              accordionForCities(value, Countries[i].Cities[j]);
+                             ModelCitiesName.push(Countries[i].Cities[j].CityName);
                            }
                          }
                          else{
@@ -432,7 +433,8 @@
   
   //Check if user pressed the final submit button
   $('#submitBtn').click(function (){
-    
+    InputCitiesName = [];
+    InputCities = [];
     //check is all the required field are filled
     let validate = true;
     
@@ -514,9 +516,19 @@
                    
         }
        
-       
+        //if one of the form is not submitted, submittedAll will be false, therefore alert wont be triggered
+        let submittedAll = true;
         $('.accordion-body > form').each(function (){
                      
+                     //Store cities name that are inputted by user
+                     InputCities.push({
+                        Country: $(this).find("input[name='country']").val(),
+                        City: $(this).find("input[name='cityName']").val()
+                      
+                     })
+                     
+                     InputCitiesName.push($(this).find("input[name='cityName']").val())
+                      
                      //Get the data for each of the form
                      const data = {
                        HasAddress: $(this).find(".address").prop("checked"),
@@ -552,21 +564,86 @@
                      
                      
                      if (deleteRequest===null){
-                       finalSubmit(data)
+                       let response = finalSubmit(data)
+                       if (!response){
+                         submittedAll=false;
+                       }
                      }
                      else{
                        deleteRequest.then(function (){
-                        finalSubmit(data)
+                        let response = finalSubmit(data)
+                          if (!response){
+                          submittedAll=false;
+                          }
                         })
                      }
                      
                    })
 
+        //Check if there are presented in model but doesnt exist in the inputted cities
+        let missingCities = findMissingCities(InputCitiesName,ModelCitiesName)
+        
+        //If there are missing cities, check if its in the deleteCities array
+        //if its exists in the deleteCities array, remove it from the missing cities array else triggered the deleteCity function
+        if (missingCities.length!==0){
+          for(let i =0; i<deleteCities.length; i++){
+            const cityToDelete = deleteCities[i].City;
+           
+            // Find the index of the city in missingCities array
+            const index = missingCities.findIndex(cityObj => cityObj.city === cityToDelete);
+            
+            // Remove the city from missingCities if it's found
+            if (index !== -1) {
+                missingCities.splice(index, 1);
+            }
+            
+          }
+          
+          //if there are still missing cities, trigger the deleteCity function
+          if (missingCities.length!==0){
+            let deleteCitiesArray = [];
+              for (let i =0; i<missingCities.length; i++){
+                let deleteCity = {
+                        Country: InputCities[missingCities[i].index].Country,
+                        City: missingCities[i].city
+                    };
+                
+                    deleteCitiesArray.push(deleteCity);
+                           
+              }
+              
+              let data = {
+                  deleteCities: deleteCitiesArray
+              };
+              
+              let csrfToken = $('.container-fluid > [name="__RequestVerificationToken"]').val();
+              $.ajax({
+                  type: 'POST',
+                  url: '@Url.Action("DeleteCities")' + "?id=" + id,
+                  data: JSON.stringify(data),
+                  dataType: 'json',
+                  contentType: 'application/json',
+                  headers: {
+                      'RequestVerificationToken': csrfToken
+                  },
+              });
+          }
+        }
+        if (submittedAll){
+           alert('Successfully submitted')
+        }
         }
        
   })
   
+  function findMissingCities(modelCitiesName, inputCitiesName){
+    return inputCitiesName
+            .map((city, index) => ({ city, index })) // Map each city to an object with city and index
+            .filter(({ city }) => !modelCitiesName.includes(city)); // Filter out cities present in modelCitiesName
+  }
+  
   function finalSubmit(data){
+    let response = true;
           $.post({
               url:'@Url.Action("CreateCities")' + "?id="+ id,
               data: JSON.stringify(data),
@@ -579,10 +656,15 @@
               success:function (data){
                 if (data.errors){
                   alert(`${data.errors}\n\nCountry: ${data.country}\nCity: ${data.city}`)
+                  response = false;
+                }
+                else{
+                  response = true;
                 }
               },
               error:function (){
                 alert('Failed to submit, please try again')
+                response = false;
               }
           }).done(function (){
             let submitBtn = $('#submitBtn');
@@ -590,6 +672,8 @@
             submitBtn.children('span').removeClass('d-none');
             $('.spinner-border').addClass('d-none');
           })
+          
+          return response;
             
   }
     </script>
