@@ -27,10 +27,10 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             _services = s;
             _configuration = configuration;
             _changeLogService = changeLogService;
-            _emailService = emailService;   
+            _emailService = emailService;
             _hubContext = hubContext;
         }
-        
+
         [Route("~/Software")]
         [Route("~/Software/Index")]
         public IActionResult Index()
@@ -47,9 +47,9 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 SoftwareTypes = _services.GetSoftwareTypeNames(software.SoftwareID),
                 SoftwareModules = _services.GetModuleNames(software.SoftwareID),
                 BusinessAreas = _services.GetBusinessAreaNames(software.SoftwareID)
-                
+
             }).ToList();
-            
+
             return View(viewModelList);
         }
 
@@ -114,7 +114,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateSoftware()
         {
-          
+
 
             if (ModelState.IsValid)
             {
@@ -135,7 +135,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 {
                     Directory.CreateDirectory(uploadsFolderPath);
                 }
-                
+
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     imageFile.CopyTo(stream);
@@ -151,7 +151,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 var description = HttpContext.Request.Form["Description"];
                 var cloudOption = HttpContext.Request.Form["CloudOption"];
                 var file = HttpContext.Request.Form.Files["File"];
-                
+
                 var businessArea = HttpContext.Request.Form["BusinessArea[]"].Select(int.Parse).ToList();
                 var softwareType = HttpContext.Request.Form["SoftwareTypes[]"].Select(int.Parse).ToList();
                 var modules = HttpContext.Request.Form["Modules[]"].Select(int.Parse).ToList();
@@ -159,61 +159,61 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
 
                 //check is business area is null
-                
-            if (businessArea.Count!=0)
-            {
-                bool hasDuplicate = businessArea.Count != businessArea.Distinct().Count();
-                if (hasDuplicate)
+
+                if (businessArea.Count != 0)
                 {
-                    return Json(new { success = false, message = "Duplicate Value in Business Area Field" });
+                    bool hasDuplicate = businessArea.Count != businessArea.Distinct().Count();
+                    if (hasDuplicate)
+                    {
+                        return Json(new { success = false, message = "Duplicate Value in Business Area Field" });
+                    }
                 }
-            }
-            
-            //check if software types is null
-            if (softwareType.Count!=0)
-            {
-                bool hasDuplicate = softwareType.Count != softwareType.Distinct().Count();
-                if (hasDuplicate)
+
+                //check if software types is null
+                if (softwareType.Count != 0)
                 {
-                    return Json(new { success = false, message = "Duplicate Value in Software Type Field" });
+                    bool hasDuplicate = softwareType.Count != softwareType.Distinct().Count();
+                    if (hasDuplicate)
+                    {
+                        return Json(new { success = false, message = "Duplicate Value in Software Type Field" });
+                    }
                 }
-            }
-            
-            //check if modules is null
-            if(modules.Count!=0)
-            {
-                bool hasDuplicate = modules.Count != modules.Distinct().Count();
-                if (hasDuplicate)
+
+                //check if modules is null
+                if (modules.Count != 0)
                 {
-                    return Json(new { success = false, message = "Duplicate Value in Software Modules Field" });
+                    bool hasDuplicate = modules.Count != modules.Distinct().Count();
+                    if (hasDuplicate)
+                    {
+                        return Json(new { success = false, message = "Duplicate Value in Software Modules Field" });
+                    }
                 }
-            }
-            
-            //check if financial is null
-            
-            if(financial.Count!=0)
-            {
-                bool hasDuplicate = financial.Count != financial.Distinct().Count();
-                if (hasDuplicate)
+
+                //check if financial is null
+
+                if (financial.Count != 0)
                 {
-                    return Json(new
+                    bool hasDuplicate = financial.Count != financial.Distinct().Count();
+                    if (hasDuplicate)
+                    {
+                        return Json(new
                         { success = false, message = "Duplicate Value in Financial Service Client Type Field" });
+                    }
                 }
-            }
-            
-            
-            
-            var software = new Software()
-            {
-                SoftwareName = softwareName,
-                Description = description,
-                Cloud = Enum.Parse<CloudType>(cloudOption, true),
-                DocumentAttached = file != null,
-                CompanyID = companyId,
-                ImagePath = relativeImagePath
-            };
-            
-            var createdSoftware = _services.CreateNewSoftware(software);
+
+
+
+                var software = new Software()
+                {
+                    SoftwareName = softwareName,
+                    Description = description,
+                    Cloud = Enum.Parse<CloudType>(cloudOption, true),
+                    DocumentAttached = file != null,
+                    CompanyID = companyId,
+                    ImagePath = relativeImagePath
+                };
+
+                var createdSoftware = _services.CreateNewSoftware(software);
                 ////////////////////////////////////////////////////
                 ///
 
@@ -236,33 +236,34 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
                 //store file to db
                 if (file != null)
-            {
-                if (createdSoftware != null)
                 {
-                    using var memoryStream = new MemoryStream();
-                    file.CopyTo(memoryStream);
-                    var pdfDocument = new PdfDocument()
+                    if (createdSoftware != null)
                     {
-                        FileName = file.FileName,
-                        Content = memoryStream.ToArray(),
-                        softwareId = createdSoftware.SoftwareID
-                    };
-                    _services.CreatePdf(pdfDocument);
+                        using var memoryStream = new MemoryStream();
+                        file.CopyTo(memoryStream);
+                        var pdfDocument = new PdfDocument()
+                        {
+                            FileName = file.FileName,
+                            Content = memoryStream.ToArray(),
+                            softwareId = createdSoftware.SoftwareID
+                        };
+                        _services.CreatePdf(pdfDocument);
+                    }
+
                 }
-                
-            }
-            
-            _services.Link_Software_Type(createdSoftware.SoftwareID, softwareType);
-            _services.Link_Software_Area(createdSoftware.SoftwareID, businessArea);
-            _services.Link_Software_Module(createdSoftware.SoftwareID, modules);
-            _services.Link_Software_Financial(createdSoftware.SoftwareID, financial);
-            
-            
+
+                _services.Link_Software_Type(createdSoftware.SoftwareID, softwareType);
+                _services.Link_Software_Area(createdSoftware.SoftwareID, businessArea);
+                _services.Link_Software_Module(createdSoftware.SoftwareID, modules);
+                _services.Link_Software_Financial(createdSoftware.SoftwareID, financial);
+
+
                 return Json(new { success = true, message = "Software Created" });
             }
 
             return Json(new { success = false, message = "Failed to create software" });
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -276,71 +277,139 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 var cloudOption = HttpContext.Request.Form["CloudOption"];
                 var file = HttpContext.Request.Form.Files["File"];
                 var image = HttpContext.Request.Form.Files["Image"];
-                
-                
+
+
                 var businessArea = HttpContext.Request.Form["BusinessArea[]"].Select(int.Parse).ToList();
                 var softwareType = HttpContext.Request.Form["SoftwareTypes[]"].Select(int.Parse).ToList();
                 var modules = HttpContext.Request.Form["Modules[]"].Select(int.Parse).ToList();
                 var financial = HttpContext.Request.Form["FinancialServiceClientType[]"].Select(int.Parse).ToList();
 
 
+
+                var imageFile = HttpContext.Request.Form.Files["Image"];
+                System.Diagnostics.Debug.WriteLine(imageFile);
+
+
+
+
+
                 //check is business area is null
-                
-            if (businessArea.Count!=0)
-            {
-                bool hasDuplicate = businessArea.Count != businessArea.Distinct().Count();
-                if (hasDuplicate)
+
+                if (businessArea.Count != 0)
                 {
-                    return Json(new { success = false, message = "Duplicate Value in Business Area Field" });
+                    bool hasDuplicate = businessArea.Count != businessArea.Distinct().Count();
+                    if (hasDuplicate)
+                    {
+                        return Json(new { success = false, message = "Duplicate Value in Business Area Field" });
+                    }
                 }
-            }
-            
-            //check if software types is null
-            if (softwareType.Count!=0)
-            {
-                bool hasDuplicate = softwareType.Count != softwareType.Distinct().Count();
-                if (hasDuplicate)
+
+                //check if software types is null
+                if (softwareType.Count != 0)
                 {
-                    return Json(new { success = false, message = "Duplicate Value in Software Type Field" });
+                    bool hasDuplicate = softwareType.Count != softwareType.Distinct().Count();
+                    if (hasDuplicate)
+                    {
+                        return Json(new { success = false, message = "Duplicate Value in Software Type Field" });
+                    }
                 }
-            }
-            
-            //check if modules is null
-            if(modules.Count!=0)
-            {
-                bool hasDuplicate = modules.Count != modules.Distinct().Count();
-                if (hasDuplicate)
+
+                //check if modules is null
+                if (modules.Count != 0)
                 {
-                    return Json(new { success = false, message = "Duplicate Value in Software Modules Field" });
+                    bool hasDuplicate = modules.Count != modules.Distinct().Count();
+                    if (hasDuplicate)
+                    {
+                        return Json(new { success = false, message = "Duplicate Value in Software Modules Field" });
+                    }
                 }
-            }
-            
-            //check if financial is null
-            
-            if(financial.Count!=0)
-            {
-                bool hasDuplicate = financial.Count != financial.Distinct().Count();
-                if (hasDuplicate)
+
+                //check if financial is null
+
+                if (financial.Count != 0)
                 {
-                    return Json(new
+                    bool hasDuplicate = financial.Count != financial.Distinct().Count();
+                    if (hasDuplicate)
+                    {
+                        return Json(new
                         { success = false, message = "Duplicate Value in Financial Service Client Type Field" });
+                    }
                 }
-            }
 
-            
-            int softwareId = id ?? 0;
-            var software = _services.FindSoftware(softwareId);
+                int softwareId = id ?? 0;
+                var software = _services.FindSoftware(softwareId);
 
-            if (software != null)
-            {
-                var updatedSoftware = new Software()
+                //Check if a new image is uploaded 
+                string imagePath = software.ImagePath;
+
+                if (imageFile != null)
                 {
-                    SoftwareName = softwareName,
-                    Description = description,
-                    Cloud = Enum.Parse<CloudType>(cloudOption, true),
-                    DocumentAttached = file !=null,
-                    CompanyID = companyId
-                };
+
+                    var uploadFolder = _configuration.GetValue<string>("ImagesUploadSettings:UploadFolder");
+                    System.Diagnostics.Debug.WriteLine(uploadFolder);
+
+                    var uploadsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                    System.Diagnostics.Debug.WriteLine(uploadsFolderPath);
+
+                    //delete the old image
+                    string filePath = Path.Combine(uploadsFolderPath, imagePath);
+                    System.Diagnostics.Debug.WriteLine(filePath);
+
+                    try
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    catch (IOException ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error deleting file: {ex.Message}");
+
+                    }
+
+
+
+                    //set the new image
+                    uploadsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", uploadFolder);
+                    System.Diagnostics.Debug.WriteLine(imageFile);
+
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                    var newfilePath = Path.Combine(uploadsFolderPath, uniqueFileName); //Create an absolute path to the image (including C:/.... )
+                    newfilePath = newfilePath.Replace("\\", "/");
+                    System.Diagnostics.Debug.WriteLine(newfilePath);
+
+                    if (!Directory.Exists(uploadsFolderPath))
+                    {
+                        Directory.CreateDirectory(uploadsFolderPath);
+                    }
+
+                    using (var stream = new FileStream(newfilePath, FileMode.Create))
+                    {
+                        imageFile.CopyTo(stream);
+                    }
+                    // Construct the relative file path
+                    var newRelativeImagePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                    System.Diagnostics.Debug.WriteLine(newRelativeImagePath);
+                    imagePath = newRelativeImagePath;
+                }
+
+
+                System.Diagnostics.Debug.WriteLine(imagePath);
+
+                if (software != null)
+                {
+                    var updatedSoftware = new Software()
+                    {
+                        SoftwareName = softwareName,
+                        Description = description,
+                        Cloud = Enum.Parse<CloudType>(cloudOption, true),
+                        DocumentAttached = file != null,
+                        CompanyID = companyId,
+                        ImagePath = imagePath
+                    };
+
+
+                    _services.UpdateSoftware(software.SoftwareID, updatedSoftware);
+
 
                     ///////////////////////////////////////////////////////////
 
@@ -352,16 +421,16 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
                     _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Software Updated", "Software", software.SoftwareName, "edited");
 
-          
+
 
                     ////////////////////////////////////////////////////
                     ///
 
-                    _services.UpdateSoftware(software.SoftwareID, updatedSoftware);
+                
 
 
-                    //store file to db
-                    if (file != null)
+                //store file to db
+                if (file != null)
                 {
                     using var memoryStream = new MemoryStream();
                     file.CopyTo(memoryStream);
@@ -374,7 +443,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                     _services.CreatePdf(pdfDocument);
 
                 }
-                        
+
                 _services.Link_Software_Type(softwareId, softwareType);
                 _services.Link_Software_Area(softwareId, businessArea);
                 _services.Link_Software_Module(softwareId, modules);
@@ -385,13 +454,14 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Software not found" });
             }
 
-                
 
-                return Json(new { success = true, message = "Software Updated" });
-            }
+
+            return Json(new { success = true, message = "Software Updated" });
+        }
 
             return Json(new { success = false, message = "Failed to update software" });
         }
+    
 
         [HttpPost]
         [ValidateAntiForgeryToken]

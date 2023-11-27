@@ -1,4 +1,5 @@
-﻿using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
+﻿using QuestPDF.Infrastructure;
+using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Enum;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Models;
@@ -9,11 +10,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
     {
         
         private readonly AppDbContext _db;
-       
-        public SoftwareServices(AppDbContext db)
+        private readonly IConfiguration _configuration; //To get the upload file path
+        public SoftwareServices(AppDbContext db, IConfiguration configuration)
         {
             _db = db;
-           
+            _configuration = configuration; 
         }
 
         public List<Company?> ListAllCompanies()
@@ -301,7 +302,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
                 existingSoftware.CompanyID = software.CompanyID;
                 existingSoftware.Cloud = software.Cloud;
                 existingSoftware.DocumentAttached = software.DocumentAttached;
-
+                existingSoftware.ImagePath = software.ImagePath;
                 _db.SaveChanges();
 
 
@@ -316,6 +317,32 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
             
             if (existingSoftware != null)
             {
+                //Delete the image in ther server
+
+                // Delete the physical file from the server
+               
+
+                var uploadFolder = _configuration.GetValue<string>("ImagesUploadSettings:UploadFolder");
+                System.Diagnostics.Debug.WriteLine(uploadFolder);
+
+                var uploadsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                
+
+                string filePath = Path.Combine(uploadsFolderPath, existingSoftware.ImagePath);
+                System.Diagnostics.Debug.WriteLine(filePath);
+
+                try
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                catch (IOException ex)
+                {
+                     System.Diagnostics.Debug.WriteLine($"Error deleting file: {ex.Message}");
+                    
+                }
+
+
+
                 _db.Softwares.Remove(existingSoftware);
                 _db.SaveChanges();
 
