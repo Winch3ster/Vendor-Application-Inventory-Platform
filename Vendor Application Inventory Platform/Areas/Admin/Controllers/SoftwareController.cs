@@ -350,7 +350,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                     _changeLogService.AddChange(software.SoftwareName, Actions.edited);
                     _hubContext.Clients.All.SendAsync("notification", "update");
 
-                    _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Software Added", "Software", software.SoftwareName, "edited");
+                    _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Software Updated", "Software", software.SoftwareName, "edited");
 
           
 
