@@ -16,9 +16,7 @@
 
         public bool InternalProfessionalServices { get; set; }
 
-        public DateTime LastDemoDate { get; set; }
-        public DateTime LastReviewDate { get; set; }
-
+     
         public List<Software> Softwares { get; set; }
         public List<Company_Country> Company_Countries { get; set; }
 

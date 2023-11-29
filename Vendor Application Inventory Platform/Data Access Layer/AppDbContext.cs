@@ -48,6 +48,11 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
         //USed to track changes made to software and company data
         public DbSet<ChangeLog> changeLogs { get; set; }
 
+
+        public DbSet<SoftwareToBeReviewed> softwareToBeRevieweds { get; set; }
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

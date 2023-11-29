@@ -29,7 +29,9 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
 
         public IActionResult Index(string searchString, List<string> filter)
         {
-            
+            var userEmail = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentlySignedInUser = _dbContext.Employees.FirstOrDefault(e => e.Email == userEmail);
+
             // Get software type list
             var softwareTypeList = _dbContext.SoftwareTypes.ToList();
 
@@ -40,10 +42,10 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                 userClaims = ((ClaimsIdentity)User.Identity).Claims,
                 softwareTypes = softwareTypeList,
                 recentlyViewed = _dbContext.user_ViewHistories
-                    .Where(u_v => u_v.EmployeeId == 1)
+                    .Where(u_v => u_v.EmployeeId == currentlySignedInUser.EmployeeID)
                     .OrderByDescending(u_v => u_v.time)
                     .Select(u_v => u_v.U_V_Software)
-                    .Distinct()
+                    .Distinct().Take(6)
                     .ToList()
             };
 
@@ -73,10 +75,10 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                 userClaims = ((ClaimsIdentity)User.Identity).Claims,
                 softwareTypes = softwareTypeList,
                 recentlyViewed = _dbContext.user_ViewHistories
-                    .Where(u_v => u_v.EmployeeId == 1)
+                    .Where(u_v => u_v.EmployeeId == currentlySignedInUser.EmployeeID)
                     .OrderByDescending(u_v => u_v.time)
                     .Select(u_v => u_v.U_V_Software)
-                    .Distinct()
+                    .Distinct().Take(6)
                     .ToList()
             };
 
@@ -121,8 +123,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                 CompanyEstablished = retrivedCompany.EstablishedDate,
                 NumberOfEmployees = retrivedCompany.NumberOfEmployee,
                 InternalProfessionalServices = retrivedCompany.InternalProfessionalServices,
-                LastDemoDate = retrivedCompany.LastDemoDate,
-                LastReviewDate = retrivedCompany.LastReviewDate,
+   
                 Cloud = retrivedSoftware.Cloud,
                 rating = retrivedSoftware.rating,
                 WebsiteURL = retrivedCompany.WebsiteURL,
@@ -169,7 +170,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
             System.Diagnostics.Debug.WriteLine($"{software?.SoftwareName}");
 
             int companyId = software.CompanyID;
-            var businessAreasList = _dbContext.Software_Areas.Where(s_a => s_a.softwareID == 1).Select(s_a => s_a.businessArea).ToList();
+            var businessAreasList = _dbContext.Software_Areas.Where(s_a => s_a.softwareID == softwareid).Select(s_a => s_a.businessArea).ToList();
             //var typeList = _dbContext.Software_Types.Where(s_t => s_t.softwareID == softwareId).Select(s_t => s_t.softwareType).ToList();
             //var financialServicesList = _dbContext.Software_FinancialServicesClientTypes.Where(s_fs => s_fs.softwareID == softwareId).Select(s_fs => s_fs.financialServicesClientType).ToList();    
 
@@ -371,8 +372,6 @@ namespace Vendor_Application_Inventory_Platform.Areas.User.Controllers
                 CompanyEstablished = retrivedCompany.EstablishedDate,
                 NumberOfEmployees = retrivedCompany.NumberOfEmployee,
                 InternalProfessionalServices = retrivedCompany.InternalProfessionalServices,
-                LastDemoDate = retrivedCompany.LastDemoDate,
-                LastReviewDate = retrivedCompany.LastReviewDate,
                 Cloud = retrivedSoftware.Cloud,
 
                 //List

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 
@@ -11,9 +12,11 @@ using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 namespace Vendor_Application_Inventory_Platform.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231129152859_movedReviewDateToBeReviewed")]
+    partial class movedReviewDateToBeReviewed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,6 +141,12 @@ namespace Vendor_Application_Inventory_Platform.Migrations
 
                     b.Property<bool>("InternalProfessionalServices")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastDemoDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastReviewDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("NumberOfEmployee")
                         .HasColumnType("int");
@@ -364,12 +373,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastDemoDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("LastReviewDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("NotificationDays")
                         .HasColumnType("int");
 
@@ -402,24 +405,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                     b.HasKey("SoftwareModuleID");
 
                     b.ToTable("SoftwareModules");
-                });
-
-            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.SoftwareToBeReviewed", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int>("SoftwareID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("SoftwareID");
-
-                    b.ToTable("softwareToBeRevieweds");
                 });
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.SoftwareType", b =>
@@ -637,17 +622,6 @@ namespace Vendor_Application_Inventory_Platform.Migrations
                         .IsRequired();
 
                     b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.SoftwareToBeReviewed", b =>
-                {
-                    b.HasOne("Vendor_Application_Inventory_Platform.Models.Software", "software")
-                        .WithMany()
-                        .HasForeignKey("SoftwareID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("software");
                 });
 
             modelBuilder.Entity("Vendor_Application_Inventory_Platform.Models.Software_Area", b =>

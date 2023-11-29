@@ -14,8 +14,6 @@ public class CreateCompanyField
     
     public string InternalProfessionalServices { get; set; }
     
-    public string LastDemoDate { get; set; }
-    
-    public string LastReviewDate { get; set; }
+
     
 }

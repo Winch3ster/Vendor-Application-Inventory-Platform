@@ -21,13 +21,19 @@ namespace Vendor_Application_Inventory_Platform.Models
 
         //Set the software rating by taking the average rating 
         public float rating { get; set; }
+        
 
         //The software image will be stored in the server. Only the path to the image is stored in the database
         [Required]
         public string ImagePath { get; set; }
 
 
+        public DateTime LastDemoDate { get; set; }
+        public DateTime LastReviewDate { get; set; }
 
+
+        //Indicate how many days have passed to review again
+        public int NotificationDays { get; set; }
 
         //Entity Relationships
         public List<Software_Area> Software_Areas { get; set; }

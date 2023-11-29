@@ -3,6 +3,7 @@ using Vendor_Application_Inventory_Platform.Areas.User.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Enum;
 using Vendor_Application_Inventory_Platform.Data_Access_Layer;
 using Vendor_Application_Inventory_Platform.Models;
+using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 {
@@ -371,6 +372,36 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
             }
 
             return _db.PdfDocuments.FirstOrDefault(pdf => pdf.softwareId == softwareId);
+        }
+
+        public List<Software> GetSoftwareToBeReviewed()
+        {
+            var result = _db.softwareToBeRevieweds.Select(s => s.software).ToList();
+            return result;
+        }
+
+        public Software GetSoftwareById(int softwareId)
+        {
+            System.Diagnostics.Debug.WriteLine($"softwareId: {softwareId}");
+            var result = _db.Softwares.FirstOrDefault(s => s.SoftwareID == softwareId);
+            System.Diagnostics.Debug.WriteLine($"result: {result}");
+            return result;
+        }
+
+        public void MarkAsReviewed(Software software)
+        {
+            System.Diagnostics.Debug.WriteLine($"Software received: {software}");
+            var tobeRemoved = _db.softwareToBeRevieweds.Where(s => s.software == software).ToList();
+            System.Diagnostics.Debug.WriteLine($"tobeRemoved count: {tobeRemoved.Count()}");
+            _db.softwareToBeRevieweds.RemoveRange(tobeRemoved);
+            _db.SaveChanges();
+        }
+
+        public void UpdateLastReviewDate(Software software)
+        {
+            var s = _db.Softwares.FirstOrDefault(s => s.SoftwareID == software.SoftwareID);
+            s.LastReviewDate = DateTime.Now;
+            _db.SaveChanges();  
         }
 
     }

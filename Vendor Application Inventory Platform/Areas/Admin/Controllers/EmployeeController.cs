@@ -144,7 +144,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Employee Data Edit", "Employee", employee.Email , "Edited" );
 
             // Disconnect from the SMTP server after sending the email
-            _emailService.Disconnect();
+       
 
             await _service.UpdateAsync(employee.EmployeeID, employee);// If the data is valid, add to database (This Add() is from the service class)
             
@@ -178,8 +178,8 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
 
             _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Employee Data Edit", "Employee", employee.Email, "removed");
 
-            // Disconnect from the SMTP server after sending the email
-            _emailService.Disconnect();
+          
+           
 
             var isAdminClaim = User.FindFirstValue("isAdmin");
             if(isAdminClaim == "true")

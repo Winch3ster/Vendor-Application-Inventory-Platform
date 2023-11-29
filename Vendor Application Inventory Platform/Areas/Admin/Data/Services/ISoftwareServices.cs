@@ -48,5 +48,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
         
         public void deleteSoftware(int softwareId);
 
+
+        public List<Software> GetSoftwareToBeReviewed();
+
+        public Software GetSoftwareById(int softwareId);
+        public void MarkAsReviewed(Software software);
+        public void UpdateLastReviewDate(Software software);
     }
 }

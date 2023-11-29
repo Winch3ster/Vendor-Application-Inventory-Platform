@@ -12,4 +12,9 @@ public class CreateSoftwareViewModel
     public string ImagePath { get; set; }
 
 
+    public DateTime LastDemoDate { get; set; }
+    public DateTime LastReviewDate { get; set; }
+    public int NotificationDays { get; set; }
+
+
 }

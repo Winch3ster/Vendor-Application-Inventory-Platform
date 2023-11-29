@@ -21,12 +21,12 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 //context is like an instance of the database
                 context.Database.EnsureCreated();
 
-                var hashedPassword = BCrypt.Net.BCrypt.HashPassword("abc123");
+                //var hashedPassword = BCrypt.Net.BCrypt.HashPassword("abc123");
 
                 //Check if employee table is empty
 
                 //if the table is empty, add employee data
-                 
+                 /*
                  context.Employees.AddRange(new List<Employee>()
                  {
                      new Employee()
@@ -54,7 +54,7 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                  });
                  context.SaveChanges();
 
-                 
+                */
                 /*
           
                  List<BusinessArea> businessAreaList = new List<BusinessArea>()
@@ -870,9 +870,10 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
 
                 */
 
-                
-                
+
+
                 //Seed changeLog
+                /*
                 List<ChangeLog> changes = new List<ChangeLog>() {
                     new ChangeLog() {
                         EntityName = "Bitsey Studio",
@@ -885,9 +886,26 @@ namespace Vendor_Application_Inventory_Platform.Data_Access_Layer
                 context.AddRange(changes);
 
                 context.SaveChanges();  
-                
-                
-               
+                */
+
+                var software = context.Softwares.FirstOrDefault(s => s.SoftwareID == 1);
+                var software2 = context.Softwares.FirstOrDefault(s => s.SoftwareID == 2);
+                //Seed to be reviewed 
+                List<SoftwareToBeReviewed> tobereviewed = new List<SoftwareToBeReviewed>()
+                {
+                    new SoftwareToBeReviewed()
+                    {
+                        software = software
+                    },
+                    new SoftwareToBeReviewed()
+                    {
+                        software = software2
+                    },
+
+                };
+
+                context.softwareToBeRevieweds.AddRange(tobereviewed);
+                context.SaveChanges();
                 /*
                 var employee1 = context.Employees.FirstOrDefault(e => e.EmployeeID == 1);
                 employee1.LastRetrieveChangeLog = DateTime.Now;

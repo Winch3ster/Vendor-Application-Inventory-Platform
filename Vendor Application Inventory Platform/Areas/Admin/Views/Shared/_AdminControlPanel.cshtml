@@ -114,6 +114,14 @@
 
                         </li>
 
+                        <li>
+                            <div class="admin-navigation-block">
+                                <div id="add-company" class="indicator indicator-off"></div>
+                                <a class="text-decoration-none text-black" asp-area="Admin" asp-controller="Software" asp-action="ReviewSoftware">Reviews <span id="number-of-software-to-be-reviewed" class="text-danger" style="margin-left: 10px"></span></a>
+                            </div>
+
+                        </li>
+
                     </ul>
                     <div class="admin-navigation-actions-block">
                         <a asp-controller="Access" asp-action="LogOut" class="btn btn-primary rounded-pill">Sign Out</a>
@@ -203,4 +211,25 @@
         $('.bi-arrow-right').removeClass('d-none')
     }
 
+    function GetSoftwareToBeReviewed(){
+        console.log("Getting the number of software to be reviewed")
+
+        fetch('https://localhost:7050/api/SoftwareToBeReviewed/')
+            .then(response => {
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+
+                var display = document.getElementById('number-of-software-to-be-reviewed')
+                display.innerText = data
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    GetSoftwareToBeReviewed()
 </script>

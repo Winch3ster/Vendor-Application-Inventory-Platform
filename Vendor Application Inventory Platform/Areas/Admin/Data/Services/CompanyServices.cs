@@ -213,8 +213,7 @@ public class CompanyServices : ICompanyServices
             EstablishedDate = DateTime.Parse(createCompanyField.EstablishedDate),
             NumberOfEmployee = int.Parse(createCompanyField.NumberOfEmployee),
             InternalProfessionalServices = bool.Parse(createCompanyField.InternalProfessionalServices),
-            LastDemoDate = DateTime.Parse(createCompanyField.LastDemoDate),
-            LastReviewDate = DateTime.Parse(createCompanyField.LastReviewDate) 
+  
         };
 
         _db.Companies.Add(newCompany);
@@ -237,8 +236,7 @@ public class CompanyServices : ICompanyServices
             company.EstablishedDate = DateTime.Parse(createCompanyField.EstablishedDate);
             company.NumberOfEmployee = int.Parse(createCompanyField.NumberOfEmployee);
             company.InternalProfessionalServices = bool.Parse(createCompanyField.InternalProfessionalServices);
-            company.LastDemoDate = DateTime.Parse(createCompanyField.LastDemoDate);
-            company.LastReviewDate = DateTime.Parse(createCompanyField.LastReviewDate);
+
 
             _db.SaveChanges();
 

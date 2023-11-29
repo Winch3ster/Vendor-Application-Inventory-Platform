@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services;
 using Vendor_Application_Inventory_Platform.Areas.Admin.ViewModels;
 using Vendor_Application_Inventory_Platform.Data.Enum;
+using Vendor_Application_Inventory_Platform.Migrations;
 using Vendor_Application_Inventory_Platform.Models;
 
 namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
@@ -62,6 +63,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             var softwareTypes = _services.ListAllSoftwareType();
             var pdfDocument = _services.GetPdf(id ?? 0);
 
+
             // Create the ViewModel and populate it with the retrieved data
             var viewModel = new CreateSoftwareViewModel
             {
@@ -70,6 +72,11 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 SoftwareModules = softwareModules,
                 FinancialServicesClientTypes = financialServicesClientTypes,
                 SoftwareTypes = softwareTypes
+
+
+                //public DateTime LastDemoDate { get; set; }
+                //public DateTime LastReviewDate { get; set; }
+                //public int NotificationDays { get; set; }
             };
 
             if (id != null && id != 0)
@@ -152,6 +159,19 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 var cloudOption = HttpContext.Request.Form["CloudOption"];
                 var file = HttpContext.Request.Form.Files["File"];
 
+
+                var lastDemoDate = HttpContext.Request.Form["LastDemoDate"];
+                var lastReviewDate = HttpContext.Request.Form["LastReviewDate"];
+
+
+                // Convert the string values to DateTime if needed
+                DateTime parsedLastDemoDate = DateTime.Parse(lastDemoDate);
+                DateTime parsedLastReviewDate = DateTime.Parse(lastReviewDate);
+
+
+
+
+
                 var businessArea = HttpContext.Request.Form["BusinessArea[]"].Select(int.Parse).ToList();
                 var softwareType = HttpContext.Request.Form["SoftwareTypes[]"].Select(int.Parse).ToList();
                 var modules = HttpContext.Request.Form["Modules[]"].Select(int.Parse).ToList();
@@ -210,7 +230,9 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                     Cloud = Enum.Parse<CloudType>(cloudOption, true),
                     DocumentAttached = file != null,
                     CompanyID = companyId,
-                    ImagePath = relativeImagePath
+                    ImagePath = relativeImagePath,
+                    LastReviewDate = parsedLastDemoDate,
+                    LastDemoDate = parsedLastReviewDate
                 };
 
                 var createdSoftware = _services.CreateNewSoftware(software);
@@ -284,10 +306,18 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 var modules = HttpContext.Request.Form["Modules[]"].Select(int.Parse).ToList();
                 var financial = HttpContext.Request.Form["FinancialServiceClientType[]"].Select(int.Parse).ToList();
 
-
+                var NotificationDays = int.Parse(HttpContext.Request.Form["NotifyDays"]);
 
                 var imageFile = HttpContext.Request.Form.Files["Image"];
                 System.Diagnostics.Debug.WriteLine(imageFile);
+
+                var lastDemoDate = HttpContext.Request.Form["LastDemoDate"];
+                var lastReviewDate = HttpContext.Request.Form["LastReviewDate"];
+
+
+                // Convert the string values to DateTime if needed
+                DateTime parsedLastDemoDate = DateTime.Parse(lastDemoDate);
+                DateTime parsedLastReviewDate = DateTime.Parse(lastReviewDate);
 
 
 
@@ -404,7 +434,10 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                         Cloud = Enum.Parse<CloudType>(cloudOption, true),
                         DocumentAttached = file != null,
                         CompanyID = companyId,
-                        ImagePath = imagePath
+                        ImagePath = imagePath,
+                        LastReviewDate = parsedLastDemoDate,
+                        LastDemoDate = parsedLastDemoDate,
+                        NotificationDays = NotificationDays
                     };
 
 
@@ -462,6 +495,49 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             return Json(new { success = false, message = "Failed to update software" });
         }
     
+
+
+
+
+        public IActionResult ReviewSoftware()
+        {
+            var result = _services.GetSoftwareToBeReviewed();
+
+            var data = new ToBeReviewedSoftwareVM()
+            {
+               
+                Softwares = result
+            };
+
+
+            return View(data);
+        }
+
+        public IActionResult MarkReviewed(int id)
+        {
+            System.Diagnostics.Debug.WriteLine($"Received id: {id}");
+            var result = _services.GetSoftwareById(id);
+            System.Diagnostics.Debug.WriteLine($"Result Count: {result}");
+
+            //If doesnt exist return message
+            if (result == null)
+            {
+                return RedirectToAction(nameof(ReviewSoftware));
+            }
+            _services.UpdateLastReviewDate(result);
+            _services.MarkAsReviewed(result);
+
+
+            return RedirectToAction(nameof(ReviewSoftware));
+        }
+
+
+
+
+
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

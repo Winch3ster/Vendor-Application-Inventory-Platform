@@ -146,8 +146,22 @@
             <input id="imageInput" type="file" accept="image/*" class="form-control h-50" required/>
         </div>
 
-       
+        <!-- Last Demo Date -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Last Demo Date</label>
+            <input id="LastDemoDate" type="date" class="form-control-light" value="@Model?.LastDemoDate.ToString("yyyy-MM-dd")" required />
+        </div>
 
+        <!-- Last Review Date -->
+        <div class="mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Last Review Date</label>
+            <input id="LastReviewDate" type="date" class="form-control-light" value="@Model?.LastReviewDate.ToString("yyyy-MM-dd")" required />
+        </div>
+        
+        <div class="col-12 mb-3 d-flex align-top">
+            <label class="form-label citisoft-text-color col-3">Next Review (In days)</label>
+            <input type="number" id="notifyDays" class="form-control-light" required />
+        </div>
         
         <!-- Business Area -->
                 <div class="mb-5 d-flex align-top">
@@ -631,7 +645,15 @@
                             formData.append('SoftwareName', $('#softwareName').val());
                             formData.append('Description', $('#softwareDescription').val());
                             formData.append('CloudOption', $('input[name="cloudRadios"]:checked').val());
-                            
+
+
+
+                            formData.append('LastDemoDate', $('#LastDemoDate').val())
+                            formData.append('LastReviewDate', $('#LastReviewDate').val())
+                            formData.append('NotifyDays', $('#notifyDays').val());
+
+
+
                             // Append file to FormData
                             const fileInput = document.getElementById('fileInput');
                             const imageInput = document.getElementById('imageInput');

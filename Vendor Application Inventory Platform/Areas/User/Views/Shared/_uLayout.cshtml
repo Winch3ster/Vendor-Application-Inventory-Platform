@@ -38,7 +38,7 @@
             <div class="container-fluid justify-content-between">
 
                 <div class="d-flex">
-                    <a class="navbar-brand" style="color: #4688F1;">CitiSoft</a>
+                    <a class="navbar-brand" asp-area="User" asp-controller="Software" asp-action="Index" style="color: #4688F1;">CitiSoft</a>
 
                     <div class="component">
                         <div id="day"></div>
@@ -52,7 +52,11 @@
 
                 <div class="component">
 
-                 
+                    <!--Notification -->
+                    <div id="notification-btn" style="margin-right: 30px;" onclick="ShowNotification()">
+                        <i class="bi bi-bell-fill  " style="color: #4688F1;"></i>
+                        <span class="notification-badge notification-active" id="notification-icon">1</span>
+                    </div>
 
                     <div class="component">
                         <div id="hour"></div>
@@ -61,6 +65,7 @@
                         <div id="period"></div>
                     </div>
 
+                    <a class="text-decoration-none ms-3" asp-controller="Access" asp-action="LogOut">Log Out</a>
                 </div>
 
             </div>
@@ -93,10 +98,11 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.5/signalr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
+<script src="~/js/notification.js"> </script>
 
 
 

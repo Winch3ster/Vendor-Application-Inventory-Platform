@@ -60,17 +60,7 @@
                     </div>
                 </div>
                 
-                <!-- Last Demo Date -->
-                <div class="mb-3 d-flex align-top">
-                    <label class="form-label citisoft-text-color col-3">Last Demo Date</label>
-                    <input id="LastDemoDate" type="date" class="form-control-light" value="@Model?.LastDemoDate.ToString("yyyy-MM-dd")" required />
-                </div>
-                
-                <!-- Last Review Date -->
-                <div class="mb-3 d-flex align-top">
-                    <label class="form-label citisoft-text-color col-3">Last Review Date</label>
-                    <input id="LastReviewDate" type="date" class="form-control-light" value="@Model?.LastReviewDate.ToString("yyyy-MM-dd")" required />
-                </div>
+              
         
         <div class="d-flex justify-content-end">
             <button id="SubmitCompanyBtn" class="btn btn-info">Next</button>
@@ -114,8 +104,7 @@
                         EstablishedDate: $('#EstablishedYear').val(),
                         NumberOfEmployee: $('#EmployeeCount').val(),
                         InternalProfessionalServices: $('input[name="gridRadios"]:checked').val(),
-                        LastDemoDate: $('#LastDemoDate').val(),
-                        LastReviewDate: $('#LastReviewDate').val(),
+                        
                         Description: $('#description').val()
                     };
 

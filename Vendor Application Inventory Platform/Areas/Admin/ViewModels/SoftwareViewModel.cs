@@ -11,6 +11,7 @@ public class SoftwareViewModel
     public CloudType Cloud { get; set; }
     public bool DocumentAttached { get; set; }
 
+
     public List<string> FinancialServicesClientTypes { get; set; }
     public List<string> SoftwareTypes { get; set; }
     public List<string> SoftwareModules { get; set; }
