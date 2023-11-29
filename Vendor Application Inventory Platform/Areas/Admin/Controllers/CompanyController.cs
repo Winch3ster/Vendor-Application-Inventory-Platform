@@ -355,7 +355,7 @@ public class CompanyController: Controller
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void DeleteCompany(int id)
+        public RedirectToActionResult DeleteCompany(int id)
         {
             if (id != null && id != 0)
             {
@@ -377,6 +377,6 @@ public class CompanyController: Controller
     
 
         ////////////////////////////////////////////////////
-
+            return RedirectToAction("Index");
     }
 }

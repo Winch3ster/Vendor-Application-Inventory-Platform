@@ -17,22 +17,23 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 
         public async Task AddAsync(Employee employee)
         {
-            employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
-            employee.LastRetrieveChangeLog = DateTime.Now;
-            await _context.AddAsync(employee);
-            await _context.SaveChangesAsync();
+            // check if user already exists
+            var result = await _context.Employees.FirstOrDefaultAsync(e => e.Email == employee.Email);
+            if (result == null)
+            {
+                employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
+                employee.LastRetrieveChangeLog = DateTime.Now;
+                await _context.AddAsync(employee);
+                await _context.SaveChangesAsync();
+            }
         }
-
 
 
         public Employee GetCurrentUser(string useremail)
         {
-            
-
-            var result =  _context.Employees.FirstOrDefault(e => e.Email == useremail); 
+            var result = _context.Employees.FirstOrDefault(e => e.Email == useremail);
             return result;
         }
-       
 
 
         public async Task<List<Employee>> GetAllAsync()
@@ -40,9 +41,6 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
             var results = await _context.Employees.ToListAsync(); //Set it to a generic method
             return results;
         }
-
-
-
 
 
         public async Task<Employee> GetByIdAsync(int id)
@@ -54,11 +52,12 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
         public async Task<Employee> UpdateAsync(int id, Employee newEmployeerData)
         {
             //check if password is null, if it is, then do not update password
-            
+
             if (newEmployeerData.Password == null)
             {
                 // Code to handle password null case
-                var employee = await _context.Employees.FirstOrDefaultAsync(n => n.EmployeeID == newEmployeerData.EmployeeID);
+                var employee =
+                    await _context.Employees.FirstOrDefaultAsync(n => n.EmployeeID == newEmployeerData.EmployeeID);
 
                 // Detach the entity if it is already being tracked
                 _context.Entry(employee).State = EntityState.Detached;
@@ -84,7 +83,7 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
                 await _context.SaveChangesAsync();
             }
 
-            
+
             return newEmployeerData;
         }
 
@@ -94,9 +93,6 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Data.Services
 
             _context.Employees.Remove(employee);
             await _context.SaveChangesAsync();
-
         }
-
-        
     }
 }

@@ -5,19 +5,18 @@
 
 @model SoftwareVM 
 @{
-    Layout = "_EmployeeControlPanel";
+    Layout = "_Layout";
     ViewData["title"] = "Details";
 }
-
 
 
 <div class="row">
     <div class="col-md-4 d-flex justify-content-center align-items-center">
 
 
-        <img src="../../@Url.Content(Model.ImagePath)" alt="company logo" style="width: 250px; height:200px; object-fit:contain;" />
-        
-      
+        <img src="../../@Url.Content(Model.ImagePath)" alt="company logo" style="width: 250px; height:200px; object-fit:contain;"/>
+
+
     </div>
     <div class="col-md-6">
 
@@ -37,9 +36,10 @@
                     <div>@businessArea.Description</div>
                 }
             </div>
-            
+
         </div>
-        <div class="mb-2">Rating 
+        <div class="mb-2">
+            Rating
             @if (@Model.softwareRating < 3)
             {
                 <span class="text-danger">@Model.softwareRating</span>
@@ -47,9 +47,10 @@
             else
             {
                 <span class="text-info">@Model.softwareRating</span>
-            }   
-            /5</div>
-        <div class="d-flex"> 
+            }
+            /5
+        </div>
+        <div class="d-flex">
             <button type="button" id="visitWebsite" data-link="@Model.websiteURL" class="btn btn-primary text-nowrap me-1">Official Website</button>
 
             <div class="dropdown me-1">
@@ -85,21 +86,21 @@
                     </ul>
                 </div>
             }
-            
 
 
 
 
 
-           
+
+
         </div>
-        
+
     </div>
 </div>
 <div class="mt-5 border-top pt-3">
     <h5>Software Description</h5>
     <p>
-       @Model.SoftwareDescription
+        @Model.SoftwareDescription
     </p>
 </div>
 
@@ -108,11 +109,14 @@
 <div class="row mt-5 border-top pt-3">
     <h5>Company Information</h5>
     <div class="row mt-3">
-        <div class="mb-2"><span class="text-primary">Name: </span>@Model.CompanyName</div>
-        <div class="mb-2"><span class="text-primary">Established Date: </span>@Model.companyEstablishedDate.Year</div>
-        
-        
-        
+        <div class="mb-2">
+            <span class="text-primary">Name: </span>@Model.CompanyName
+        </div>
+        <div class="mb-2">
+            <span class="text-primary">Established Date: </span>@Model.companyEstablishedDate.Year
+        </div>
+
+
         <div class="col-sm-6">
             <p class="text-primary">Locations</p>
 
@@ -123,9 +127,8 @@
                     <div>[@country.Key.ToString()], @city.Key.ToString()</div>
                 }
             }
-            
-        </div>
 
+        </div>
 
 
         <div class="col-sm-6">
@@ -137,15 +140,13 @@
                 {
                     foreach (var contact in city.Value)
                     {
-                        if(contact.Key == "Contact Number")
+                        if (contact.Key == "Contact Number")
                         {
                             <div>[@city.Key.ToString()] + @contact.Value </div>
                         }
-                        
                     }
-                    
                 }
-            }       
+            }
         </div>
     </div>
     <div class="mt-2">
@@ -157,103 +158,119 @@
 <div class="mt-5 border-top pt-3 row gy-3">
     <h5 class="col-5">Reviews</h5>
 
-    @foreach( var review in Model.reviews)
+    @foreach (var review in Model.reviews)
     {
         <div class="standard-margin-left col-7 light-gray-bg rounded py-1">
             <div class="d-flex align-items-center">
-                
+
                 <span class="text-primary" style="margin-right:15px">@review.employeeFirstName @review.employeeLastName</span>
                 <div class="d-flex col-3" style="margin: 0 10px">
                     @for (int i = 0; i < review.givenStar; i++)
                     {
-                        <div style="margin-right:8px"><i class="bi bi-star-fill" style="color: gold;"></i></div>
+                        <div style="margin-right:8px">
+                            <i class="bi bi-star-fill" style="color: gold;"></i>
+                        </div>
                     }
 
                 </div>
                 <span> @review.ReviewDate </span>
             </div>
-            
+
             <p>@review.Description</p>
         </div>
     }
-    
+
 </div>
 
 
 <!-- Drop review -->
 <div id="review" class="mt-5 standard-margin-left">
-   
+
     <form asp-action="AddComment" method="post">
-       <div class="d-flex"> 
+        <div class="d-flex">
             <label class="form-label citisoft-text-color p-2" for="userReview">Drop your review here</label>
 
 
             <div class="d-flex">
                 <label class="starContainer">
                     <input value="1" type="radio" name="ratingStar" onclick="updateStar()">
-                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                    <span class="star">
+                        <i class="bi bi-star-fill"></i>
+                    </span>
                 </label>
                 <label class="starContainer">
                     <input value="2" type="radio" name="ratingStar" onclick="updateStar()">
-                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                    <span class="star">
+                        <i class="bi bi-star-fill"></i>
+                    </span>
                 </label>
                 <label class="starContainer">
                     <input value="3" type="radio" name="ratingStar" onclick="updateStar()">
-                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                    <span class="star">
+                        <i class="bi bi-star-fill"></i>
+                    </span>
                 </label>
                 <label class="starContainer">
                     <input value="4" type="radio" name="ratingStar" onclick="updateStar()">
-                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                    <span class="star">
+                        <i class="bi bi-star-fill"></i>
+                    </span>
                 </label>
                 <label class="starContainer">
                     <input value="5" type="radio" name="ratingStar" checked="checked" onclick="updateStar()">
-                    <span class="star"><i class="bi bi-star-fill"></i></span>
+                    <span class="star">
+                        <i class="bi bi-star-fill"></i>
+                    </span>
                 </label>
 
             </div>
 
 
-       </div>
+        </div>
         <div class="mb-3 d-flex align-top">
-            <input type="hidden" name="softwareId" asp-for = "softwareID" />
-            
+            <input type="hidden" name="softwareId" asp-for="softwareID"/>
+
             <textarea class="form-control-light" placeholder="Your review..." id="userReview" for="userReview" name="userReview"></textarea>
             <span asp-validation-for="newReview.Description" class="text-danger"></span>
         </div>
-        <div class="col-9 col-md-8 d-flex justify-content-center"><button type="submit" class="btn btn-primary">Submit</button></div>
+        <div class="col-9 col-md-8 d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
     </form>
 
 
-
 </div>
-
-
-
-
-
 
 
 <div class="mt-5 border-top pt-3 row">
-    <div class="col-12 text-center mb-2"><h5>See also</h5></div>
-
+    <div class="col-12 text-center mb-2">
+        <h5>See also</h5>
+    </div>
 
 
     <div class="row g-4">
-        @foreach (var software in Model.similarSoftwares)
+        @* check if similar software if empty *@
+        @if (Model.similarSoftwares.Count == 0)
         {
-            <div class="col-lg-4" style="margin: 20px 0">
-                @* <!-- <p>@returnedSoftware.SoftwareName</p> --> *@
-                <img src="../../@Url.Content(software.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@software.SoftwareID)" />
-            </div>
+            <div class="col-12 text-center ms-2">No similar software found</div>
+        }
+        else
+        {
+            @foreach (var software in Model.similarSoftwares)
+            {
+                <div class="col-lg-4" style="margin: 20px 0">
+                    @* <!-- <p>@returnedSoftware.SoftwareName</p> --> *@
+                    <img src="../../@Url.Content(software.ImagePath)" class="software-image-link" style="width:250px; height:200px; object-fit:contain; object-position:center" onclick="NavigateToViewDetailsPage(@software.SoftwareID)"/>
+                </div>
+            }
         }
 
+
     </div>
-    
+
 </div>
 
 <div class="mt-5"></div>
-
-
 
 
 @section Scripts{

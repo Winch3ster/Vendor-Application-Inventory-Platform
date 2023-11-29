@@ -87,14 +87,23 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
                 //What do the IsValid check?  --> If if all required fields are filled by [Required] (implemented in the employee class)
 
             }
+            
             await _service.AddAsync(employee);// If the data is valid, add to database (This Add() is from the service class)
 
             _emailService.SendEmail(User.FindFirstValue(ClaimTypes.NameIdentifier), "Created Employee", "Employee", employee.Email, "added");
             //For testing purposes The email will be send to one of the developer's email
             //_notificationService.NotifyUser("kingstonlee96@gmail.com", "Create");
-
-            return RedirectToAction("Index", "Employee", new { area = "Admin" });  //Redirect back to the Employee's index view
-
+            
+            //redirect back to employee index page or admin index page based on the user's claim is false or not
+            var isAdminClaim = User.FindFirstValue("isAdmin");
+            if(isAdminClaim == "true")
+            {
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
          
         }
 
@@ -138,7 +147,16 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             _emailService.Disconnect();
 
             await _service.UpdateAsync(employee.EmployeeID, employee);// If the data is valid, add to database (This Add() is from the service class)
-            return RedirectToAction("Index", "Employee", new { area = "Admin" }); //Redirect back to the Employee's index view
+            
+            var isAdminClaim = User.FindFirstValue("isAdmin");
+            if(isAdminClaim == "true")
+            {
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
 
@@ -163,7 +181,15 @@ namespace Vendor_Application_Inventory_Platform.Areas.Admin.Controllers
             // Disconnect from the SMTP server after sending the email
             _emailService.Disconnect();
 
-            return RedirectToAction("Index", "Employee", new { area = "Admin" }); //Redirect back to the actor's index view
+            var isAdminClaim = User.FindFirstValue("isAdmin");
+            if(isAdminClaim == "true")
+            {
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
 

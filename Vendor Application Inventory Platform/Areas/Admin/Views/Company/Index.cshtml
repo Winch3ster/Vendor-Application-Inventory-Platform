@@ -69,7 +69,8 @@
                     @Html.DisplayFor(modelItem => company.LastReviewDate)
                 </td>
                 <td>
-                    <a class="btn btn-primary rounded-pill px-4" asp-area="Admin" asp-action="CreateCompany" asp-route-id="@company.CompanyID"><i class="bi bi-pencil-square"></i> Edit</a>
+                    <a class="btn btn-primary rounded-pill px-4 my-1" asp-area="User" asp-action="Details" asp-route-companyId="@company.CompanyID"><i class="bi bi-eye"></i>View</a>
+                    <a class="btn btn-primary rounded-pill px-4" asp-area="Admin" asp-action="" asp-route-id="@company.CompanyID"><i class="bi bi-pencil-square"></i> Edit</a>
                     <form asp-area="Admin" asp-action="DeleteCompany" asp-route-id="@company.CompanyID" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
                         <button type="submit" class="d-flex btn btn-danger mt-1 rounded-pill px-4" data-toggle="tooltip" data-placement="top" title="Delete">
                             <i class="bi bi-trash"></i> Remove

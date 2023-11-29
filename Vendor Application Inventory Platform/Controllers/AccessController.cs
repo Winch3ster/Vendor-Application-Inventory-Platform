@@ -76,7 +76,7 @@ public class AccessController : Controller
 
                         if (user.IsAdmin)
                         {
-                            return RedirectToAction("Index", "Employee", new { area = "Admin" });
+                            return RedirectToAction("Index", "Admin", new { area = "Admin" });
                         }
                         else
                         {
